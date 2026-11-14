@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Earth Jukebox: listen to NASA Earth data as sound." />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <title>Earth Jukebox</title>
+    <link rel="stylesheet" href="/src/ui/style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#player">Skip to player</a>
+    <header>
+      <h1>Earth Jukebox</h1>
+      <p class="tagline">Listen to NASA Earth data. Every sound comes from a data value.</p>
+    </header>
+
+    <main>
+      <section aria-labelledby="tracks-heading">
+        <h2 id="tracks-heading">Tracks</h2>
+        <ul id="track-list" class="track-list"></ul>
+      </section>
+
+      <section id="player" aria-labelledby="player-heading" tabindex="-1">
+        <h2 id="player-heading">Player</h2>
+        <p id="track-title" class="track-title">Choose a track.</p>
+        <p id="placeholder-warning" class="warning" hidden>
+          Placeholder: this track uses synthetic numbers, not real NASA data.
+        </p>
+
+        <div id="frame-view" class="frame-view" aria-hidden="true">
+          <img id="frame-img" alt="" hidden />
+          <span id="frame-label" class="frame-label">—</span>
+        </div>
+
+        <div class="controls">
+          <button id="play-btn" type="button" disabled>Play</button>
+          <label for="progress" class="visually-hidden">Position</label>
+          <input id="progress" type="range" min="0" max="0" step="1" value="0" disabled />
+          <span id="position-text" class="position-text" aria-hidden="true"></span>
+        </div>
+        <p class="hint">Keyboard: Space or K plays and pauses. Arrow keys on the slider move one frame.</p>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+
+        <section aria-labelledby="mapping-heading">
+          <h3 id="mapping-heading">What you hear</h3>
+          <ul id="mapping-list" class="mapping-list"></ul>
+          <p id="source-text" class="source"></p>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
