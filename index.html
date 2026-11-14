@@ -16,6 +16,16 @@
     </header>
 
     <main>
+      <section class="settings" aria-label="Narration settings">
+        <label for="lang-select">Narration language</label>
+        <select id="lang-select">
+          <option value="en" lang="en">English</option>
+          <option value="pt" lang="pt-BR">Português</option>
+          <option value="es" lang="es">Español</option>
+        </select>
+        <label class="check"><input id="narration-toggle" type="checkbox" checked /> Spoken narration</label>
+      </section>
+
       <section aria-labelledby="tracks-heading">
         <h2 id="tracks-heading">Tracks</h2>
         <ul id="track-list" class="track-list"></ul>
@@ -35,11 +45,14 @@
 
         <div class="controls">
           <button id="play-btn" type="button" disabled>Play</button>
+          <button id="intro-btn" type="button" class="secondary" disabled>Introduction and sound legend</button>
           <label for="progress" class="visually-hidden">Position</label>
           <input id="progress" type="range" min="0" max="0" step="1" value="0" disabled />
           <span id="position-text" class="position-text" aria-hidden="true"></span>
         </div>
-        <p class="hint">Keyboard: Space or K plays and pauses. Arrow keys on the slider move one frame.</p>
+        <p class="hint">Keyboard: Space or K plays and pauses. Escape stops. Arrow keys on the slider move one frame.</p>
+
+        <p id="caption" class="caption"></p>
 
         <div id="status" class="status" role="status" aria-live="polite"></div>
 

@@ -70,6 +70,17 @@ layer is played alone at value 0 and value 1 so listeners learn the scale.
 track's color legend, not by raw brightness. Anything not taken from the frames or a NASA source is
 marked as a placeholder.
 
+## Narration
+
+- Languages: English (en-US), Portuguese (pt-BR), Spanish (es-ES), chosen with the *Narration language* selector.
+- Order: title → intro → **audio legend** (each layer alone at its minimum, then its maximum) → the track,
+  with events spoken over lowered music → outro. *Skip introduction* jumps straight to the track.
+- Voice: the browser's speech synthesis by default. A track may ship recorded MP3s, used instead when present:
+  `narration.audio.intro.pt`, `narration.audio.outro.pt`, `mapping.<series>.legend.audio.min.pt` / `.max.pt`,
+  `events[].audio.pt` (file paths relative to the track folder).
+- Every spoken line is also shown as a caption. With *Spoken narration* off, lines go to the screen-reader
+  live region instead, so nothing is ever said twice.
+
 ## Tracks
 
 | id | Status | Mapping |
@@ -78,6 +89,6 @@ marked as a placeholder.
 
 ## Accessibility
 
-- Everything works from the keyboard. Space or K plays and pauses. Arrow keys on the position slider move one frame.
+- Everything works from the keyboard. Space or K plays and pauses, Escape stops. Arrow keys on the position slider move one frame.
 - Labelled buttons, slider with `aria-valuetext` (year + frame), and a `role="status"` live region that announces what is playing.
 - Audio starts only after a click or key press.

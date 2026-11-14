@@ -161,12 +161,19 @@ export class SonificationEngine {
     layer.set(value, now, 0.05);
     this.master.gain.rampTo(1, 0.15);
     if (layer.type === 'pulse') for (let k = 0; k < 4; k++) layer.tick(now + 0.1 + k * 0.5);
-    await new Promise((r) => setTimeout(r, seconds * 1000));
+    await new Promise((r) => {
+      const timer = setTimeout(r, seconds * 1000);
+      this._cancelPreview = () => { clearTimeout(timer); r(); };
+    });
+    this._cancelPreview = null;
     this.master.gain.rampTo(0, 0.25);
     await new Promise((r) => setTimeout(r, 300));
     this._unmuteAll();
     this._setValues(this.frame, Tone.now(), 0.05); // restore current frame values
   }
+
+  /** Ends a running previewValue() early. */
+  cancelPreview() { this._cancelPreview?.(); }
 
   _unmuteAll() {
     const now = Tone.now();
