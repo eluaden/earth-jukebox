@@ -65,3 +65,8 @@ button.secondary { background: #d9e3f5; }
 .caption { min-height: 3em; font-size: 1.15rem; margin: 0.5rem 0; }
 
 .values-text { min-height: 1.5em; margin: 0.4rem 0 0; font-variant-numeric: tabular-nums; color: var(--muted); text-transform: capitalize; }
+
+.intro { background: var(--panel); border-radius: 0.75rem; padding: 1rem 1.5rem 1.5rem; margin-top: 1rem; }
+.intro ol { padding-left: 1.2rem; }
+.intro li { margin-bottom: 0.4rem; }
+[hidden] { display: none !important; }

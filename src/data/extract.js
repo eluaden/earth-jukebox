@@ -120,6 +120,41 @@ function loadImage(url) {
 }
 
 /**
+ * MARKER extraction: for visualizations that show the value as a drawn marker moving along a
+ * ruler printed on the frame (instead of a colour legend).
+ * The value is how far the top of the marker sits above its position in `zeroFrame`,
+ * converted with the ruler's pixels-per-unit.
+ *
+ * Config: { "type": "marker", "series": "name", "strip": [x0, y0, x1, y1],
+ *           "markerColor": { "rMax", "gMax", "bMin" }, "minPixelsPerRow": 2,
+ *           "pxPerUnit": 6.86, "zeroFrame": 0, "unit": "cm", "range": [lo, hi] }
+ * `stripPixels[f]` = RGBA pixels of the strip in frame f.
+ */
+export function computeMarkerSeries(stripPixels, width, cfg) {
+  const { rMax, gMax, bMin } = cfg.markerColor;
+  const minPx = cfg.minPixelsPerRow ?? 2;
+  const tops = stripPixels.map((px) => {
+    const rows = px.length / 4 / width;
+    for (let y = 0; y < rows; y++) {
+      let n = 0;
+      for (let x = 0; x < width; x++) {
+        const i = (y * width + x) * 4;
+        if (px[i] < rMax && px[i + 1] < gMax && px[i + 2] > bMin) n++;
+      }
+      if (n >= minPx) return y;
+    }
+    return null; // marker not found in this frame
+  });
+  const zero = tops[cfg.zeroFrame ?? 0];
+  const [lo, hi] = cfg.range;
+  const values = tops.map((t) => (t == null || zero == null ? null
+    : Math.round(((zero - t) / cfg.pxPerUnit) * 10) / 10));
+  const series = values.map((v) => (v == null ? null
+    : Math.round(Math.min(1, Math.max(0, (v - lo) / (hi - lo))) * 1000) / 1000));
+  return { series: { [cfg.series]: series }, values: { [cfg.series]: values } };
+}
+
+/**
  * Loads the track's frames, reads their pixels and fills in track.series (0..1),
  * track.values (physical values), track.coverage and data-driven events.
  */
@@ -130,22 +165,29 @@ export async function extractTrack(track, urlFor) {
   canvas.width = images[0].naturalWidth;
   canvas.height = images[0].naturalHeight;
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-  const framesPixels = images.map((img) => {
+  const grab = (img, [x0, y0, x1, y1]) => {
     ctx.drawImage(img, 0, 0);
-    const regions = {};
-    for (const [key, [x0, y0, x1, y1]] of Object.entries(cfg.regions)) {
-      regions[key] = ctx.getImageData(x0, y0, x1 - x0, y1 - y0).data;
-    }
-    return regions;
-  });
+    return ctx.getImageData(x0, y0, x1 - x0, y1 - y0).data;
+  };
 
-  const result = computeSeries(framesPixels, cfg);
+  let result;
+  if (cfg.type === 'marker') {
+    const strips = images.map((img) => grab(img, cfg.strip));
+    result = computeMarkerSeries(strips, cfg.strip[2] - cfg.strip[0], cfg);
+  } else {
+    const framesPixels = images.map((img) => {
+      const regions = {};
+      for (const [key, box] of Object.entries(cfg.regions)) regions[key] = grab(img, box);
+      return regions;
+    });
+    result = computeSeries(framesPixels, cfg);
+  }
   track.series = result.series;
   track.values = result.values;
-  track.coverage = result.coverage;
+  if (result.coverage) track.coverage = result.coverage;
+  track.unit = cfg.unit ?? cfg.colormap?.unit ?? '';
 
-  // Events whose position comes from the data itself (e.g. the day's maximum).
+  // Events whose position comes from the data itself (e.g. the highest value).
   const events = [...(track.events || [])];
   for (const rule of cfg.recordEvents || []) {
     const vals = result.values[rule.series];

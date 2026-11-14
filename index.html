@@ -9,13 +9,33 @@
     <link rel="stylesheet" href="/src/ui/style.css" />
   </head>
   <body>
-    <a class="skip-link" href="#player">Skip to player</a>
+    <a class="skip-link" href="#intro">Skip to content</a>
     <header>
       <h1>Earth Jukebox</h1>
       <p class="tagline">Listen to NASA Earth data. Every sound comes from a data value.</p>
     </header>
 
     <main>
+      <section id="intro" class="intro" aria-labelledby="intro-heading">
+        <h2 id="intro-heading">Hear our changing planet</h2>
+        <p>
+          NASA's Earth Information Center shows our planet through images. Earth Jukebox turns those
+          same images into sound, so the data can be heard, not only seen. It is built to work
+          without sight: with a keyboard, a screen reader, and spoken narration in English,
+          Portuguese and Spanish.
+        </p>
+        <h3>How it works</h3>
+        <ol>
+          <li><strong>Pick a track.</strong> Each track is a NASA visualization, shown frame by frame.</li>
+          <li><strong>Learn the sounds.</strong> Before the track, you hear the lowest and the highest value of each sound, so you know the scale.</li>
+          <li><strong>Listen.</strong> Every sound is made live from the data value read from the frame: a tone, a wind, a tick, and a bell on records.</li>
+        </ol>
+        <p>Nothing plays until you press a button. Headphones are recommended.</p>
+        <button id="start-btn" type="button">Start listening</button>
+      </section>
+
+      <div id="app" hidden>
+      <p><button id="about-btn" type="button" class="secondary">About this project</button></p>
       <section class="settings" aria-label="Narration settings">
         <label for="lang-select">Narration language</label>
         <select id="lang-select">
@@ -64,6 +84,7 @@
           <p id="source-text" class="source"></p>
         </section>
       </section>
+      </div>
     </main>
 
     <script type="module" src="/src/main.js"></script>

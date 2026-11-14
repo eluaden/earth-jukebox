@@ -149,7 +149,7 @@ export async function startApp(doc) {
     // Real-world values behind the sound (only for tracks extracted from frames).
     let readout = '';
     if (t.values) {
-      const unit = t.extraction?.colormap?.unit ?? '';
+      const unit = t.unit ?? '';
       readout = Object.entries(t.values)
         .map(([key, vals]) => `${key} ${vals[i] ?? 'no data'}`).join(', ') + ` ${unit}`;
     }
@@ -300,6 +300,22 @@ export async function startApp(doc) {
   engine.on('end', async () => {
     announce(`End of ${pick(state.track.title, state.lang)}.`);
     await runOutro(ctx());
+  });
+
+  // ---- Intro page <-> jukebox --------------------------------------------
+  const introView = $('intro');
+  const appView = $('app');
+  $('start-btn').addEventListener('click', () => {
+    introView.hidden = true;
+    appView.hidden = false;
+    (ui.list.querySelector('button:not([disabled])') || ui.lang).focus();
+    announce('Choose a track.');
+  });
+  $('about-btn').addEventListener('click', async () => {
+    await stopAll();
+    appView.hidden = true;
+    introView.hidden = false;
+    $('start-btn').focus();
   });
 
   renderTexts();
