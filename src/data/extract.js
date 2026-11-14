@@ -155,6 +155,48 @@ export function computeMarkerSeries(stripPixels, width, cfg) {
 }
 
 /**
+ * CURSOR extraction: for visualizations with a chart drawn on the frame, where a coloured
+ * cursor line rises to the current value along a printed axis.
+ * The cursor moves one step to the right each frame, so we look in the expected column
+ * (column.start + column.perFrame * frame, +/- halfWidth) for the topmost cursor-coloured pixel
+ * and convert its height above the axis zero with the axis scale.
+ *
+ * Config: { "type": "cursor", "series": "name", "strip": [x0, y0, x1, y1],
+ *           "column": { "start", "perFrame", "halfWidth" },
+ *           "color": { "rMin", "rMinusB", "rMinusG" },
+ *           "zeroY": <row of the axis zero, relative to the strip>, "pxPerUnit", "unit", "range",
+ *           "derived": { "<name>": { "from": "<series>", "op": "increase", "range": [lo, hi] } } }
+ */
+export function computeCursorSeries(stripPixels, width, cfg) {
+  const { rMin, rMinusB, rMinusG } = cfg.color;
+  const half = cfg.column.halfWidth ?? 2;
+  const values = stripPixels.map((px, f) => {
+    const rows = px.length / 4 / width;
+    const xc = Math.round(cfg.column.start + cfg.column.perFrame * f);
+    for (let y = 0; y < rows; y++) {
+      for (let x = Math.max(0, xc - half); x <= Math.min(width - 1, xc + half); x++) {
+        const i = (y * width + x) * 4;
+        if (px[i] > rMin && px[i] - px[i + 2] > rMinusB && px[i] - px[i + 1] > rMinusG) {
+          return Math.round((cfg.zeroY - y) / cfg.pxPerUnit);
+        }
+      }
+    }
+    return null;
+  });
+  const norm = (v, [lo, hi]) => (v == null ? null
+    : Math.round(Math.min(1, Math.max(0, (v - lo) / (hi - lo))) * 1000) / 1000);
+  const out = { series: { [cfg.series]: values.map((v) => norm(v, cfg.range)) }, values: { [cfg.series]: values } };
+  // Derived series, e.g. how much the value grew since the previous frame.
+  for (const [name, d] of Object.entries(cfg.derived || {})) {
+    const src = out.values[d.from];
+    const vals = src.map((v, i) => (i === 0 || v == null || src[i - 1] == null ? null : Math.max(0, v - src[i - 1])));
+    out.values[name] = vals;
+    out.series[name] = vals.map((v) => norm(v, d.range));
+  }
+  return out;
+}
+
+/**
  * Loads the track's frames, reads their pixels and fills in track.series (0..1),
  * track.values (physical values), track.coverage and data-driven events.
  */
@@ -174,6 +216,9 @@ export async function extractTrack(track, urlFor) {
   if (cfg.type === 'marker') {
     const strips = images.map((img) => grab(img, cfg.strip));
     result = computeMarkerSeries(strips, cfg.strip[2] - cfg.strip[0], cfg);
+  } else if (cfg.type === 'cursor') {
+    const strips = images.map((img) => grab(img, cfg.strip));
+    result = computeCursorSeries(strips, cfg.strip[2] - cfg.strip[0], cfg);
   } else {
     const framesPixels = images.map((img) => {
       const regions = {};
