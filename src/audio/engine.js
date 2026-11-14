@@ -96,7 +96,8 @@ export class SonificationEngine {
     this._setValues(i, time, spf * 0.9); // glide across the frame: smooth, not steppy
     const events = this.eventsByFrame[i] || [];
     if (withSound) {
-      this.pulse?.tick(time, events.some((e) => e.type === 'milestone'));
+      const milestone = events.some((e) => e.type === 'milestone');
+      if (milestone || i % (this.track.clockEvery || 1) === 0) this.pulse?.tick(time, milestone);
       if (events.some((e) => e.type === 'record')) this.bell.ring(time);
     }
     Tone.getDraw().schedule(() => {

@@ -358,5 +358,22 @@
    "pt": "Fim das varreduras do dia. O TEMPO mede com a luz do sol, então não enxerga a poluição à noite nem debaixo de nuvens.",
    "es": "Fin de los barridos del día. TEMPO mide con la luz del sol, así que no puede ver la contaminación de noche ni debajo de las nubes."
   }
+ },
+ "video": {
+  "file": "video.mp4",
+  "times": [
+   0.133,
+   1.033,
+   2.067,
+   3.083,
+   4.15,
+   6.2,
+   8.3,
+   10.283,
+   12.383,
+   14.433,
+   16.517,
+   18.617
+  ]
  }
 }

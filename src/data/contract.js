@@ -39,6 +39,10 @@
  *                                      (color legend, regions, range). See src/data/extract.js.
  *                                      The loader fills `series`, `values` and `coverage`.
  * @property {Object<string, (number|null)[]>} [values]  Physical values behind each series.
+ * @property {{file: string, times: number[]}} [video]  The NASA video the frames were taken
+ *                                      from; times[i] = video time (s) of frame i. The player
+ *                                      shows it in sync with the sound instead of still frames.
+ * @property {number} [clockEvery]      Tick every N frames instead of every frame (default 1).
  * @property {boolean} [clock]          Default true: the pulse layer ticks once per frame
  *                                      (time), accented on "milestone" events. If a series is
  *                                      mapped to "pulse", it also sets the tick pitch.

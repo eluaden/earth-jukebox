@@ -10,7 +10,7 @@ export async function startApp(doc) {
   const $ = (id) => doc.getElementById(id);
   const ui = {
     list: $('track-list'), title: $('track-title'), warning: $('placeholder-warning'),
-    img: $('frame-img'), label: $('frame-label'), play: $('play-btn'), intro: $('intro-btn'),
+    img: $('frame-img'), video: $('frame-video'), label: $('frame-label'), play: $('play-btn'), intro: $('intro-btn'),
     progress: $('progress'), posText: $('position-text'), status: $('status'),
     caption: $('caption'), values: $('values-text'), mapping: $('mapping-list'), source: $('source-text'),
     lang: $('lang-select'), narration: $('narration-toggle'),
@@ -97,6 +97,15 @@ export async function startApp(doc) {
     ui.intro.disabled = false;
     // Preload every frame so the picture never lags behind the sound.
     state.preloaded = t.frames.map((f) => { const im = new Image(); im.src = trackUrl(t.id, f); return im; });
+    ui.video.pause();
+    ui.video.hidden = !t.video;
+    ui.img.hidden = true;
+    if (t.video) {
+      ui.video.src = trackUrl(t.id, t.video.file);
+      ui.video.poster = t.frames.length ? trackUrl(t.id, t.frames[0]) : '';
+    } else {
+      ui.video.removeAttribute('src');
+    }
     renderTexts();
     showFrame(0);
     announce(`${pick(t.title, state.lang)} selected. Press Play to listen.`);
@@ -157,12 +166,31 @@ export async function startApp(doc) {
     ui.progress.setAttribute('aria-valuetext',
       `${label}, frame ${i + 1} of ${t.labels.length}${readout ? `. ${readout}` : ''}`);
     ui.posText.textContent = `${i + 1} / ${t.labels.length}`;
-    if (t.frames.length) {
+    if (t.video) {
+      syncVideo(i);
+    } else if (t.frames.length) {
       ui.img.src = trackUrl(t.id, t.frames[i]);
       ui.img.hidden = false;
     } else {
       ui.img.hidden = true;
     }
+  }
+
+  /**
+   * Keeps NASA's video in step with the sound. Frame i sounds for secondsPerFrame; meanwhile the
+   * video runs from times[i] to times[i + 1], so its speed is set per frame.
+   */
+  function syncVideo(i) {
+    const t = state.track;
+    const times = t.video.times;
+    const span = i + 1 < times.length ? times[i + 1] - times[i]
+      : i > 0 ? times[i] - times[i - 1] : t.secondsPerFrame;
+    const playing = engine.state === 'playing';
+    // Only jump when the picture has drifted: small corrections would make it stutter.
+    if (!playing || Math.abs(ui.video.currentTime - times[i]) > 0.25) ui.video.currentTime = times[i];
+    ui.video.playbackRate = Math.min(16, Math.max(0.0625, span / t.secondsPerFrame));
+    if (playing && ui.video.paused) ui.video.play().catch(() => {});
+    if (!playing && !ui.video.paused) ui.video.pause();
   }
 
   // Audio may only start after a user gesture: init happens inside click handlers.
@@ -292,6 +320,7 @@ export async function startApp(doc) {
   engine.on('frame', (i) => showFrame(i));
   engine.on('state', (s) => {
     updatePlayButton();
+    if (state.track?.video) syncVideo(engine.frame);
     const label = state.track?.labels[engine.frame] ?? '';
     if (s === 'playing') announce(`Playing from ${label}.`);
     if (s === 'paused' && !state.introRunning) announce(`Paused at ${label}.`);
