@@ -1,4 +1,5 @@
 import { validateTrack } from './contract.js';
+import { extractTrack } from './extract.js';
 
 const BASE = import.meta.env.BASE_URL; // './' in build, '/' in dev — works on any host path
 
@@ -15,14 +16,15 @@ export async function loadTrackIndex() {
 
 /**
  * Loads and validates one track.
- * Step 5 will extend this: if a track ships frames + a color legend instead of
- * precomputed series, the series are extracted here (canvas) before returning.
+ * If the track has an `extraction` block (frames + color legend) instead of precomputed
+ * series, the series are read from the frames' pixels here, in the browser.
  * Either way, callers always receive a contract-valid Track.
  */
 export async function loadTrack(id) {
   const res = await fetch(trackUrl(id));
   if (!res.ok) throw new Error(`Could not load track "${id}" (${res.status})`);
   const track = await res.json();
+  if (track.extraction) await extractTrack(track, (file) => trackUrl(id, file));
   const errors = validateTrack(track);
   if (errors.length) throw new Error(`Track "${id}" is invalid:\n- ${errors.join('\n- ')}`);
   return track;

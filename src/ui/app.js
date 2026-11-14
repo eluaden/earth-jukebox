@@ -12,7 +12,7 @@ export async function startApp(doc) {
     list: $('track-list'), title: $('track-title'), warning: $('placeholder-warning'),
     img: $('frame-img'), label: $('frame-label'), play: $('play-btn'), intro: $('intro-btn'),
     progress: $('progress'), posText: $('position-text'), status: $('status'),
-    caption: $('caption'), mapping: $('mapping-list'), source: $('source-text'),
+    caption: $('caption'), values: $('values-text'), mapping: $('mapping-list'), source: $('source-text'),
     lang: $('lang-select'), narration: $('narration-toggle'),
   };
   const engine = new SonificationEngine();
@@ -146,7 +146,16 @@ export async function startApp(doc) {
     const label = t.labels[i];
     ui.label.textContent = label;
     ui.progress.value = String(i);
-    ui.progress.setAttribute('aria-valuetext', `${label}, frame ${i + 1} of ${t.labels.length}`);
+    // Real-world values behind the sound (only for tracks extracted from frames).
+    let readout = '';
+    if (t.values) {
+      const unit = t.extraction?.colormap?.unit ?? '';
+      readout = Object.entries(t.values)
+        .map(([key, vals]) => `${key} ${vals[i] ?? 'no data'}`).join(', ') + ` ${unit}`;
+    }
+    ui.values.textContent = readout;
+    ui.progress.setAttribute('aria-valuetext',
+      `${label}, frame ${i + 1} of ${t.labels.length}${readout ? `. ${readout}` : ''}`);
     ui.posText.textContent = `${i + 1} / ${t.labels.length}`;
     if (t.frames.length) {
       ui.img.src = trackUrl(t.id, t.frames[i]);
@@ -294,4 +303,5 @@ export async function startApp(doc) {
   });
 
   renderTexts();
+  window.earthJukebox = { tracks, engine, narrator }; // handy for debugging in the console
 }

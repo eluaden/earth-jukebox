@@ -63,3 +63,5 @@ button.secondary { background: #d9e3f5; }
 .controls { flex-wrap: wrap; }
 .controls input[type='range'] { min-width: 12rem; }
 .caption { min-height: 3em; font-size: 1.15rem; margin: 0.5rem 0; }
+
+.values-text { min-height: 1.5em; margin: 0.4rem 0 0; font-variant-numeric: tabular-nums; color: var(--muted); text-transform: capitalize; }

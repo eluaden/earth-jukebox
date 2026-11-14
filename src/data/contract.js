@@ -35,6 +35,10 @@
  * @property {TrackEvent[]} [events]
  * @property {{intro?: I18nText, outro?: I18nText}} [narration]
  * @property {boolean} [placeholder]    true = NOT real data. UI must say so.
+ * @property {Object} [extraction]      Instead of `series`: how to read the series from the frames
+ *                                      (color legend, regions, range). See src/data/extract.js.
+ *                                      The loader fills `series`, `values` and `coverage`.
+ * @property {Object<string, (number|null)[]>} [values]  Physical values behind each series.
  * @property {boolean} [clock]          Default true: the pulse layer ticks once per frame
  *                                      (time), accented on "milestone" events. If a series is
  *                                      mapped to "pulse", it also sets the tick pitch.

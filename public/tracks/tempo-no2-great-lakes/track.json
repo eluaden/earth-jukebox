@@ -1,0 +1,362 @@
+{
+ "id": "tempo-no2-great-lakes",
+ "title": {
+  "en": "A day of air pollution over Chicago, Detroit and Toronto",
+  "pt": "Um dia de poluição do ar sobre Chicago, Detroit e Toronto",
+  "es": "Un día de contaminación del aire sobre Chicago, Detroit y Toronto"
+ },
+ "source": "NASA Scientific Visualization Studio, \"TEMPO - Nitrogen Dioxide Air Pollution Over North America - Additional Views\" (SVS 5175), Chicago/Toronto view, 31 Aug 2023. https://svs.gsfc.nasa.gov/5175/",
+ "secondsPerFrame": 2.5,
+ "frames": [
+  "frame_000.jpg",
+  "frame_001.jpg",
+  "frame_002.jpg",
+  "frame_003.jpg",
+  "frame_004.jpg",
+  "frame_005.jpg",
+  "frame_006.jpg",
+  "frame_007.jpg",
+  "frame_008.jpg",
+  "frame_009.jpg",
+  "frame_010.jpg",
+  "frame_011.jpg"
+ ],
+ "labels": [
+  "08:17",
+  "08:45",
+  "09:16",
+  "09:47",
+  "10:19",
+  "11:21",
+  "12:24",
+  "13:24",
+  "14:28",
+  "15:30",
+  "16:33",
+  "17:36"
+ ],
+ "extraction": {
+  "note": "Frames: one per TEMPO scan, taken from NASA's 1080p MP4 (video frames 8, 62, 124, 185, 249, 372, 498, 617, 743, 866, 991, 1117), scaled to 960x540. Labels: the clock printed on each frame. Colormap stops: sampled from the colour bar printed on the frames (linear scale, ticks at 25, 50 and 125 measured). Regions are rectangles around each city label, not official city limits.",
+  "colormap": {
+   "unit": "×10¹⁴ molecules/cm²",
+   "stops": [
+    [
+     0,
+     88,
+     169,
+     254
+    ],
+    [
+     5,
+     111,
+     179,
+     240
+    ],
+    [
+     10,
+     144,
+     193,
+     223
+    ],
+    [
+     15,
+     174,
+     204,
+     204
+    ],
+    [
+     20,
+     203,
+     215,
+     189
+    ],
+    [
+     25,
+     237,
+     227,
+     174
+    ],
+    [
+     30,
+     251,
+     203,
+     137
+    ],
+    [
+     35,
+     249,
+     143,
+     96
+    ],
+    [
+     40,
+     241,
+     93,
+     81
+    ],
+    [
+     45,
+     207,
+     52,
+     93
+    ],
+    [
+     50,
+     166,
+     42,
+     110
+    ],
+    [
+     55,
+     132,
+     26,
+     114
+    ],
+    [
+     60,
+     117,
+     21,
+     118
+    ],
+    [
+     65,
+     104,
+     17,
+     114
+    ],
+    [
+     70,
+     95,
+     15,
+     114
+    ],
+    [
+     75,
+     80,
+     13,
+     110
+    ],
+    [
+     80,
+     72,
+     8,
+     113
+    ],
+    [
+     85,
+     61,
+     7,
+     105
+    ],
+    [
+     90,
+     49,
+     7,
+     94
+    ],
+    [
+     95,
+     38,
+     7,
+     83
+    ],
+    [
+     100,
+     29,
+     10,
+     71
+    ],
+    [
+     105,
+     16,
+     5,
+     62
+    ],
+    [
+     110,
+     13,
+     5,
+     52
+    ],
+    [
+     115,
+     12,
+     5,
+     46
+    ],
+    [
+     120,
+     9,
+     4,
+     36
+    ],
+    [
+     125,
+     11,
+     7,
+     31
+    ],
+    [
+     130,
+     6,
+     3,
+     20
+    ],
+    [
+     135,
+     5,
+     3,
+     14
+    ],
+    [
+     140,
+     3,
+     2,
+     8
+    ],
+    [
+     145,
+     2,
+     1,
+     6
+    ],
+    [
+     150,
+     3,
+     3,
+     6
+    ]
+   ],
+   "maxDistance": 40
+  },
+  "overlayMask": {
+   "darkBelow": 60,
+   "minShare": 0.9
+  },
+  "regions": {
+   "chicago": [
+    130,
+    170,
+    270,
+    290
+   ],
+   "detroit": [
+    450,
+    150,
+    570,
+    260
+   ],
+   "toronto": [
+    690,
+    40,
+    810,
+    140
+   ]
+  },
+  "range": [
+   5,
+   40
+  ],
+  "minCoverage": 0.2,
+  "recordEvents": [
+   {
+    "series": "chicago",
+    "of": "max",
+    "type": "record",
+    "say": {
+     "en": "{label}: Chicago's highest level of the day.",
+     "pt": "{label}: o nível mais alto do dia em Chicago.",
+     "es": "{label}: el nivel más alto del día en Chicago."
+    }
+   }
+  ]
+ },
+ "mapping": {
+  "chicago": {
+   "layer": "drone",
+   "meaning": {
+    "en": "Chicago area: higher, louder tone = more nitrogen dioxide",
+    "pt": "Região de Chicago: tom mais agudo e mais forte = mais dióxido de nitrogênio",
+    "es": "Zona de Chicago: tono más agudo y más fuerte = más dióxido de nitrógeno"
+   },
+   "legend": {
+    "min": {
+     "en": "Chicago, least nitrogen dioxide on our scale: a low, quiet tone.",
+     "pt": "Chicago, menos dióxido de nitrogênio na nossa escala: um tom grave e suave.",
+     "es": "Chicago, menos dióxido de nitrógeno en nuestra escala: un tono grave y suave."
+    },
+    "max": {
+     "en": "Chicago, most nitrogen dioxide on our scale: a high, loud tone.",
+     "pt": "Chicago, mais dióxido de nitrogênio na nossa escala: um tom agudo e forte.",
+     "es": "Chicago, más dióxido de nitrógeno en nuestra escala: un tono agudo y fuerte."
+    }
+   },
+   "physicalRange": {
+    "min": "5 ×10¹⁴ molecules/cm²",
+    "max": "40 ×10¹⁴ molecules/cm²"
+   }
+  },
+  "detroit": {
+   "layer": "texture",
+   "loudWhen": "high",
+   "meaning": {
+    "en": "Detroit area: stronger, brighter wind = more nitrogen dioxide",
+    "pt": "Região de Detroit: vento mais forte e mais brilhante = mais dióxido de nitrogênio",
+    "es": "Zona de Detroit: viento más fuerte y más brillante = más dióxido de nitrógeno"
+   },
+   "legend": {
+    "min": {
+     "en": "Detroit, least nitrogen dioxide on our scale: a faint wind.",
+     "pt": "Detroit, menos dióxido de nitrogênio na nossa escala: um vento fraco.",
+     "es": "Detroit, menos dióxido de nitrógeno en nuestra escala: un viento débil."
+    },
+    "max": {
+     "en": "Detroit, most nitrogen dioxide on our scale: a strong, bright wind.",
+     "pt": "Detroit, mais dióxido de nitrogênio na nossa escala: um vento forte e brilhante.",
+     "es": "Detroit, más dióxido de nitrógeno en nuestra escala: un viento fuerte y brillante."
+    }
+   },
+   "physicalRange": {
+    "min": "5 ×10¹⁴ molecules/cm²",
+    "max": "40 ×10¹⁴ molecules/cm²"
+   }
+  },
+  "toronto": {
+   "layer": "pulse",
+   "meaning": {
+    "en": "Toronto area: higher tick = more nitrogen dioxide. One tick per satellite scan",
+    "pt": "Região de Toronto: tique mais agudo = mais dióxido de nitrogênio. Um tique por varredura do satélite",
+    "es": "Zona de Toronto: tic más agudo = más dióxido de nitrógeno. Un tic por barrido del satélite"
+   },
+   "legend": {
+    "min": {
+     "en": "Toronto, least nitrogen dioxide on our scale: a low tick.",
+     "pt": "Toronto, menos dióxido de nitrogênio na nossa escala: um tique grave.",
+     "es": "Toronto, menos dióxido de nitrógeno en nuestra escala: un tic grave."
+    },
+    "max": {
+     "en": "Toronto, most nitrogen dioxide on our scale: a high tick.",
+     "pt": "Toronto, mais dióxido de nitrogênio na nossa escala: um tique agudo.",
+     "es": "Toronto, más dióxido de nitrógeno en nuestra escala: un tic agudo."
+    }
+   },
+   "physicalRange": {
+    "min": "5 ×10¹⁴ molecules/cm²",
+    "max": "40 ×10¹⁴ molecules/cm²"
+   }
+  }
+ },
+ "events": [],
+ "narration": {
+  "intro": {
+   "en": "Nitrogen dioxide air pollution over Chicago, Detroit and Toronto, measured from space by NASA's TEMPO instrument on August 31st, 2023. You will hear twelve scans, from 8:17 in the morning to 5:36 in the afternoon, Eastern time. Each tick is one scan. Chicago is the tone, Detroit is the wind, and Toronto is the pitch of the tick.",
+   "pt": "Poluição do ar por dióxido de nitrogênio sobre Chicago, Detroit e Toronto, medida do espaço pelo instrumento TEMPO da NASA em 31 de agosto de 2023. Você vai ouvir doze varreduras, das 8h17 da manhã às 5h36 da tarde, no horário do leste dos Estados Unidos. Cada tique é uma varredura. Chicago é o tom, Detroit é o vento e Toronto é a altura do tique.",
+   "es": "Contaminación del aire por dióxido de nitrógeno sobre Chicago, Detroit y Toronto, medida desde el espacio por el instrumento TEMPO de la NASA el 31 de agosto de 2023. Vas a escuchar doce barridos, desde las 8:17 de la mañana hasta las 5:36 de la tarde, hora del este de Estados Unidos. Cada tic es un barrido. Chicago es el tono, Detroit es el viento y Toronto es la altura del tic."
+  },
+  "outro": {
+   "en": "End of the day's scans. TEMPO measures with sunlight, so it cannot see pollution at night or below clouds.",
+   "pt": "Fim das varreduras do dia. O TEMPO mede com a luz do sol, então não enxerga a poluição à noite nem debaixo de nuvens.",
+   "es": "Fin de los barridos del día. TEMPO mide con la luz del sol, así que no puede ver la contaminación de noche ni debajo de las nubes."
+  }
+ }
+}
