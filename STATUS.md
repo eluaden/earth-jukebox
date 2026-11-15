@@ -2,7 +2,7 @@
 
 > O que já foi feito e quem faz o quê, item a item do [`direcionamento.md`](docs/direcionamento.md) (a fonte de verdade: em caso de dúvida, ele vence este arquivo).
 > Atualizado em 15/11/2026, com a `main` em `205c533` (fatia SST publicada em https://eluaden.github.io/earth-jukebox/).
-> **Atualize este arquivo no mesmo PR do trabalho.**
+> **Atualize este arquivo no mesmo commit do trabalho.**
 
 **Legenda:** **Feito** · **Parcial** (existe, mas falta algo dito na coluna ao lado) · **A fazer** · **Bloqueado** (depende de outro item)
 
@@ -24,11 +24,11 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 ### Como trabalhamos
 
-1. `git pull` na `main` antes de começar; uma branch por tarefa; PR para a `main`.
-2. Mudou uma decisão? Atualize o `direcionamento.md` primeiro ([`AGENTS.md`](AGENTS.md)). Terminou um item? Atualize este arquivo no mesmo PR.
+1. Tudo direto na `main`, sem branches nem PRs. `git pull` antes de começar e antes de cada push; commits pequenos, push logo depois.
+2. Mudou uma decisão? Atualize o `direcionamento.md` primeiro ([`AGENTS.md`](AGENTS.md)). Terminou um item? Atualize este arquivo no mesmo commit.
 3. Precisa mexer em arquivo de outra frente? Avise o dono antes.
 4. `npm run deploy` só a partir da `main` atualizada: o deploy sobrescreve o site inteiro.
-5. Antes do PR: `npm test`, `npm run test:pipeline` e `npm run build` passando.
+5. Antes do push: `npm test`, `npm run test:pipeline` e `npm run build` passando.
 
 ---
 

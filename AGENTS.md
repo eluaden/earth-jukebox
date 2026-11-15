@@ -16,4 +16,5 @@
 
 - [`STATUS.md`](STATUS.md) diz o que já foi feito, item a item do direcionamento, e qual frente (A, B ou C) cuida de cada coisa e de quais arquivos.
 - Leia antes de começar; não mexa em arquivos de outra frente sem avisar o dono.
-- **Ao terminar um item, atualize o `STATUS.md` no mesmo PR.**
+- **Ao terminar um item, atualize o `STATUS.md` no mesmo commit.**
+- Trabalhamos direto na `main`, sem branches nem PRs: `git pull` antes de começar e antes de cada push.
