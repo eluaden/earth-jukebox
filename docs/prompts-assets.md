@@ -177,3 +177,21 @@ Put on headphones. This is the Atlantic Ocean, in the summer of 2007. Every note
 | `sst-north-warmest` | September 2007: the northern waters reach their warmest of the year. | Setembro de 2007: as águas do norte chegam ao ponto mais quente do ano. | Septiembre de 2007: las aguas del norte llegan a su punto más cálido del año. |
 | `sst-south-warmest` | February 2008: now it is the turn of the southern waters, at their warmest of the year. | Fevereiro de 2008: agora é a vez das águas do sul, no ponto mais quente do ano. | Febrero de 2008: ahora es el turno de las aguas del sur, en su punto más cálido del año. |
 | `sst-outro` | One year of ocean has passed under the needle. The record starts again. | Um ano de oceano passou sob a agulha. O disco recomeça. | Un año de océano ha pasado bajo la aguja. El disco vuelve a empezar. |
+
+**Raios** (textos de `src/i18n/tracks/lightning.js`; marcos calculados da grade: verão no norte em 08/08/2017, verão no sul em 25/01/2018)
+
+| ID | EN | PT | ES |
+|---|---|---|---|
+| `lightning-intro` | This is lightning seen from the International Space Station, from 2017 to 2023. Every hit is lightning under the needle: the further north, the higher the note. | Estes são os raios vistos da Estação Espacial Internacional, de 2017 a 2023. Cada batida é um raio embaixo da agulha: quanto mais ao norte, mais aguda a nota. | Estos son los rayos vistos desde la Estación Espacial Internacional, de 2017 a 2023. Cada golpe es un rayo bajo la aguja: cuanto más al norte, más aguda la nota. |
+| `lightning-north-summer` | August 2017: summer in the north. The lightning, and the notes, have moved north. | Agosto de 2017: verão no norte. Os raios, e as notas, foram para o norte. | Agosto de 2017: verano en el norte. Los rayos, y las notas, se fueron al norte. |
+| `lightning-south-summer` | January 2018: now it is summer in the south, and the lightning has followed it. | Janeiro de 2018: agora é verão no sul, e os raios foram atrás. | Enero de 2018: ahora es verano en el sur, y los rayos lo siguieron. |
+| `lightning-outro` | Six years of storms have passed under the needle. The record starts again. | Seis anos de tempestades passaram sob a agulha. O disco recomeça. | Seis años de tormentas han pasado bajo la aguja. El disco vuelve a empezar. |
+
+**Luzes noturnas** (textos de `src/i18n/tracks/nightLights.js`; marcos calculados da grade: maior salto em 2022, ano mais claro 2023). Nesta faixa a data é só o ano (o site precisa formatar `time.unit = 'year'` como "2022"; a chave da gravação depende disso)
+
+| ID | EN | PT | ES |
+|---|---|---|---|
+| `night-lights-intro` | These are the lights of the planet at night, one year at a time, from 2012 to 2023. The more light under the needle, the more piano notes. | Estas são as luzes do planeta à noite, um ano de cada vez, de 2012 a 2023. Quanto mais luz embaixo da agulha, mais notas de piano. | Estas son las luces del planeta de noche, un año a la vez, de 2012 a 2023. Cuanta más luz bajo la aguja, más notas de piano. |
+| `night-lights-biggest-jump` | 2022: the biggest jump of the series, about ten percent more light than the year before. | 2022: o maior salto da série, cerca de dez por cento mais luz que no ano anterior. | 2022: el mayor salto de la serie, cerca de un diez por ciento más de luz que el año anterior. |
+| `night-lights-brightest` | 2023: the brightest year, about a third more light than in 2012. | 2023: o ano mais claro, cerca de um terço mais luz que em 2012. | 2023: el año más claro, cerca de un tercio más de luz que en 2012. |
+| `night-lights-outro` | Twelve years of night have passed under the needle. The record starts again. | Doze anos de noite passaram sob a agulha. O disco recomeça. | Doce años de noche han pasado bajo la aguja. El disco vuelve a empezar. |

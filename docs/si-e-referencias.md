@@ -52,13 +52,13 @@
 | NASA resource | What we use | Status |
 |---|---|---|
 | [SVS 5235](https://svs.gsfc.nasa.gov/5235/) — Sea Level Through a Porthole, 1993–2023 | Global sea level read from the ruler on the frame | Planned (bonus 2D track; old frames kept in `public/tracks/`, not in the new app yet) |
-| [SVS 5011](https://svs.gsfc.nasa.gov/5011/) — Lightning Events Detected from the ISS, 2017–2023 | Lightning under the needle, latitude → pitch | Planned (to be redone for the needle) |
+| [SVS 5011](https://svs.gsfc.nasa.gov/5011/) — Lightning Events Detected from the ISS, 2017–2023 | Flat Science On a Sphere video `iss_lightning_sos_yearly_07312023_2048p60.mp4` as the globe skin; share of each 2° box covered by lightning dots; date of every frame from NASA's `labels.txt` | Data ready (`public/tracks/lightning/`), not in the app yet |
 | [SVS 4993](https://svs.gsfc.nasa.gov/4993/) — Spread of the Dixie Fire, 2021 | Burned area read from the chart on the frame | Removed (direcionamento §8) |
 | [SVS 5113](https://svs.gsfc.nasa.gov/5113/) — Active Fires as Observed by VIIRS | Map coverage of fire detections by region | Removed |
 | [SVS 5175](https://svs.gsfc.nasa.gov/5175/) — TEMPO nitrogen dioxide, Chicago/Toronto | NO₂ read from the color legend | Removed |
 | [SVS 5669](https://svs.gsfc.nasa.gov/5669/) — GEOS Aerosols 2025 | Aerosol types, one instrument per type | Planned |
 | [SVS 3912](https://svs.gsfc.nasa.gov/3912/) — ECCO2 Sea Surface Temperature | `ecco2_sst_flow.mp4` as the globe skin; temperature read from its flow-line colours with the official colour bar `sst_ecco2_cbar.png` (0–32 °C); exact dates from `flat_ecco2_dates.txt` | In the site |
-| [SVS 5313](https://svs.gsfc.nasa.gov/5313/) — Night Lights 2012–2023 | Amount of light, Compare mode | Planned |
+| [SVS 5313](https://svs.gsfc.nasa.gov/5313/) — Night Lights 2012–2023 | Left copy of the EIC video as 12 yearly stills on the globe; brightness the lights add above NASA's own lights-off frame | Data ready (`public/tracks/night-lights/`), not in the app yet |
 | [SVS 5533](https://svs.gsfc.nasa.gov/5533/) — EIC Air Quality | Studied as a candidate track | Research |
 | [SVS 13786](https://svs.gsfc.nasa.gov/13786/) — Data Sonification: Caldwell 73 | Reference for "latitude → pitch" scanning | Method reference |
 | NASA Blue Marble Next Generation (Dec 2004) | Globe texture of the old landing page | Removed |
@@ -78,7 +78,7 @@ Keep this table in sync with `public/tracks/` and the README track table.
 | Tool | [Vite](https://vitejs.dev/), [Vitest](https://vitest.dev/) | MIT | Build, dev server, tests |
 | Library | [React](https://react.dev/), [three.js](https://threejs.org/), [React Three Fiber](https://github.com/pmndrs/react-three-fiber), [drei](https://github.com/pmndrs/drei), [postprocessing](https://github.com/pmndrs/postprocessing), [zustand](https://github.com/pmndrs/zustand), [Tone.js](https://tonejs.github.io/) | MIT | Interface, 3D globe, state, audio |
 | Library | [GSAP](https://gsap.com/) | GSAP standard license (free) | Camera and needle animation |
-| Samples | [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE), Versilian Studios: cello and violin sections, upright piano, glockenspiel (subset, converted to MP3 by `scripts/pipeline/samples.py`) | CC0 1.0 | Instruments |
+| Samples | [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE), Versilian Studios: cello and violin sections, upright piano, glockenspiel, marimba (subset, converted to MP3 by `scripts/pipeline/samples.py`) | CC0 1.0 | Instruments |
 | Tool | Python, numpy, Pillow, ffmpeg | PSF / BSD / HPND / LGPL | Reading NASA frames (`scripts/pipeline/`) |
 | Browser API | Web Audio API, Web Speech API, WebGL | Browser standard | Sound synthesis, fallback narration, 3D |
 | Hosting | GitHub Pages | GitHub terms | Live site |

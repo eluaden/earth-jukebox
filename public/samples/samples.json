@@ -39,5 +39,14 @@
   "C7": "glock/C7.mp3",
   "G7": "glock/G7.mp3",
   "C8": "glock/C8.mp3"
+ },
+ "marimba": {
+  "G3": "marimba/G3.mp3",
+  "B3": "marimba/B3.mp3",
+  "C5": "marimba/C5.mp3",
+  "G5": "marimba/G5.mp3",
+  "B5": "marimba/B5.mp3",
+  "F6": "marimba/F6.mp3",
+  "C7": "marimba/C7.mp3"
  }
 }

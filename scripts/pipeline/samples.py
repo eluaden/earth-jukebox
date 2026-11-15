@@ -43,6 +43,10 @@ def plan():
         files['piano'].append((f'Keys/Upright Piano/Player_dyn2_rr1_{idx:03d}.wav', note_name(21 + 2 * idx)))
     for n in ['G4', 'C5', 'G5', 'C6', 'G6', 'C7']:
         files['glock'].append((f'Percussion/Glock/glock_medium_{n}.wav', vsco_to_scientific(n)))
+    # Marimba (lightning): tuned percussion across the range of the lightning bands.
+    files['marimba'] = []
+    for n in ['G2', 'B2', 'C4', 'G4', 'B4', 'F5', 'C6']:
+        files['marimba'].append((f'Percussion/Marimba/Marimba_hit_Outrigger_{n}_loud_01.wav', vsco_to_scientific(n)))
     return files
 
 

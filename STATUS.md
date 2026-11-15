@@ -14,11 +14,11 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 | Frente | Dono (proposta) | Cuida de | Arquivos da frente |
 |---|---|---|---|
-| **A. Dados e faixas** | Lucas Valadares (fez o pipeline da SST) | Explorações E1/E4, scripts que leem os vídeos da NASA, grade de cada faixa, mapeamento dado → nota de cada faixa, textos do encarte de cada faixa | `scripts/pipeline/`, `public/tracks/`, `src/data/`, `src/music/mapping.js`, `src/i18n/tracks/` |
+| **A. Dados e faixas** | Lucas Valadares (fez o pipeline da SST) | Explorações E1/E4, scripts que leem os vídeos da NASA, grade de cada faixa, mapeamento dado → nota de cada faixa, textos do encarte de cada faixa | `scripts/pipeline/`, `public/tracks/`, `src/data/`, `src/music/mapping.js`, `src/music/tracks/`, `src/i18n/tracks/` |
 | **B. Experiência no navegador** | Lucas Senno (fez o direcionamento e o polimento visual) | Globo, agulha, interface, troca de faixa, motor de som, desempenho, acessibilidade, Explorar, Audio-first | `src/scene/`, `src/ui/`, `src/state/`, `src/flat/`, `src/music/engine.js`, `src/styles.css` |
 | **C. Conteúdo, voz e apresentação** | Lucas Souza (gravou a narração) | Narração e efeitos (ElevenLabs), vídeos do pitch (Veo), teste com usuários, vídeo, página do projeto, referências e regras de IA | `media-src/`, `public/narration/`, `docs/prompts-assets.md`, `docs/si-e-referencias.md`, textos do About em `src/i18n/strings.js` |
 
-**Contrato entre A e B:** a frente A entrega, por faixa, `public/tracks/<id>/` (`track.json`, `grid.bin`, vídeos) + um módulo de mapeamento testado + os textos em `src/i18n/tracks/<id>.js`; a frente B só consome. Mudar esse formato = combinar antes.
+**Contrato entre A e B:** a frente A entrega, por faixa, `public/tracks/<id>/` (`track.json`, `grid.bin`, vídeos ou imagens) + o módulo de música da faixa em `src/music/tracks/` (interface comum `TRACK_MUSIC[id]`: `voices`, `read`, `summary`, `initialState`, `plan`, descrita em `src/music/tracks/index.js`) + os textos em `src/i18n/tracks/<id>.js`; a frente B só consome. Qual passo está tocando: `stepAtFrame` / `stepAtTime` em `src/data/steps.js`. Mudar esse formato = combinar antes.
 
 **Sem dono fixo:** aprovação de ouvido do som (§6.1) por quem do time tiver formação musical: **[a definir]**.
 
@@ -41,17 +41,17 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | E1 — luzes noturnas | §14 | **Feito** | A | Quadro 32:9 = duas cópias do mapa; usar a da esquerda (equirretangular 16:9, começa em 168,5° W); série anual nos frames 0–269, mapa sem luzes no 290; textura = 12 imagens (§14.1) |
 | E3 — vídeo como textura | §14 | **Parcial** | B | Tamanhos escolhidos (1536 / 1024). Falta medir fluidez (FPS) em notebook comum e celular real |
 | Globo com agulha | §5.3 | **Feito** | B | Polido em 15/11 (volume do globo, braço em J, vidro) |
-| Motor musical com samples e regras de clareza | §6.1, §6.3 | **Parcial** | B | Feito para a SST, tetos testados. Falta **aprovação de ouvido** e as vozes de raios (percussão afinada) e luzes (piano + regra emocional) |
+| Motor musical com samples e regras de clareza | §6.1, §6.3 | **Parcial** | B | Feito para a SST. O mapeamento de raios e luzes está pronto e testado (A, `TRACK_MUSIC`); falta o motor tocar a marimba (samples em `public/samples/marimba/`), aceitar eventos com `offset` (arpejo) e a **aprovação de ouvido** |
 | Faixa: temperatura do mar | §8 | **Feito** | A | Pipeline, grade, mapeamento, encarte, narração gravada. Textos do encarte: revisar (time) |
-| Faixa: raios | §8, §6.2 | **A fazer** | A | Pipeline: um passo a cada 10 dias pelas datas do `labels.txt` (frame de cada passo no `track.json`), vídeos 1536/1024, mapeamento (percussão afinada, 1 batida por faixa de latitude por passo) |
-| Faixa: luzes noturnas | §8, §6.2 | **A fazer** | A | Pipeline: 12 imagens 2:1 (uma por ano) + grade de brilho relativo (ano − frame 290); mapeamento (densidade de piano; luz apagada/nova pela diferença ano a ano) |
+| Faixa: raios | §8, §6.2 | **Parcial** | A feito, B falta | Dados prontos em `public/tracks/lightning/` (`npm run pipeline:lightning`): 236 passos de 10 dias, `grid.stepFrames`, vídeos 1536/1024 a 30 fps. Música (`src/music/tracks/lightning.js`) e textos (`src/i18n/tracks/lightning.js`) prontos. Falta a frente B ligar no app e incluir `lightning` em `public/tracks/index.json` (hoje só tem `sst`, de propósito) |
+| Faixa: luzes noturnas | §8, §6.2 | **Parcial** | A feito, B falta | Dados prontos em `public/tracks/night-lights/` (`npm run pipeline:nightlights`): 12 imagens 2:1 e grade de brilho por ano. Música (`src/music/tracks/nightLights.js`, usa a coluna do ano anterior) e textos prontos. Falta a frente B: textura feita de imagens com fade (`texture.kind = 'stills'`), relógio sem vídeo (`time.secondsPerStep`) e data só com o ano (`time.unit = 'year'`); depois incluir `night-lights` em `public/tracks/index.json` |
 | Records (troca de faixa) | §5.4 | **Parcial** | B | Painel com 1 capa (frame) e agulha levantando. Falta trocar de faixa: crossfade da pele do globo, agulha desce, som novo. Para raios e luzes, o app precisa aceitar passos por lista de frames e textura feita de imagens (§14.1) |
 | Liner notes | §5.5 | **Feito** | A (texto), B (painel) | Inclui "Hear the legend" e limites. Repetir para cada faixa nova |
 | Acessibilidade de base | §5.8 | **Parcial** | B | Teclado, leitor de tela, `aria-live`, V para valores, movimento e transparência reduzidos feitos. Falta checar com VoiceOver/NVDA real e medir contraste (R10) |
 | Narração N1 (falas da UI) | §7.2 | **A fazer** | C (gravar), B (tocar) | `put-on-headphones` e `welcome` em EN/PT/ES; o app ainda não toca o `welcome` |
 | Narração N2 — temperatura do mar | §7.2 | **Feito** | C | 12 falas gravadas (voz clonada de um integrante), `public/narration/` |
-| Narração N2 — raios e luzes | §7.2 | **Bloqueado** | C | Depende dos roteiros, que saem das faixas (A) |
-| Pipeline reproduzível | §7.5 | **Parcial** | A | Feito para a SST (`npm run pipeline:sst`). Falta raios e luzes |
+| Narração N2 — raios e luzes | §7.2 | **A fazer** | C | Roteiros prontos em `prompts-assets.md` §2.5 (8 falas por faixa nos 3 idiomas) |
+| Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, com testes (`npm run test:pipeline`) |
 | Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | Volta à página pula a descida; "Replay opening" no About |
 | Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
 | Site publicado + versão 2D | §10 | **Feito** | B | GitHub Pages; 2D automática sem WebGL (`?flat=1` força) |
@@ -114,6 +114,6 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 ## 8. Próximos passos sugeridos (em paralelo, um por frente)
 
-1. **A:** pipeline da faixa de raios, depois o de luzes noturnas (E1 feito).
-2. **B:** Records com troca de faixa e suporte a várias faixas (incluindo passos por lista de frames e textura de imagens); medir FPS em aparelho real.
+1. **A:** revisar os textos das três faixas com o time; E4 (CO₂) e aerossóis (P1).
+2. **B:** ligar raios e luzes no app (Records com troca de faixa, `TRACK_MUSIC`, marimba, passos por lista de frames, textura de imagens); medir FPS em aparelho real.
 3. **C:** contato com os testadores (prazo longo: começar já); N1; S1–S7.

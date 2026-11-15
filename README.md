@@ -12,7 +12,8 @@ with fixed, documented rules.
 
 Current state: the first slice of the direction ([`docs/direcionamento.md`](docs/direcionamento.md)),
 with one track, **sea surface temperature** (NASA SVS 3912, ECCO2 model, March 2007 – March 2008).
-Lightning and night lights come next.
+The data, music mapping and texts of **lightning** (SVS 5011) and **night lights** (SVS 5313) are ready
+(`public/tracks/`, `src/music/tracks/`, `src/i18n/tracks/`); plugging them into the app is next.
 
 ## Run
 
@@ -32,10 +33,12 @@ The browser never reads colours. A script reads NASA's original frames once and 
 values that the app looks up under the needle.
 
 ```bash
-npm run fetch-sources -- sea-surface-temperature sst-legend sst-dates   # NASA files into sources/ (git-ignored)
-npm run test:pipeline                                                   # reader tests
-npm run pipeline:sst                                                    # writes public/tracks/sst/
-npm run pipeline:samples                                                # instrument samples into public/samples/
+npm run fetch-sources -- sea-surface-temperature sst-legend sst-dates lightning-flat lightning-labels night-lights
+npm run test:pipeline        # reader tests (SST, lightning, night lights)
+npm run pipeline:sst         # writes public/tracks/sst/
+npm run pipeline:lightning   # writes public/tracks/lightning/ (one step every 10 days, NASA's labels.txt dates)
+npm run pipeline:nightlights # writes public/tracks/night-lights/ (12 yearly stills + light grid)
+npm run pipeline:samples     # instrument samples into public/samples/
 ```
 
 [`scripts/pipeline/sst.py`](scripts/pipeline/sst.py) (Python 3, numpy, Pillow, ffmpeg):
