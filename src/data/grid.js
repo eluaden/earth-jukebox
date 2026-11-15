@@ -1,5 +1,7 @@
-// The temperature grid written by scripts/pipeline/sst.py:
-// uint8[step][lat][lon], lat 0 = 90-88 N, lon 0 = 180-178 W; value q -> q * scale degrees C, 255 = no data.
+// The grid written by every track pipeline (scripts/pipeline/<id>.py):
+// uint8[step][lat][lon], lat 0 = 90-88 N, lon 0 = 180-178 W; value q -> q * scale, 255 = no data.
+// A layered grid (grid.layers > 1, aerosols) is uint8[step][layer][lat][lon]: its column holds every
+// layer's 90 rows back to back.
 
 export const DEFAULT_GRID = { lats: 90, lons: 180, scale: 0.125984, noData: 255 };
 
@@ -7,14 +9,15 @@ export function decodeValue(q, scale = DEFAULT_GRID.scale, noData = DEFAULT_GRID
   return q === noData ? NaN : q * scale;
 }
 
-/** North-to-south column (one value per 2-degree row) at one step and longitude column. */
+/** North-to-south column (one value per 2-degree row, per layer) at one step and longitude column. */
 export function readColumn(bytes, step, lonIdx, g = DEFAULT_GRID) {
   const { lats, lons } = g;
+  const rows = lats * (g.layers ?? 1);
   const scale = g.scale ?? DEFAULT_GRID.scale;
   const noData = g.noData ?? DEFAULT_GRID.noData;
-  const out = new Float32Array(lats);
-  const base = step * lats * lons + lonIdx;
-  for (let j = 0; j < lats; j++) out[j] = decodeValue(bytes[base + j * lons], scale, noData);
+  const out = new Float32Array(rows);
+  const base = step * rows * lons + lonIdx;
+  for (let j = 0; j < rows; j++) out[j] = decodeValue(bytes[base + j * lons], scale, noData);
   return out;
 }
 

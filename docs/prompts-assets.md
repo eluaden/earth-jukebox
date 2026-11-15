@@ -200,3 +200,13 @@ Put on headphones. This is the Atlantic Ocean, in the summer of 2007. Every note
 | `night-lights-biggest-jump` | 2022: the biggest jump of the series, about ten percent more light than the year before. | 2022: o maior salto da série, cerca de dez por cento mais luz que no ano anterior. | 2022: el mayor salto de la serie, cerca de un diez por ciento más de luz que el año anterior. |
 | `night-lights-brightest` | 2023: the brightest year, about a third more light than in 2012. | 2023: o ano mais claro, cerca de um terço mais luz que em 2012. | 2023: el año más claro, cerca de un tercio más de luz que en 2012. |
 | `night-lights-outro` | Twelve years of night have passed under the needle. The record starts again. | Doze anos de noite passaram sob a agulha. O disco recomeça. | Doce años de noche han pasado bajo la aguja. El disco vuelve a empezar. |
+
+**Aerossóis** (textos de `src/i18n/tracks/aerosols.js`; a gravar). Faixa de um instante: os marcos são **lugares** (o quadrado mais forte de cada tipo, calculado da grade: poeira 21° N 23° W, fumaça 3° S 17° E, sal 51° S 91° W) e tocam quando a agulha chega àquela longitude; sem `{date}`.
+
+| ID | EN | PT | ES |
+|---|---|---|---|
+| `aerosols-intro` | This is the air of a single moment: 19 August 2025, as NASA’s GEOS model saw it. Low strings are smoke, the marimba is dust, the bells are sea salt. | Este é o ar de um único momento: 19 de agosto de 2025, como o modelo GEOS da NASA o viu. As cordas graves são fumaça, a marimba é poeira, os sinos são sal marinho. | Este es el aire de un solo momento: el 19 de agosto de 2025, tal como lo vio el modelo GEOS de la NASA. Las cuerdas graves son humo, la marimba es polvo, las campanas son sal marina. |
+| `aerosols-dust` | Under the needle: dust from the Sahara, crossing the Atlantic. | Sob a agulha: poeira do Saara, cruzando o Atlântico. | Bajo la aguja: polvo del Sahara, cruzando el Atlántico. |
+| `aerosols-smoke` | Now smoke, from the fires burning in Africa. | Agora fumaça, das queimadas na África. | Ahora humo, de las quemas en África. |
+| `aerosols-sea-salt` | Sea salt, lifted by the winds over the southern seas. | Sal marinho, levantado pelos ventos sobre os mares do sul. | Sal marina, levantada por los vientos sobre los mares del sur. |
+| `aerosols-outro` | The same moment comes round again: every turn plays the same air, place by place. | O mesmo momento volta: cada volta toca o mesmo ar, lugar por lugar. | El mismo momento vuelve: cada vuelta toca el mismo aire, lugar por lugar. |

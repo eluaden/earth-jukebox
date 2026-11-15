@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { stepAtFrame, stepAtTime } from '../../data/steps.js';
+import { readFileSync } from 'node:fs';
+import { AEROSOL_BANDS, AEROSOL_LAYERS, AEROSOL_VOICES } from './aerosols.js';
 import { TRACK_MUSIC } from './index.js';
 import { LIGHTNING_BANDS } from './lightning.js';
 import { NIGHT_BANDS } from './nightLights.js';
@@ -182,5 +184,73 @@ describe('night lights', () => {
     expect(s.new.value).toBeCloseTo(0.25, 5);
     expect(s.new.unit).toBe('change');
     expect(s.out.value).toBe(0);
+  });
+});
+
+describe('aerosols', () => {
+  const m = TRACK_MUSIC.aerosols;
+  /** A column of a layered grid: four layers of 90 rows, each from a function of latitude. */
+  const layered = (fs) => {
+    const out = new Float32Array(360).fill(0);
+    AEROSOL_LAYERS.forEach((id, k) => {
+      if (fs[id]) for (let j = 0; j < 90; j++) out[k * 90 + j] = fs[id](89 - 2 * j);
+    });
+    return out;
+  };
+  const plan = (col, tick = 0) => m.plan(m.read(col), tick, m.initialState()).events;
+
+  it('reads the layers in the order the pipeline writes them', () => {
+    const meta = JSON.parse(readFileSync(new URL('../../../public/tracks/aerosols/track.json', import.meta.url), 'utf8'));
+    expect(meta.grid.layerIds).toEqual(AEROSOL_LAYERS);
+  });
+
+  it('one voice per aerosol type, latitude sets the pitch (north higher)', () => {
+    expect(AEROSOL_VOICES.map((v) => v.layer)).toEqual(['black-carbon', 'dust', 'sea-salt']);
+    for (const v of AEROSOL_VOICES) {
+      expect(v.notes.length).toBe(AEROSOL_BANDS.length);
+      for (let i = 1; i < v.notes.length; i++) expect(v.notes[i]).toBeLessThan(v.notes[i - 1]);
+    }
+  });
+
+  it('sulfate is on the globe but silent (three voices, Q2)', () => {
+    const col = layered({ sulfate: () => 0.9 });
+    for (let tick = 0; tick < 8; tick++) expect(plan(col, tick)).toEqual([]);
+  });
+
+  it('dust plays where there is dust, louder where there is more', () => {
+    const col = layered({ dust: (lat) => (lat > 0 && lat < 23.5 ? 0.3 : lat < 0 && lat > -23.5 ? 0.05 : 0) });
+    const dust = plan(col).filter((e) => e.voice === 'dust');
+    expect(dust.length).toBe(2);
+    const north = dust.find((e) => e.lat > 0);
+    const south = dust.find((e) => e.lat < 0);
+    expect(north.velocity).toBeGreaterThan(south.velocity);
+    expect(north.midi).toBeGreaterThan(south.midi);
+  });
+
+  it('smoke holds at most two low notes every half bar; sea salt sparkles on quarter notes', () => {
+    const col = layered({ 'black-carbon': () => 0.4, 'sea-salt': () => 0.4 });
+    expect(plan(col, 0).filter((e) => e.voice === 'smoke').length).toBe(2);
+    expect(plan(col, 1).filter((e) => e.voice === 'smoke').length).toBe(0);
+    expect(plan(col, 2).filter((e) => e.voice === 'salt').length).toBe(4);
+    expect(plan(col, 3).filter((e) => e.voice === 'salt').length).toBe(0);
+  });
+
+  it('respects the clarity caps on random layered columns', () => {
+    let seed = 7;
+    const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let tick = 0; tick < 400; tick++) {
+      const col = Float32Array.from({ length: 360 }, () => (rand() < 0.2 ? NaN : rand() * 0.8));
+      const events = plan(col, tick);
+      for (const v of AEROSOL_VOICES) expect(events.filter((e) => e.voice === v.id).length).toBeLessThanOrEqual(v.max);
+      checkCaps(events);
+    }
+  });
+
+  it('summary gives the strength of each type under the needle', () => {
+    const col = layered({ dust: (lat) => (lat > -70 && lat < 70 ? 0.2 : 0) });
+    const s = Object.fromEntries(m.summary(m.read(col)).map((x) => [x.voice, x]));
+    expect(s.dust.value).toBeCloseTo(0.2, 5);
+    expect(s.dust.unit).toBe('strength');
+    expect(s.smoke.value).toBe(0);
   });
 });

@@ -56,7 +56,7 @@
 | [SVS 4993](https://svs.gsfc.nasa.gov/4993/) — Spread of the Dixie Fire, 2021 | Burned area read from the chart on the frame | Removed (direcionamento §8) |
 | [SVS 5113](https://svs.gsfc.nasa.gov/5113/) — Active Fires as Observed by VIIRS | Map coverage of fire detections by region | Removed |
 | [SVS 5175](https://svs.gsfc.nasa.gov/5175/) — TEMPO nitrogen dioxide, Chicago/Toronto | NO₂ read from the color legend | Removed |
-| [SVS 5669](https://svs.gsfc.nasa.gov/5669/) — GEOS Aerosols 2025 | Aerosol types, one instrument per type | Planned |
+| [SVS 5669](https://svs.gsfc.nasa.gov/5669/) — GEOS Aerosols 2025 (GEOS-FP 2 km replay, NASA GMAO; visualizers Joseph V. Ardizzone and Helen-Nicole Kostis, scientist Lesley Ott) | `Aerosols_2025-08-19T20_00_00_3840x2160.png` stretched to 2:1 as the globe skin; strength of each type's legend colour per 2° box (`Aerosols_cbar.png`); smoke, dust and sea salt played, sulfate shown but silent | Data ready (`public/tracks/aerosols/`), not in the app yet |
 | [SVS 3912](https://svs.gsfc.nasa.gov/3912/) — ECCO2 Sea Surface Temperature | `ecco2_sst_flow.mp4` as the globe skin; temperature read from its flow-line colours with the official colour bar `sst_ecco2_cbar.png` (0–32 °C); exact dates from `flat_ecco2_dates.txt` | In the site |
 | [SVS 5313](https://svs.gsfc.nasa.gov/5313/) — Night Lights 2012–2023 | Left copy of the EIC video as 12 yearly stills on the globe; brightness the lights add above NASA's own lights-off frame | Data ready (`public/tracks/night-lights/`), not in the app yet |
 | [SVS 5533](https://svs.gsfc.nasa.gov/5533/) — EIC Air Quality | Studied as a candidate track | Research |

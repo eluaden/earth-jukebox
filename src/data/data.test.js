@@ -22,6 +22,16 @@ describe('grid', () => {
     expect(col[89]).toBeCloseTo(89 * 0.125984, 4);
   });
 
+  it('reads every layer of a layered grid back to back (aerosols)', () => {
+    const g = { lats: 90, lons: 180, layers: 4, scale: 1, noData: 255 };
+    const bytes = new Uint8Array(4 * 90 * 180).fill(255);
+    for (let k = 0; k < 4; k++) bytes[(k * 90 + 10) * 180 + 33] = 10 * (k + 1); // row 10 of each layer, column 33
+    const col = readColumn(bytes, 0, 33, g);
+    expect(col.length).toBe(360);
+    expect([col[10], col[100], col[190], col[280]]).toEqual([10, 20, 30, 40]);
+    expect(Number.isNaN(col[0])).toBe(true);
+  });
+
   it('maps longitude to 2-degree columns, wrapping at the date line', () => {
     expect(lonToIndex(-180)).toBe(0);
     expect(lonToIndex(-178.1)).toBe(0);

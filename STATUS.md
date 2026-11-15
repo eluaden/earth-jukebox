@@ -1,7 +1,7 @@
 # Earth Jukebox — Status
 
 > O que já foi feito e quem faz o quê, item a item do [`direcionamento.md`](docs/direcionamento.md) (a fonte de verdade: em caso de dúvida, ele vence este arquivo).
-> Atualizado em 15/11/2026, início do P1 (frente A: capas "vinil de dados"). Site: https://eluaden.github.io/earth-jukebox/ (atualiza a cada `npm run deploy`).
+> Atualizado em 15/11/2026, P1 da frente A: capas "vinil de dados" e aerossóis (dados, música e textos). Site: https://eluaden.github.io/earth-jukebox/ (atualiza a cada `npm run deploy`).
 > **Atualize este arquivo no mesmo commit do trabalho.**
 
 **Legenda:** **Feito** · **Parcial** (existe, mas falta algo dito na coluna ao lado) · **A fazer** · **Bloqueado** (depende de outro item)
@@ -52,7 +52,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Narração N1 (falas da UI) | §7.2 | **Feito** | C (gravar), B (tocar) | Na primeira visita: clique → "Put on headphones." → "Welcome…" durante a descida → 2,5 s só de música → fala de abertura da faixa. Volta à página e "Replay opening" não repetem o N1. Teste confere que toda fala (N1 e N2 das três faixas, com datas) tem MP3 no manifesto |
 | Narração N2 — temperatura do mar | §7.2 | **Feito** | C | 12 falas regravadas com os ajustes de narrador (stability 50, similarity 75, style 10), `public/narration/` |
 | Narração N2 — raios e luzes | §7.2 | **Feito** | C | 12 falas por faixa gravadas e conferidas por transcrição. A introdução dos raios foi gravada a 1,1–1,2× porque o primeiro marco chega aos 8,8 s (ver `prompts-assets.md` §2.5). Se um texto mudar, regravar |
-| Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, `pipeline:covers`, com testes (`npm run test:pipeline`). Nenhum pipeline escreve `public/tracks/index.json` (ordem do Records, editada à mão) |
+| Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, `pipeline:aerosols`, `pipeline:covers`, com testes (`npm run test:pipeline`). Nenhum pipeline escreve `public/tracks/index.json` (ordem do Records, editada à mão) |
 | Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | "Put on headphones." + pedido de idioma; clicar EN/PT/ES inicia; volta à página pula a descida; "Replay opening" no About |
 | Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
 | Site publicado + versão 2D | §10 | **Feito** | B | GitHub Pages; 2D automática sem WebGL (`?flat=1` força) |
@@ -66,7 +66,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Item | Ref. | Status | Frente | Observação |
 |---|---|---|---|---|
 | Explorar | §5.6 | **A fazer** | B | Funcionar sem fone; áudio espacial é bônus |
-| Aerossóis (4ª faixa) | §8, Q2 | **A fazer** | A | Depende de E1 (1920×1080) e de Q2 |
+| Aerossóis (4ª faixa) | §8, Q2 | **Parcial** | A feito, B falta | Dados em `public/tracks/aerosols/` (`npm run pipeline:aerosols`): 1 imagem 2:1 (`texture.kind = 'stills'`), grade em 4 camadas (`grid.layers`, `layerIds`), legenda da NASA, capa. Música (`src/music/tracks/aerosols.js`: fumaça = cordas graves, poeira = marimba, sal = glockenspiel; sulfato não toca, Q2) e textos (`src/i18n/tracks/aerosols.js`) prontos e testados; `readColumn` já lê camadas. **Falta a B:** (1) `TRACK_VIEW.aerosols` e `TRACK_TEXT.aerosols` em `src/state/tracks.js` (cor do flash = cor da legenda de cada tipo, em `meta.legend.categories`; "Hear the legend" = as 6 notas de cada voz de sul a norte); (2) unidade `strength` (0–1 relativo) nos chips e no texto acessível, e rótulos "Cordas · fumaça", "Marimba · poeira", "Glockenspiel · sal marinho"; (3) data de `time.unit = 'instant'` com dia ("19 AUG 2025"); (4) marcos por **lugar** (`markers: {id, lat, lon}`): a fala toca quando a agulha chega à longitude, só na primeira volta; encerramento depois de algumas voltas; (5) `controller.js` linha 84: coluna vazia com `lats * (layers ?? 1)` (hoje funciona, só lê menos); depois incluir `aerosols` em `public/tracks/index.json`. **C:** gravar as 5 falas (`prompts-assets.md` §2.5) |
 | Capas "vinil de dados" | §5.4 | **Feito** | A (gerar), B (mostrar) | `scripts/pipeline/cover.py` (`npm run pipeline:covers`; cada pipeline também roda): disco visto de cima, ângulo = longitude, 3 bandas (norte / trópicos / sul), uma volta do sulco por passo, cor na paleta da faixa. Entra no Records sem mudar código (mesmo `cover.jpg`). **B:** o disco decorativo em CSS que sai da capa pode virar o próprio disco de dados, se quiser |
 | Modo Audio-first (tecla A) | §5.8 | **A fazer** | B | |
 | Efeitos S1–S7 | §7.2 | **Parcial** | C (gravar), B (tocar) | No site: `public/sfx/` (glass-tap e record-swap normalizados). Ligados: S7 abertura, S4 prato, S1/S3 agulha, S2 cama de vinil, S5 troca de disco, S6 tap nos botões. Micro-animações de UI no mesmo passe. Falta **aprovação de ouvido** do time |
@@ -86,12 +86,12 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 | # | Status | Frente | Situação |
 |---|---|---|---|
-| E1 | **Parcial** | A | SST, raios e luzes noturnas feitos; aerossóis a fazer (P1) |
+| E1 | **Feito** | A | SST, raios, luzes noturnas e aerossóis (16:9 esticado de 180° W, polo a polo; §14.1). Nível do mar é a escotilha 2D, fora do globo |
 | E2 | **Feito** | — | VSCO 2 CE (CC0) em uso |
 | E3 | **Parcial** | B | Falta FPS em aparelho real |
 | E4 | **A fazer** | A | CO₂ DYAMOND (câmera móvel) |
 | Q1 | **Parcial** | B | Ponto de partida: 10 s por volta, vídeo a 1×. Validar de ouvido |
-| Q2 | **A fazer** | A | Aerossóis: 3 ou 4 vozes |
+| Q2 | **Feito** | A | 3 vozes: o sulfato (36% do mapa) fica no globo mas não toca. Volta com uma linha se o teste de ouvido pedir |
 | Q3 | **A fazer** | C | Quantos testadores e quando |
 | Q4 | **Feito** | C | Voz clonada (PVC) do Lucas Souza, registrada no direcionamento §7.2 |
 | Q5 | **Parcial** | B | S2 no site como cama; sintetizado só se o arquivo falhar. Falta validar nível de ouvido. Achado: com faixas largas pelo menos 4 de 6 notas sempre soam (R5 quase não ocorre) |
@@ -115,6 +115,6 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 ## 8. Próximos passos sugeridos (em paralelo, um por frente)
 
-1. **A:** revisar os textos das três faixas com o time; aerossóis e nível do mar (P1); E4 (CO₂).
+1. **A:** revisar os textos das quatro faixas com o time; nível do mar (P1); E4 (CO₂).
 2. **B:** medir FPS e testar com leitor de tela em aparelho real; depois do P0 verificado, efeitos S1–S7 no lugar dos sons sintetizados (P1).
 3. **C:** contato com os testadores (prazo longo: começar já); ouvir e aprovar S1–S7; atualizar `si-e-referencias.md` com raios e luzes no app.

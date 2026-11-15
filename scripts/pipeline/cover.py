@@ -10,7 +10,8 @@ public/tracks/<id>/cover.jpg (512 x 512):
   turn per step. A track of a single instant (time.unit = 'instant') is one band with one ring per
   latitude instead, 90 N at the rim;
 - colour = the zone's mean at that step and longitude (cells with data, weighted by area) in the
-  track's own palette.
+  track's own palette. A grid of several layers (aerosols) mixes the legend colour of each layer,
+  each layer's strength relative to its own 99th percentile.
 
 Usage: python scripts/pipeline/cover.py [track_id ...]   (all tracks in public/tracks/index.json by default)
 """
@@ -42,6 +43,7 @@ PALETTES = {
     'lightning': {'norm': 'p99', 'gamma': 0.5, 'stops': [(0, VINYL), (0.55, (150, 140, 30)), (1, (255, 233, 74))]},
     'night-lights': {'norm': 'p99', 'gamma': 0.6,
                      'stops': [(0, VINYL), (0.4, (125, 100, 62)), (0.75, (242, 208, 150)), (1, (255, 250, 240))]},
+    'aerosols': {'norm': 'layers', 'gamma': 0.7},
 }
 
 
@@ -58,9 +60,11 @@ def lut(stops, n=256):
 
 
 def read_grid(track_dir, meta):
-    """grid.bin -> float steps x 90 x 180 in the track's unit, NaN where there is no data."""
+    """grid.bin -> float steps x 90 x 180 (steps x layers x 90 x 180 for a layered grid) in the track's
+    unit, NaN where there is no data."""
     g = meta['grid']
-    raw = np.fromfile(os.path.join(track_dir, g['file']), dtype=np.uint8).reshape(g['steps'], LATS, LONS)
+    shape = (g['steps'], g['layers'], LATS, LONS) if g.get('layers', 1) > 1 else (g['steps'], LATS, LONS)
+    raw = np.fromfile(os.path.join(track_dir, g['file']), dtype=np.uint8).reshape(shape)
     out = raw.astype(np.float64) * g['scale']
     out[raw == g['noData']] = np.nan
     return out
@@ -119,8 +123,8 @@ def groove_map(r, frac, rings, outer, inner, spiral=True):
 
 
 def render(bands, table, spiral=True, size=SIZE):
-    """bands: list of rings x 180 arrays in 0..1 (NaN = no data), rim first, ring 0 outermost ->
-    uint8 size x size x 3."""
+    """bands: list of rings x 180 arrays in 0..1 (NaN = no data), or rings x 180 x 3 colours, rim first,
+    ring 0 outermost -> uint8 size x size x 3."""
     big = size * SUPER
     r, frac = polar(big)
     col = np.minimum((frac * LONS).astype(np.int64), LONS - 1)
@@ -134,8 +138,11 @@ def render(bands, table, spiral=True, size=SIZE):
         ring, across = groove_map(r, frac, rings, outer, inner, spiral)
         on = ring >= 0
         v = values01[ring[on], col[on]]
-        idx = np.round(np.nan_to_num(v) * 255).astype(np.int64)
-        rgb = np.where(np.isnan(v)[:, None], np.array(VINYL, dtype=np.uint8), table[idx])
+        if v.ndim == 2:
+            rgb = v.astype(np.uint8)
+        else:
+            idx = np.round(np.nan_to_num(v) * 255).astype(np.int64)
+            rgb = np.where(np.isnan(v)[:, None], np.array(VINYL, dtype=np.uint8), table[idx])
         # Wide grooves (few steps) get a thin dark line between turns, as on a real record.
         width_px = (outer - inner) / rings * big * DISC
         if width_px >= 6:
@@ -145,10 +152,25 @@ def render(bands, table, spiral=True, size=SIZE):
     return np.asarray(Image.fromarray(img).resize((size, size), Image.LANCZOS))
 
 
+def mix_layers(layers, colors, gamma=1.0):
+    """layers x rings x 180 strengths -> rings x 180 x 3: vinyl plus each layer's colour, by its strength
+    relative to its own 99th percentile."""
+    out = np.zeros(layers.shape[1:] + (3,)) + VINYL
+    for layer, color in zip(layers, colors):
+        top = np.nanpercentile(layer, 99)
+        v = np.clip(np.nan_to_num(layer) / top, 0, 1) ** gamma if top > 0 else np.zeros_like(layer)
+        out += v[..., None] * (np.array(color, dtype=np.float64) - VINYL)
+    return np.clip(out, 0, 255).round()
+
+
 def cover_values(track_id, meta, grid):
-    """Bands (each rings x 180 in 0..1), the colour table and whether the rings are a spiral (time)."""
+    """Bands (each rings x 180 in 0..1, or rings x 180 x 3 colours), the colour table and whether the
+    rings are a spiral (time)."""
     palette = PALETTES[track_id]
     instant = meta.get('time', {}).get('unit') == 'instant'
+    if palette['norm'] == 'layers':
+        colors = [hex_rgb(c['color']) for c in meta['legend']['categories']]
+        return [mix_layers(grid[0], colors, palette.get('gamma', 1))], None, not instant
     bands = [grid[0]] if instant else [zone_means(grid, n, s) for n, s in ZONES]
     # One normalisation for the whole record, so the bands can be compared.
     flat = normalise(np.concatenate(bands), palette, meta)

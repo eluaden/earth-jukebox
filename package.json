@@ -8,11 +8,12 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:pipeline": "python scripts/pipeline/test_sst.py && python scripts/pipeline/test_lightning.py && python scripts/pipeline/test_nightlights.py && python scripts/pipeline/test_cover.py",
+    "test:pipeline": "python scripts/pipeline/test_sst.py && python scripts/pipeline/test_lightning.py && python scripts/pipeline/test_nightlights.py && python scripts/pipeline/test_cover.py && python scripts/pipeline/test_aerosols.py",
     "fetch-sources": "node scripts/fetch-sources.mjs",
     "pipeline:sst": "python scripts/pipeline/sst.py",
     "pipeline:lightning": "python scripts/pipeline/lightning.py",
     "pipeline:nightlights": "python scripts/pipeline/nightlights.py",
+    "pipeline:aerosols": "python scripts/pipeline/aerosols.py",
     "pipeline:samples": "python scripts/pipeline/samples.py",
     "pipeline:covers": "python scripts/pipeline/cover.py",
     "deploy": "node scripts/deploy.mjs"

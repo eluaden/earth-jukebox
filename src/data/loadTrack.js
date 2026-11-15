@@ -4,7 +4,7 @@ export async function loadTrack(id, base) {
   const meta = await (await fetch(`${dir}track.json`)).json();
   const buf = await (await fetch(`${dir}${meta.grid.file}`)).arrayBuffer();
   const grid = new Uint8Array(buf);
-  const want = meta.grid.steps * meta.grid.lats * meta.grid.lons;
+  const want = meta.grid.steps * (meta.grid.layers ?? 1) * meta.grid.lats * meta.grid.lons;
   if (grid.length !== want) throw new Error(`${id}: grid has ${grid.length} bytes, expected ${want}`);
   return { meta, grid, dir };
 }

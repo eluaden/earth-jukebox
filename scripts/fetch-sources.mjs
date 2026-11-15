@@ -21,6 +21,9 @@ const VIDEOS = [
   { name: 'sst-dates', svs: 3912, path: 'a003900/a003912/flat_ecco2_dates.txt', bytes: null },
   // Date of each frame of the flat lightning video (Science On a Sphere labels).
   { name: 'lightning-labels', svs: 5011, path: 'a005000/a005011/labels.txt', bytes: null },
+  // Aerosols: a single image (19 Aug 2025 20:00 UTC) and its categorical legend.
+  { name: 'aerosols', svs: 5669, path: 'a005600/a005669/Aerosols_2025-08-19T20_00_00_3840x2160.png', bytes: null },
+  { name: 'aerosols-legend', svs: 5669, path: 'a005600/a005669/Aerosols_cbar.png', bytes: null },
 ];
 
 const mb = (n) => (n == null ? 'small' : `${(n / 2 ** 20).toFixed(1)} MB`);

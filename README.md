@@ -40,11 +40,12 @@ The browser never reads colours. A script reads NASA's original frames once and 
 values that the app looks up under the needle.
 
 ```bash
-npm run fetch-sources -- sea-surface-temperature sst-legend sst-dates lightning-flat lightning-labels night-lights
-npm run test:pipeline        # reader tests (SST, lightning, night lights, covers)
+npm run fetch-sources -- sea-surface-temperature sst-legend sst-dates lightning-flat lightning-labels night-lights aerosols aerosols-legend
+npm run test:pipeline        # reader tests (SST, lightning, night lights, covers, aerosols)
 npm run pipeline:sst         # writes public/tracks/sst/
 npm run pipeline:lightning   # writes public/tracks/lightning/ (one step every 10 days, NASA's labels.txt dates)
 npm run pipeline:nightlights # writes public/tracks/night-lights/ (12 yearly stills + light grid)
+npm run pipeline:aerosols    # writes public/tracks/aerosols/ (one still + four aerosol layers)
 npm run pipeline:samples     # instrument samples into public/samples/
 npm run pipeline:covers      # Records covers from the grids already written (each pipeline also runs it)
 ```
@@ -99,6 +100,17 @@ Night lights:
 | A band with at least 10% more light than the year before | Glockenspiel: a rising major third |
 | Sea | Silence |
 | Time | One year per turn of the globe (10 s) |
+
+Aerosols (data and music ready, not on the shelf yet: one instant, 19 August 2025 20:00 UTC, so every
+turn of the globe plays the same picture, place by place):
+
+| Data | Sound |
+|---|---|
+| Smoke (black carbon) under the needle, six latitude bands from 70° N to 70° S | Low strings: up to two long notes every half bar, the strongest bands; north is higher |
+| Dust | Marimba: one hit per band with dust, as an arpeggio |
+| Sea salt | Glockenspiel on quarter notes, as an arpeggio |
+| Strength of the type's colour in NASA's image (relative, no unit) | How hard the note is played |
+| Sulfate | Not played (on more than a third of the map; at most 3 voices) |
 
 At most 3 voices, 2 notes per voice and 6 in total (tested). A very quiet vinyl crackle that is not
 data plays underneath and is declared in the liner notes. Music ducks while the narrator speaks.
