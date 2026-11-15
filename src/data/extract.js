@@ -197,6 +197,32 @@ export function computeCursorSeries(stripPixels, width, cfg) {
 }
 
 /**
+ * COVERAGE extraction: for maps where the data is drawn as bright marks on a dark base map
+ * (e.g. fire detections). The value is the share of a region's pixels that carry a mark,
+ * in percent. A pixel counts as a mark when it matches the colour rule.
+ *
+ * Config: { "type": "coverage", "regions": { name: [x0, y0, x1, y1] },
+ *           "color": { "rMin", "rMinusB" }, "unit": "%", "range": [lo, hi] }
+ * `framesPixels[f][name]` = RGBA pixels of that region in frame f.
+ */
+export function computeCoverageSeries(framesPixels, cfg) {
+  const { rMin, rMinusB } = cfg.color;
+  const [lo, hi] = cfg.range;
+  const out = { series: {}, values: {} };
+  for (const key of Object.keys(cfg.regions)) {
+    const values = framesPixels.map((frame) => {
+      const px = frame[key];
+      let n = 0;
+      for (let i = 0; i < px.length; i += 4) if (px[i] > rMin && px[i] - px[i + 2] > rMinusB) n++;
+      return Math.round((n / (px.length / 4)) * 1000) / 10;
+    });
+    out.values[key] = values;
+    out.series[key] = values.map((v) => Math.round(Math.min(1, Math.max(0, (v - lo) / (hi - lo))) * 1000) / 1000);
+  }
+  return out;
+}
+
+/**
  * Loads the track's frames, reads their pixels and fills in track.series (0..1),
  * track.values (physical values), track.coverage and data-driven events.
  */
@@ -225,7 +251,7 @@ export async function extractTrack(track, urlFor) {
       for (const [key, box] of Object.entries(cfg.regions)) regions[key] = grab(img, box);
       return regions;
     });
-    result = computeSeries(framesPixels, cfg);
+    result = cfg.type === 'coverage' ? computeCoverageSeries(framesPixels, cfg) : computeSeries(framesPixels, cfg);
   }
   track.series = result.series;
   track.values = result.values;
