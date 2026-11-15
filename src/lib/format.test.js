@@ -53,3 +53,24 @@ describe('chipValue', () => {
     expect(chipValue('share', 0, 'en')).toEqual({ value: '0.0', suffix: '%' });
   });
 });
+
+describe('a single instant and the units of the bonus records', () => {
+  it('shows the day of a single instant', () => {
+    expect(formatDate('2025-08-19T20:00Z', 'en', 'instant')).toBe('19 AUG 2025');
+    expect(formatDate('2025-08-19T20:00Z', 'pt', 'instant')).toBe('19 AGO 2025');
+    expect(longDate('2025-08-19T20:00Z', 'en', 'instant')).toBe('19 August 2025');
+    expect(longDate('2025-08-19T20:00Z', 'pt', 'instant')).toBe('19 de agosto de 2025');
+  });
+
+  it('signs sea level in centimetres, whole when the value is whole', () => {
+    expect(chipValue('cm', 6.37, 'en')).toEqual({ value: '+6.4', suffix: 'cm' });
+    expect(chipValue('cm', 6.37, 'pt')).toEqual({ value: '+6,4', suffix: 'cm' });
+    expect(chipValue('cm', 6, 'en')).toEqual({ value: '+6', suffix: 'cm' });
+  });
+
+  it('shows aerosol strength as a percentage of the strongest', () => {
+    expect(chipValue('strength', 0.123, 'en')).toEqual({ value: '12', suffix: '%' });
+    expect(chipValue('strength', 0.003, 'en')).toEqual({ value: '<1', suffix: '%' });
+    expect(chipValue('strength', 0, 'en')).toEqual({ value: '0', suffix: '%' });
+  });
+});

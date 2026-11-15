@@ -5,6 +5,7 @@ import { chipSign, describeValue, TRACK_TEXT } from '../state/tracks.js';
 import { chipValue, formatDate, longDate } from '../lib/format.js';
 import { t } from '../i18n/strings.js';
 import { rememberOpener } from './focus.js';
+import { trackDuration } from '../state/clock.js';
 
 function openPanel(name) {
   rememberOpener();
@@ -34,7 +35,18 @@ export function Corners() {
   );
 }
 
-/** Big date on the left, narration caption below it. */
+const MONTH_MS = 30.44 * 86400e3;
+
+/** True when a record moves faster than one month per second (sea level: 31 years in 30 s). */
+function fastRecord(meta) {
+  const months = (Date.parse(meta.dates[meta.dates.length - 1]) - Date.parse(meta.dates[0])) / MONTH_MS;
+  return months > 0 && trackDuration(meta) / months < 1;
+}
+
+/**
+ * Big date on the left, narration caption below it. The date settles in when it changes; on a
+ * fast record only a new year does, or the month would flicker away before it can be read.
+ */
 export function DateCaption() {
   const lang = useStore((s) => s.lang);
   const meta = useStore((s) => s.meta);
@@ -46,7 +58,7 @@ export function DateCaption() {
   const label = formatDate(iso, lang, unit);
   return (
     <div className="when">
-      <p key={label} className="date" aria-label={longDate(iso, lang, unit)}>
+      <p key={fastRecord(meta) ? iso.slice(0, 4) : label} className="date" aria-label={longDate(iso, lang, unit)}>
         {label}
       </p>
       <p className="caption" aria-hidden="true">

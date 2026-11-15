@@ -956,6 +956,18 @@ a {
   height: 100%;
   display: block;
 }
+/* Sea level (direction 5.4): NASA's round video in a glass porthole, in the middle of the map's box. */
+.flat-porthole .flat-media {
+  left: 25%;
+  width: 50%;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(223, 227, 232, 0.75), 0 0 28px rgba(82, 143, 255, 0.35);
+}
+.flat-line.is-hidden,
+.flat-dots.is-hidden {
+  display: none;
+}
 .flat-line {
   position: absolute;
   top: 5%;

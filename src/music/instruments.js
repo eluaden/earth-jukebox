@@ -19,13 +19,16 @@ export const INSTRUMENTS = {
 /**
  * What each record offers in the menu (5 at most), chosen for how the record plays:
  * SST holds long notes over the ocean (sustained and soft-attack instruments); lightning is short
- * hits (struck and plucked); night lights is a piano figure with strings and bells.
+ * hits (struck and plucked); night lights is a piano figure with strings and bells; aerosols mixes
+ * long low notes with struck arpeggios; sea level is one held note and a bell.
  * Every voice's own instrument is in its record's list.
  */
 export const TRACK_INSTRUMENTS = {
   sst: ['strings', 'piano', 'glock', 'harp', 'flute'],
   lightning: ['marimba', 'xylo', 'pizz', 'harp', 'glock'],
   'night-lights': ['piano', 'strings', 'glock', 'harp', 'flute'],
+  aerosols: ['strings', 'marimba', 'glock', 'pizz', 'harp'],
+  'sea-level': ['strings', 'glock', 'flute', 'harp', 'piano'],
 };
 
 /** Menu of one voice: its record's list (the voice's current instrument always included). */

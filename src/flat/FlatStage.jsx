@@ -20,6 +20,7 @@ const DOT_LIFE = 650;
 function flatLayer(skin) {
   const el = document.createElement('div');
   el.className = 'flat-layer';
+  if (skin.meta.texture?.kind === 'porthole') el.classList.add('flat-porthole');
   if (skin.kind === 'video') {
     skin.el.className = 'flat-media';
     el.appendChild(skin.el);
@@ -90,6 +91,10 @@ export default function FlatStage() {
         layer.frame();
       }
 
+      // The porthole record (sea level) has no column under a needle.
+      const porthole = Boolean(controller.track?.view.porthole);
+      line.current.classList.toggle('is-hidden', porthole);
+      dots.current.classList.toggle('is-hidden', porthole);
       const x = ((live.lon + 180) / 360) * 100;
       line.current.style.left = `${x}%`;
       const alive = live.dots.filter((d) => now - d.t0 < DOT_LIFE);

@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { controller } from '../state/controller.js';
 import { live } from '../state/live.js';
 import { stillsFrame } from '../media/skins.js';
 import { TRACK_VIEW } from '../state/tracks.js';
+import { GLOBE_Y } from './layout.js';
 
 // The globe wears the NASA map of the current record. Unlit, so the colours under the needle stay
 // exactly the NASA legend colours; only the limb darkens (for volume) and, on maps where grey is
@@ -124,7 +125,30 @@ function stillsLayer(skin) {
   };
 }
 
+/** Porthole skin (sea level): the globe wears nothing; the video is shown by <Porthole />. */
+function emptyLayer(blank) {
+  return { frame: () => ({ a: blank, b: blank, mix: 0 }), still: () => blank, dispose() {} };
+}
+
+const isPorthole = (skin) => Boolean(skin && !skin.disposed && skin.meta.texture?.kind === 'porthole');
+
 const ease = (p) => p * p * (3 - 2 * p);
+
+/**
+ * How much the porthole shows (0..1) and which skin it shows: fully while a porthole record plays,
+ * fading in or out with the globe's crossfade when a record changes to or from one.
+ */
+function portholeState() {
+  const skin = controller.track?.skin;
+  const swap = controller.swap;
+  if (swap && !swap.from.disposed) {
+    const m = ease(Math.min(1, (performance.now() - swap.t0) / swap.dur));
+    if (isPorthole(skin)) return { show: m, skin, swapping: true };
+    if (isPorthole(swap.from)) return { show: 1 - m, skin: swap.from, swapping: true };
+    return { show: 0, skin: null, swapping: true };
+  }
+  return isPorthole(skin) ? { show: 1, skin, swapping: false } : { show: 0, skin: null, swapping: false };
+}
 
 export function Globe() {
   const spin = useRef();
@@ -168,7 +192,7 @@ export function Globe() {
   const layerOf = (skin) => {
     let l = layers.get(skin);
     if (!l) {
-      l = skin.kind === 'stills' ? stillsLayer(skin) : videoLayer(skin);
+      l = isPorthole(skin) ? emptyLayer(blank) : skin.kind === 'stills' ? stillsLayer(skin) : videoLayer(skin);
       layers.set(skin, l);
     }
     return l;
@@ -176,6 +200,9 @@ export function Globe() {
 
   useFrame(() => {
     spin.current.rotation.y = live.rotation;
+    // A porthole record hides the globe once its porthole is fully in (direction 5.4).
+    const p = portholeState();
+    spin.current.visible = !(p.show >= 1 && !p.swapping);
     for (const [skin, l] of layers) {
       if (skin.disposed) {
         l.dispose();
@@ -209,6 +236,83 @@ export function Globe() {
       <sphereGeometry args={[1, 160, 80]} />
       <meshBasicMaterial ref={mat} map={blank} toneMapped={false} onBeforeCompile={onBeforeCompile} />
     </mesh>
+  );
+}
+
+/**
+ * Sea level (direction 5.4): NASA's square video is a round porthole filling the frame, so it is
+ * drawn on a disc the apparent size of the globe, where the globe was, with a thin chrome rim. The
+ * halo and the platter stay around it; the tonearm rests on its glass. While a record changes it
+ * fades over the darkening globe.
+ */
+export function Porthole() {
+  const group = useRef();
+  const disc = useRef();
+  const rim = useRef();
+  const { camera } = useThree();
+  const textures = useMemo(() => new Map(), []); // skin -> { video, poster }
+
+  useEffect(
+    () => () => {
+      for (const t of textures.values()) {
+        t.video.dispose();
+        t.poster.dispose();
+      }
+      textures.clear();
+    },
+    [textures],
+  );
+
+  useFrame(() => {
+    for (const [skin, t] of textures) {
+      if (skin.disposed) {
+        t.video.dispose();
+        t.poster.dispose();
+        textures.delete(skin);
+      }
+    }
+    const p = portholeState();
+    const on = p.show > 0.001 && p.skin;
+    group.current.visible = Boolean(on);
+    if (!on) return;
+    let t = textures.get(p.skin);
+    if (!t) {
+      const video = new THREE.VideoTexture(p.skin.el);
+      video.colorSpace = THREE.SRGBColorSpace;
+      const poster = new THREE.TextureLoader().load(p.skin.poster);
+      poster.colorSpace = THREE.SRGBColorSpace;
+      t = { video, poster, started: false };
+      textures.set(p.skin, t);
+    }
+    const el = p.skin.el;
+    if (!t.started && !el.paused && el.readyState >= 2 && el.currentTime > 0) t.started = true;
+    const mat = disc.current.material;
+    const map = t.started ? t.video : t.poster;
+    if (mat.map !== map) {
+      mat.map = map;
+      mat.needsUpdate = true;
+    }
+    mat.opacity = p.show;
+    rim.current.material.opacity = p.show;
+    // Over the darkening globe while fading; behind the tonearm once it stands alone.
+    mat.depthTest = !p.swapping;
+    rim.current.material.depthTest = !p.swapping;
+    // Same apparent radius as the globe: a sphere of radius 1 seen from distance d.
+    const d = Math.hypot(camera.position.y - GLOBE_Y, camera.position.z);
+    group.current.scale.setScalar(d > 1.01 ? d / Math.sqrt(d * d - 1) : 1);
+  });
+
+  return (
+    <group ref={group} position={[0, GLOBE_Y, 0]} visible={false}>
+      <mesh ref={disc} renderOrder={2}>
+        <circleGeometry args={[1, 160]} />
+        <meshBasicMaterial transparent toneMapped={false} />
+      </mesh>
+      <mesh ref={rim} renderOrder={3}>
+        <torusGeometry args={[1.004, 0.016, 16, 200]} />
+        <meshStandardMaterial color="#dfe3e8" metalness={1} roughness={0.2} transparent />
+      </mesh>
+    </group>
   );
 }
 

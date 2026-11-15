@@ -24,6 +24,7 @@ const SWAP_MS = 1200; // globe crossfade between two records (direction 5.4)
 const ARM_MS = 650; // tonearm swing before the stylus touches
 const INTRO_GAP_MS = 2500; // music alone between the welcome and the track's opening narration
 const PREFETCH_MS = 5000; // after the music starts, the other records load in the background
+const INSTANT_OUTRO_TURNS = 4; // a single-instant record (aerosols) closes after this many turns
 
 const c = {
   ready: null,
@@ -39,6 +40,9 @@ const c = {
   landed: false, // the current descent already ended (introDone ran)
   token: 0, // changes with every record; callbacks left over from an older record do nothing
   prefetched: false,
+  speaking: 0, // narration lines in progress (place markers wait for a free narrator)
+  introSaid: -1, // token of the record whose intro has been spoken (place markers wait for it)
+  turned: 0, // radians the globe has turned with the needle down on this record (instant records)
 };
 
 export const controller = c;
@@ -84,11 +88,13 @@ function getBundle(id) {
 function activate(bundle, skin) {
   const music = TRACK_MUSIC[bundle.id];
   const view = TRACK_VIEW[bundle.id];
-  const nan = new Float32Array(bundle.meta.grid.lats).fill(NaN);
+  const g = bundle.meta.grid;
+  const nan = new Float32Array(g.lats * (g.layers ?? 1)).fill(NaN);
   const emptyRead = music.read(nan, nan);
   c.track = { ...bundle, music, view, skin, emptyRead };
   c.musicState = music.initialState();
   c.fired = new Set();
+  c.turned = 0;
   c.token++;
   live.step = -1;
   live.lonIdx = -1;
@@ -157,6 +163,7 @@ export async function chooseInstrument(voiceId, inst) {
 export function scrubStart() {
   const s = useStore.getState();
   if (!c.track || s.phase !== 'playing' || s.switching || s.panel === 'records' || s.panel === 'about') return false;
+  if (c.track.view.porthole) return false; // one value per step: turning by hand would change nothing
   if (c.scrub) return true;
   c.scrub = { wasPlaying: s.playing };
   c.track.skin.pause();
@@ -290,6 +297,7 @@ function sayIntroWhenFree() {
       c.fired.delete('intro'); // spoken on the next play instead
       return;
     }
+    c.introSaid = token;
     Promise.resolve(say('intro')).then(() => {
       if (token === c.token) hintOnce();
     });
@@ -350,6 +358,7 @@ export function replayTrack() {
   c.narrator.stop();
   c.opening = null; // the welcome, if still speaking, gives way to the record's own intro
   c.fired = new Set();
+  c.turned = 0;
   live.step = -1; // the jump back is a restart, not a loop: no outro, no milestone on the way
   s.requestSeek(0);
   if (s.panel === 'records') setPanel(null);
@@ -469,7 +478,42 @@ export function progress() {
 
 function say(id) {
   const { lang } = useStore.getState();
-  return c.narrator.say(narrationLine(c.track.id, c.track.meta, id, lang), lang);
+  c.speaking++;
+  return c.narrator.say(narrationLine(c.track.id, c.track.meta, id, lang), lang).finally(() => {
+    c.speaking--;
+  });
+}
+
+/** True when the needle went from lon a to lon b (degrees, eastward, less than half a turn) past lon. */
+export function crossedLon(a, b, lon) {
+  const span = (((b - a) % 360) + 360) % 360;
+  if (span === 0 || span > 180) return false;
+  const to = (((lon - a) % 360) + 360) % 360;
+  return to > 0 && to <= span;
+}
+
+/**
+ * A single-instant record (aerosols): its milestones are places. A line is spoken when the needle
+ * crosses the place's longitude with the narrator free (the intro is never cut; a place missed
+ * waits for the next turn); the closing line after every place and a few turns, also with the
+ * narrator free.
+ */
+function placeMarkers(meta, prevLon, lon, dt) {
+  if (!live.spinning) return;
+  c.turned += Math.min(dt, 0.5) * ((2 * Math.PI) / SECONDS_PER_TURN);
+  if (c.speaking > 0 || c.introSaid !== c.token || !Number.isFinite(prevLon)) return;
+  for (const m of meta.markers) {
+    if (!c.fired.has(m.id) && crossedLon(prevLon, lon, m.lon)) {
+      c.fired.add(m.id);
+      say(m.id);
+      return;
+    }
+  }
+  const allPlaces = meta.markers.every((m) => c.fired.has(m.id));
+  if (allPlaces && c.turned >= INSTANT_OUTRO_TURNS * 2 * Math.PI && !c.fired.has('outro')) {
+    c.fired.add('outro');
+    say('outro');
+  }
 }
 
 const HINT_MS = 9000;
@@ -547,7 +591,9 @@ export function advance(dt) {
   }
   skin.advance(dt);
   const step = stepAt(meta, skin.time());
+  const prevLon = live.lon;
   live.lon = lonUnderNeedle(live.rotation);
+  if (meta.time?.unit === 'instant' && s.playing && !s.switching) placeMarkers(meta, prevLon, live.lon, dt);
   const lonIdx = lonToIndex(live.lon, meta.grid.lons);
   if (step === live.step && lonIdx === live.lonIdx) return;
   const prev = live.step;

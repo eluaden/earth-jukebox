@@ -7,7 +7,7 @@ import { advance, introDone, togglePlay } from '../state/controller.js';
 import { beginGlobeDrag, wasDrag } from '../ui/globeDrag.js';
 import { useStore } from '../state/store.js';
 import { Backdrop } from './Backdrop.jsx';
-import { Atmosphere, Globe } from './Globe.jsx';
+import { Atmosphere, Globe, Porthole } from './Globe.jsx';
 import { MeridianLine, Tonearm } from './Needle.jsx';
 import { Platter } from './Platter.jsx';
 import { FOV, GLOBE_Y, TILT, cameraFrame } from './layout.js';
@@ -119,6 +119,7 @@ export default function Stage() {
         <MeridianLine />
         <PlanetHit />
       </group>
+      <Porthole />
       <Platter />
       <Tonearm />
       <CameraRig />

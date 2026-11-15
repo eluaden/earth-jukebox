@@ -10,7 +10,7 @@ under it: every note is a value read from the NASA frame with NASA's own colour 
 made up, and the music is not AI-generated: it is synthesized live in the browser from the data,
 with fixed, documented rules.
 
-Current state ([`docs/direcionamento.md`](docs/direcionamento.md)): three records on the shelf, changed
+Current state ([`docs/direcionamento.md`](docs/direcionamento.md)): five records on the shelf, changed
 from **Records**:
 
 | Record | NASA source | Period | Globe skin |
@@ -18,6 +18,8 @@ from **Records**:
 | Sea surface temperature | SVS 3912, ECCO2 model | March 2007 – March 2008 | Video |
 | Lightning | SVS 5011, LIS on the ISS | March 2017 – August 2023 | Video |
 | Night lights | SVS 5313, Black Marble (VIIRS) | 2012 – 2023 | 12 yearly images, faded at each new year |
+| Aerosols | SVS 5669, GEOS model | 19 August 2025, 20:00 UTC (one instant) | One image; narration by place |
+| Sea level (bonus) | SVS 5235, ocean altimeters | 1993 – 2023 | NASA's round video in a glass porthole instead of the globe |
 
 Changing record: the needle lifts, the globe dims while the new record loads, its map crossfades in
 (1.2 s), the needle drops and the new record starts from its first step with its own narration.
@@ -102,7 +104,7 @@ Night lights:
 | Sea | Silence |
 | Time | One year per turn of the globe (10 s) |
 
-Aerosols (data and music ready, not on the shelf yet: one instant, 19 August 2025 20:00 UTC, so every
+Aerosols (one instant, 19 August 2025 20:00 UTC, so every
 turn of the globe plays the same picture, place by place):
 
 | Data | Sound |
@@ -113,7 +115,7 @@ turn of the globe plays the same picture, place by place):
 | Strength of the type's colour in NASA's image (relative, no unit) | How hard the note is played |
 | Sulfate | Not played (on more than a third of the map; at most 3 voices) |
 
-Sea level (bonus, data and music ready, not on the shelf yet; NASA's square video in a porthole):
+Sea level (bonus; NASA's square video in a porthole):
 
 | Data | Sound |
 |---|---|
@@ -143,9 +145,9 @@ Recorded narration (ElevenLabs, see [`docs/prompts-assets.md`](docs/prompts-asse
 `public/narration/<en|pt|es>/<key>.mp3`, listed in `public/narration/manifest.json` under `lines`. The key
 is `lineKey(lang, text)` ([`src/narration/key.js`](src/narration/key.js)), a hash of the exact text: a line
 whose text changes falls back to the browser's speech synthesis until it is recorded again. Captions
-show one short line at a time, in step with the voice. Every line of the three records and the opening
+show one short line at a time, in step with the voice. Every line of the first three records and the opening
 ("Put on headphones." and "Welcome…", first visit only) is recorded in EN / PT / ES; a test checks that
-each one has its file.
+each one has its file. Aerosols and sea level still use speech synthesis until their lines are recorded.
 
 ## Accessibility
 

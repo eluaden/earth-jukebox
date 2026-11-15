@@ -162,7 +162,11 @@ export function LinerNotes() {
               <img
                 className="legend-img"
                 src={controller.track.dir + meta.legend.image}
-                alt={t(lang, 'legendImageAlt', { min: meta.legend.min, max: meta.legend.max, unit: meta.legend.unit })}
+                alt={
+                  meta.legend.categories
+                    ? t(lang, 'legendCategoriesAlt', { list: meta.legend.categories.map((c) => c.name).join(', ') })
+                    : t(lang, 'legendImageAlt', { min: meta.legend.min, max: meta.legend.max, unit: meta.legend.unit })
+                }
               />
             ) : (
               <p>{t(lang, `legendText.${trackId}`)}</p>

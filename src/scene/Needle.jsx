@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import * as THREE from 'three';
 import { live } from '../state/live.js';
+import { controller } from '../state/controller.js';
 import { useStore } from '../state/store.js';
 import { GLOBE_Y, LINE_LATS, NEEDLE_LAT, meridianPoint, pivotFor } from './layout.js';
 
@@ -45,8 +46,11 @@ export function MeridianLine() {
   }, []);
   const flashMap = useMemo(() => softFlashMap(), []);
   const dots = useRef([]);
+  const line = useRef();
 
   useFrame(() => {
+    // No column to read on the porthole record (sea level): no groove, no flashes.
+    line.current.visible = !controller.track?.view.porthole;
     const now = performance.now();
     const alive = live.dots.filter((d) => now - d.t0 < DOT_LIFE);
     live.dots = alive;
@@ -75,7 +79,7 @@ export function MeridianLine() {
   });
 
   return (
-    <group>
+    <group ref={line}>
       <mesh geometry={geom}>
         <meshBasicMaterial color="#e8eaed" transparent opacity={0.4} toneMapped={false} depthWrite={false} />
       </mesh>

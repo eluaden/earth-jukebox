@@ -92,3 +92,15 @@ describe('pickVideo', () => {
     expect(pickVideo(meta, { coarsePointer: false, screenMax: 1920, dpr: 1 })).toBe('video-1536.mp4');
   });
 });
+
+describe('crossedLon (place markers of a single instant)', () => {
+  it('fires when the needle passes the longitude eastward, also across 180°', async () => {
+    const { crossedLon } = await import('./controller.js');
+    expect(crossedLon(-25, -22, -23)).toBe(true);
+    expect(crossedLon(-23, -20, -23)).toBe(false);
+    expect(crossedLon(-20, -25, -23)).toBe(false);
+    expect(crossedLon(178, -178, 180)).toBe(true);
+    expect(crossedLon(178, -178, -179)).toBe(true);
+    expect(crossedLon(10, 10, 10)).toBe(false);
+  });
+});
