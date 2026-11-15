@@ -205,6 +205,7 @@ The player shows the video in step with the sound; the still frames are what the
 
 - [`docs/recursos-do-desafio.md`](docs/recursos-do-desafio.md): every resource on the challenge's Resources tab, its files, and how it compares with what the project has (Portuguese).
 - [`docs/analise-estrategica.md`](docs/analise-estrategica.md): judging criteria, past winners and award strategy (Portuguese).
+- [`docs/earth-jukebox-projetos-anteriores.md`](docs/earth-jukebox-projetos-anteriores.md): past Space Apps winners and finalists that used sound, their interfaces and what set them apart (Portuguese).
 
 ## Placeholders still open
 
