@@ -16,6 +16,8 @@ export const useStore = create((set) => ({
   switching: null, // track id being loaded and swapped in, or null
   meta: null,
   grid: null,
+  trend: null, // { bucket, unit, label } from TRACK_VIEW, or null when the record has no sparkline
+  trendMeans: null, // Float64Array: area-weighted global mean per step of the current grid
   base: '',
   voices: [], // [{ id, instrument }] of the current track
   step: 0,

@@ -100,6 +100,9 @@ export const STRINGS = {
     ],
     replayOpening: 'Replay opening',
     replay: 'Replay from the start, with narration',
+    'trend.sst': 'Sea temperature',
+    'trend.lightning': 'Area with lightning',
+    'trend.nightLights': 'Night light brightness',
   },
   pt: {
     brand: 'EARTH JUKEBOX',
@@ -199,6 +202,9 @@ export const STRINGS = {
     ],
     replayOpening: 'Rever a abertura',
     replay: 'Repetir do começo, com narração',
+    'trend.sst': 'Temperatura do mar',
+    'trend.lightning': 'Área com raios',
+    'trend.nightLights': 'Brilho das luzes',
   },
   es: {
     brand: 'EARTH JUKEBOX',
@@ -298,6 +304,9 @@ export const STRINGS = {
     ],
     replayOpening: 'Ver de nuevo la apertura',
     replay: 'Repetir desde el principio, con narración',
+    'trend.sst': 'Temperatura del mar',
+    'trend.lightning': 'Área con rayos',
+    'trend.nightLights': 'Brillo de las luces',
   },
 };
 

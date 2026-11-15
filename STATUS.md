@@ -41,6 +41,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | E1 — luzes noturnas | §14 | **Feito** | A | Quadro 32:9 = duas cópias do mapa; usar a da esquerda (equirretangular 16:9, começa em 168,5° W); série anual nos frames 0–269, mapa sem luzes no 290; textura = 12 imagens (§14.1) |
 | E3 — vídeo como textura | §14 | **Parcial** | B | Tamanhos escolhidos (1536 / 1024). Falta medir fluidez (FPS) em notebook comum e celular real |
 | Globo com agulha | §5.3 | **Feito** | B | Polido em 15/11 (volume do globo, braço em J, vidro) |
+| Gráfico de tendência | §5.2.1, §5.3 | **Feito** | B | Canto inferior esquerdo, um gráfico por disco (série inteira, marcador no período atual), unidade em todo número (°C, %), até 5 rótulos no eixo X. Pausa: o globo segue girando com a agulha levantada |
 | Fundo que reage ao mouse | §5.1 | **Feito** | B | `src/scene/Backdrop.jsx`: estrelas distantes e poeira próxima em parallax acompanhando o cursor, poeira acende perto do cursor, brilho azul largo e quase imperceptível atrás do globo. Toque e movimento reduzido: fundo parado |
 | Motor musical com samples e regras de clareza | §6.1, §6.3 | **Parcial** | B | Toca qualquer faixa de `TRACK_MUSIC`: vozes montadas por faixa (cordas, piano, glockenspiel, marimba; samples decodificados uma vez e compartilhados), eventos com `offset` (arpejo), troca de vozes com fade. Falta a **aprovação de ouvido** |
 | Faixa: temperatura do mar | §8 | **Feito** | A | Pipeline, grade, mapeamento, encarte, narração gravada. Textos do encarte: revisar (time) |

@@ -261,6 +261,110 @@ a {
   text-wrap: balance;
   transition: opacity 0.35s ease;
 }
+/* Fixed-size trend chart, docked bottom-left (direction 5.2.1): every tick carries its unit. */
+.trend {
+  position: absolute;
+  left: calc(var(--gutter) + 40px);
+  bottom: calc(var(--gutter) + 36px);
+  width: 300px;
+  pointer-events: none;
+  animation: trend-rise 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+}
+@keyframes trend-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.panel-records .trend {
+  visibility: hidden;
+}
+.trend-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.trend-label {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  white-space: nowrap;
+}
+.trend-now {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+  white-space: nowrap;
+}
+.trend-svg {
+  display: block;
+  width: 300px;
+  height: 96px;
+  overflow: visible;
+}
+.trend-grid {
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+.trend-grid.mid {
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-dasharray: 3 4;
+}
+.trend-axis,
+.trend-xmark {
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1;
+}
+.trend-now-line {
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1;
+}
+.trend-tick {
+  fill: var(--fg-faint);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+.trend-tick.x {
+  fill: rgba(255, 255, 255, 0.62);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.trend-tick.x.year {
+  fill: rgba(255, 255, 255, 0.4);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+.trend-line {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.95);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.trend-dot {
+  fill: #fff;
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 0.6;
+}
+.trend-glow {
+  animation: trend-pulse 2.4s ease-in-out infinite;
+}
+@keyframes trend-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
 
 .chips {
   position: absolute;
@@ -273,12 +377,12 @@ a {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: min(280px, 24vw);
+  gap: 10px;
+  width: min(210px, 19vw);
 }
 .chip {
-  border-radius: 16px;
-  padding: 14px 16px 14px;
+  border-radius: 14px;
+  padding: 11px 13px;
   transition:
     opacity 0.3s ease,
     transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -307,10 +411,19 @@ a {
 .panel-liner .about-link {
   visibility: hidden;
 }
+/* Narrow chips: instrument and variable on two lines instead of one cut-off line. */
 .chip-name {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.35;
   color: var(--fg-dim);
+}
+.chip-sep {
+  display: none;
+}
+.chip-voice,
+.chip-zone {
+  display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -322,11 +435,11 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 .chip-value {
   font-family: var(--mono);
-  font-size: 20px;
+  font-size: 18px;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
@@ -371,7 +484,7 @@ a {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: clamp(10px, 1.4vw, 22px);
+  gap: clamp(14px, 1.5vw, 22px);
   padding: 7px 20px 7px 7px;
   border-radius: 999px;
   white-space: nowrap;
@@ -387,7 +500,7 @@ a {
   }
 }
 .footer button {
-  padding: 6px 4px;
+  padding: 6px 0;
   color: var(--fg-dim);
   transition:
     color 0.2s ease,
@@ -438,8 +551,13 @@ a {
 .track-name {
   color: var(--fg);
   font-weight: 700;
-  padding-right: clamp(4px, 0.6vw, 10px);
-  border-right: 1px solid var(--glass-border);
+}
+/* The rule is its own item, so the footer's gap is the same on both sides of it. */
+.footer-rule {
+  width: 1px;
+  height: 14px;
+  background: var(--glass-border);
+  flex: none;
 }
 .track-name.is-loading {
   animation: loading-pulse 1.1s ease-in-out infinite alternate;
@@ -864,6 +982,13 @@ a {
   mix-blend-mode: screen;
 }
 
+/* Mid-width screens: the centred footer would reach the chart, so the chart rises above it. */
+@media (max-width: 1180px) {
+  .trend {
+    bottom: calc(var(--gutter) + 64px);
+  }
+}
+
 /* ---------- phones ---------- */
 @media (max-width: 760px) {
   .brand {
@@ -881,6 +1006,16 @@ a {
   .caption {
     font-size: 14px;
     margin-top: 8px;
+  }
+  /* Phones: footer and chips own the bottom, so the chart sits right above the chips. */
+  .trend {
+    bottom: calc(var(--gutter) + 64px + 118px);
+    left: var(--gutter);
+    width: min(300px, calc(100vw - 2 * var(--gutter)));
+  }
+  .trend-svg {
+    width: 100%;
+    height: auto;
   }
   .panel-liner .footer {
     left: var(--gutter);

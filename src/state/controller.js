@@ -11,6 +11,7 @@ import { TRACK_MUSIC } from '../music/tracks/index.js';
 import { createNarrator } from '../narration/narrator.js';
 import { createSkin } from '../media/skins.js';
 import { longDate } from '../lib/format.js';
+import { stepMeans } from '../data/series.js';
 import { t } from '../i18n/strings.js';
 import { TRACK_TEXT, TRACK_VIEW, describeValue, engineVoices, narrationLine } from './tracks.js';
 import { bindUiSounds } from '../ui/sounds.js';
@@ -82,9 +83,10 @@ function getBundle(id) {
 /** Makes a loaded record the current one: music, voices, chips and narration start fresh. */
 function activate(bundle, skin) {
   const music = TRACK_MUSIC[bundle.id];
+  const view = TRACK_VIEW[bundle.id];
   const nan = new Float32Array(bundle.meta.grid.lats).fill(NaN);
   const emptyRead = music.read(nan, nan);
-  c.track = { ...bundle, music, view: TRACK_VIEW[bundle.id], skin, emptyRead };
+  c.track = { ...bundle, music, view, skin, emptyRead };
   c.musicState = music.initialState();
   c.fired = new Set();
   c.token++;
@@ -95,11 +97,16 @@ function activate(bundle, skin) {
   live.dots = [];
   const voices = pickedVoices(bundle.id);
   c.engine.setVoices(voices);
+  // Sparkline under the date: one global mean per step, cached on the bundle (direction 5.2.1).
+  const trend = view.trend && bundle.meta.time?.unit !== 'instant' ? view.trend : null;
+  if (trend && !bundle.trendMeans) bundle.trendMeans = stepMeans(bundle.grid, bundle.meta.grid);
   const ids = music.voices.map((v) => v.id);
   useStore.setState({
     trackId: bundle.id,
     meta: bundle.meta,
     grid: bundle.grid,
+    trend,
+    trendMeans: trend ? bundle.trendMeans : null,
     voices: music.voices.map((v) => ({ ...v, instrument: voices.find((x) => x.id === v.id).instrument })),
     summary: live.summary,
     step: 0,
@@ -321,7 +328,6 @@ export function togglePlay() {
   // Resume: drop the needle unless Records is holding it up.
   const keepUp = s.panel === 'records';
   useStore.setState({ playing: true, ...(keepUp ? {} : { arm: 'down' }) });
-  c.engine.playSfx('platter-spin-up');
   c.engine.start(onTick);
   if (!keepUp) {
     setTimeout(() => c.engine.needleDrop(), ARM_MS);
@@ -531,8 +537,10 @@ export function advance(dt) {
   const s = useStore.getState();
   if (!c.track || s.phase !== 'playing') return;
   const { meta, grid, music, skin } = c.track;
-  // Long gaps (tab in the background) are capped so the globe does not jump half a turn.
-  if (s.playing && !s.scrubbing) live.rotation -= Math.min(dt, 0.5) * ((2 * Math.PI) / SECONDS_PER_TURN);
+  // The platter keeps turning with the needle up (pause, Records), like a real turntable; only the
+  // data clock and the music stop. While the user drags the globe (scrubbing) it does not spin on
+  // its own. Long gaps (tab in the background) are capped so the globe does not jump half a turn.
+  if (!s.scrubbing) live.rotation -= Math.min(dt, 0.5) * ((2 * Math.PI) / SECONDS_PER_TURN);
   if (s.seekTo != null) {
     skin.seek(s.seekTo);
     useStore.setState({ seekTo: null });

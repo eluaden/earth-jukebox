@@ -182,6 +182,7 @@ export function Footer() {
       <span className={`track-name ${switching ? 'is-loading' : ''}`} aria-busy={busy}>
         {shownId && TRACK_TEXT[shownId][lang].title}
       </span>
+      <span className="footer-rule" aria-hidden="true" />
       <button
         type="button"
         aria-expanded={panel === 'records'}

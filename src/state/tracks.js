@@ -39,6 +39,8 @@ export const TRACK_VIEW = {
     /** Warmer water, brighter timbre (direction 6.2). */
     filters: (summary) => Object.fromEntries(summary.filter((s) => Number.isFinite(s.value)).map((s) => [s.voice, brightness(s.value)])),
     dotColor: (meta, e) => legendColor(meta, e.temp),
+    // Global mean SST by month under the date (direction 5.2.1).
+    trend: { bucket: 'month', unit: '°C', label: 'trend.sst' },
     legend() {
       const notes = [];
       for (let d = 0; d <= 15; d++) notes.push({ instrument: 'piano', midi: noteFor('piano', (d * T_MAX) / 15), velocity: 0.7, at: d * 0.22, duration: '8n' });
@@ -50,6 +52,7 @@ export const TRACK_VIEW = {
     voiceTone: {},
     filters: null,
     dotColor: () => LIGHTNING_YELLOW,
+    trend: { bucket: 'month', unit: 'share', label: 'trend.lightning' },
     legend() {
       return [...LIGHTNING_BANDS].reverse().map((b, k) => {
         const [e] = planOnce('lightning', column(inBand(b, 1, 0)));
@@ -63,6 +66,7 @@ export const TRACK_VIEW = {
     voiceTone: { out: { attack: 0.06 } },
     filters: null,
     dotColor: (meta, e) => NIGHT_COLOURS[e.voice] || NIGHT_COLOURS.light,
+    trend: { bucket: 'year', unit: 'brightness', label: 'trend.nightLights' },
     legend(pulse) {
       const notes = [];
       let at = 0;

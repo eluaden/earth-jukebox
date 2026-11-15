@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useStore } from './state/store.js';
 import { ColdOpen } from './ui/ColdOpen.jsx';
 import { Chips, Corners, DateCaption, Footer, LiveRegion, TimeSlider } from './ui/Hud.jsx';
+import { Trend } from './ui/Trend.jsx';
 import { About, LinerNotes, Records } from './ui/Panels.jsx';
 import { useKeys } from './ui/useKeys.js';
 import FlatStage, { hasWebGL } from './flat/FlatStage.jsx';
@@ -44,6 +45,7 @@ export default function App() {
         <main className="hud">
           <Corners />
           <DateCaption />
+          <Trend />
           <Chips />
           <Footer />
           <TimeSlider />
