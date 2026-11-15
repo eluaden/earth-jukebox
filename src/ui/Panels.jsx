@@ -73,6 +73,7 @@ export function Records() {
  * with the drawer (peeking at the screen edge when closed, on the left edge when open).
  */
 export function LinerNotes() {
+  const hint = useStore((st) => st.hint);
   const lang = useStore((s) => s.lang);
   const meta = useStore((s) => s.meta);
   const trackId = useStore((s) => s.trackId);
@@ -98,7 +99,7 @@ export function LinerNotes() {
   return (
     <>
       {open && <div className="liner-backdrop" onClick={(e) => e.target === e.currentTarget && close()} />}
-      <div className={`liner-shell ${open ? 'is-open' : ''}`}>
+      <div className={`liner-shell ${open ? 'is-open' : ''} ${hint && !open ? 'hint' : ''}`}>
         <button
           type="button"
           className="liner-tab"
@@ -106,17 +107,28 @@ export function LinerNotes() {
           aria-expanded={open}
           onClick={() => (open ? close() : openLiner())}
         >
-          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-            <path
-              d="M9.5 3.5L5.5 8l4 4.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          {open ? (
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+              <path d="M6.5 3.5l4 4.5-4 4.5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : (
+            <>
+              <svg className="liner-tab-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="12" cy="12" r="9.2" />
+                <path d="M12 11v5.5" />
+                <circle cx="12" cy="7.6" r="0.6" fill="currentColor" />
+              </svg>
+              <span className="liner-tab-label" aria-hidden="true">
+                {t(lang, 'linerNotes')}
+              </span>
+            </>
+          )}
         </button>
+        {hint && !open && (
+          <p className="liner-hint" aria-hidden="true">
+            {t(lang, 'hearingHint')}
+          </p>
+        )}
         {showPanel && (
           <aside
             className="liner glass"

@@ -4,6 +4,7 @@ import { Environment, Lightformer } from '@react-three/drei';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import gsap from 'gsap';
 import { advance, introDone, togglePlay } from '../state/controller.js';
+import { beginGlobeDrag, wasDrag } from '../ui/globeDrag.js';
 import { useStore } from '../state/store.js';
 import { Backdrop } from './Backdrop.jsx';
 import { Atmosphere, Globe } from './Globe.jsx';
@@ -66,16 +67,18 @@ function Driver() {
   return null;
 }
 
-/** Invisible hit target on the planet: click toggles play/pause (needle lifts on pause). */
+/** Invisible hit target on the planet: click toggles play/pause (needle lifts on pause); drag turns it. */
 function PlanetHit() {
   return (
     <mesh
+      onPointerDown={(e) => beginGlobeDrag(e.nativeEvent)}
       onClick={(e) => {
         e.stopPropagation();
+        if (wasDrag()) return; // a drag turned the globe: not a play / pause click
         togglePlay();
       }}
       onPointerOver={() => {
-        document.body.style.cursor = 'pointer';
+        document.body.style.cursor = 'grab';
       }}
       onPointerOut={() => {
         document.body.style.cursor = '';

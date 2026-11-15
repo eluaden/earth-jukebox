@@ -1007,3 +1007,171 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- globe drag ---------- */
+body.dragging-globe,
+body.dragging-globe * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+.stage {
+  touch-action: pan-y; /* horizontal finger drags turn the globe; vertical still scrolls */
+}
+
+/* ---------- instrument menu on the chips ---------- */
+.chip-voice {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.chip-instrument {
+  /* the native select sits invisibly over the label, so the menu is the system one (accessible) */
+  position: absolute;
+  inset: -4px -6px;
+  opacity: 0;
+  cursor: pointer;
+  font: inherit;
+  width: calc(100% + 12px);
+}
+.chip-instrument-label {
+  border-bottom: 1px dashed currentColor;
+  padding-bottom: 1px;
+}
+.chip-caret {
+  order: 2;
+  font-size: 10px;
+  opacity: 0.7;
+}
+.chip-voice:hover .chip-instrument-label,
+.chip-instrument:focus-visible ~ .chip-instrument-label {
+  color: var(--fg);
+}
+.chip-voice:has(.chip-instrument:focus-visible) {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- "What am I hearing?" openers ---------- */
+.hearing-link {
+  position: absolute;
+  top: calc(var(--gutter) - 10px);
+  right: calc(var(--gutter) + 64px);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  animation: fade-in 1s ease 0.3s both;
+  transition: background 0.2s ease;
+}
+.hearing-link:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.panel-liner .hearing-link {
+  visibility: hidden;
+}
+.footer button.hearing {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.1);
+}
+.footer button.hearing:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+/* The pull-tab now says what it is: icon + vertical label. */
+.liner-tab {
+  width: 34px;
+  height: auto;
+  min-height: 56px;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--fg);
+}
+.liner-tab-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.liner-shell .liner-tab-icon {
+  transform: none !important;
+}
+/* First visit, after the intro: the openers glow for a few seconds. */
+.hint {
+  animation: hint-glow 1.6s ease-in-out infinite;
+}
+.liner-shell.hint .liner-tab {
+  animation: hint-glow 1.6s ease-in-out infinite;
+}
+@keyframes hint-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 200, 120, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(255, 200, 120, 0.28);
+  }
+}
+.liner-hint {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(calc(-100% - 46px), -50%);
+  max-width: 210px;
+  margin: 0;
+  padding: 9px 13px;
+  border-radius: 12px;
+  background: rgba(255, 244, 228, 0.95);
+  color: #111;
+  font-size: 13.5px;
+  line-height: 1.35;
+  pointer-events: none;
+  animation: fade-in 0.5s ease both;
+}
+.liner-hint::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  margin-top: -6px;
+  border: 6px solid transparent;
+  border-right: 0;
+  border-left-color: rgba(255, 244, 228, 0.95);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hint,
+  .liner-shell.hint .liner-tab {
+    animation: none;
+    box-shadow: 0 0 0 4px rgba(255, 200, 120, 0.35);
+  }
+}
+@media (max-width: 760px) {
+  .hearing-link {
+    display: none; /* the footer and the tab are enough on a phone */
+  }
+  .footer button.hearing {
+    padding: 5px 9px;
+  }
+}
+@media (max-width: 430px) {
+  .hearing-label {
+    display: none;
+  }
+  .liner-hint {
+    max-width: 150px;
+  }
+}

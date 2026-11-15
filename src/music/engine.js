@@ -1,5 +1,6 @@
 import * as Tone from 'tone';
 import { isAudible } from './mix.js';
+import { INSTRUMENTS } from './instruments.js';
 
 // Plays what a track's music module decides (src/music/tracks/index.js). Every voice of the current
 // track gets its own sampled instrument (VSCO 2 CE, CC0) through a low-pass filter and a gain (mute /
@@ -8,12 +9,6 @@ import { isAudible } from './mix.js';
 // underneath while the needle is on the record; with the needle up the record is silent. One-shot
 // SFX (S1, S3–S7) sit on a separate bus so they do not duck with the narration.
 
-const INSTRUMENTS = {
-  strings: { db: -7, attack: 0.25, release: 1.6 },
-  piano: { db: -3, attack: 0, release: 1.2 },
-  glock: { db: -13, attack: 0, release: 2.2 },
-  marimba: { db: -6, attack: 0, release: 0.9 },
-};
 const BPM = 84;
 const PULSE = '8n';
 const OPEN_FILTER = 9000; // Hz: voices whose brightness is not driven by the data
@@ -81,13 +76,17 @@ export function createEngine(base) {
   async function load() {
     const urls = await (await fetch(`${base}samples/samples.json`)).json();
     const buffers = {};
+    const decoding = {};
+    // Core instruments now; the others when a listener picks one (ensureInstrument).
     await Promise.all(
-      Object.keys(INSTRUMENTS).map(
-        (inst) =>
-          new Promise((resolve, reject) => {
-            buffers[inst] = new Tone.ToneAudioBuffers({ urls: urls[inst], baseUrl: `${base}samples/`, onload: resolve, onerror: reject });
-          }),
-      ),
+      Object.keys(INSTRUMENTS)
+        .filter((inst) => INSTRUMENTS[inst].core)
+        .map(
+          (inst) =>
+            (decoding[inst] = new Promise((resolve, reject) => {
+              buffers[inst] = new Tone.ToneAudioBuffers({ urls: urls[inst], baseUrl: `${base}samples/`, onload: resolve, onerror: reject });
+            })),
+        ),
     );
     const limiter = new Tone.Limiter(-1).toDestination();
     // The VSCO recordings are quiet; make-up gain on the music only (the limiter catches peaks).
@@ -111,7 +110,7 @@ export function createEngine(base) {
     const sfxBus = new Tone.Gain(1).connect(limiter);
 
     await reverb.ready;
-    n = { urls, buffers, limiter, reverb, music, bed, hiss, crackle, crackleEnv, thump, sfxBus };
+    n = { urls, buffers, decoding, limiter, reverb, music, bed, hiss, crackle, crackleEnv, thump, sfxBus };
     await loadSfx(sfxBus);
   }
 
@@ -163,6 +162,34 @@ export function createEngine(base) {
       voices[v.id] = { sampler, filter, gain, db: spec.db };
     }
     applyMix();
+  }
+
+  /** Decodes an instrument's samples if they are not loaded yet. */
+  function ensureInstrument(inst) {
+    if (!n) return Promise.reject(new Error('engine not loaded'));
+    if (!INSTRUMENTS[inst] || !n.urls[inst]) return Promise.reject(new Error(`No samples for instrument "${inst}"`));
+    if (!n.decoding[inst]) {
+      n.decoding[inst] = new Promise((resolve, reject) => {
+        n.buffers[inst] = new Tone.ToneAudioBuffers({ urls: n.urls[inst], baseUrl: `${base}samples/`, onload: resolve, onerror: reject });
+      }).catch((err) => {
+        delete n.decoding[inst];
+        throw err;
+      });
+    }
+    return n.decoding[inst];
+  }
+
+  /** Plays one voice on another instrument (same notes, same filter and mute / solo). */
+  function setInstrument(id, inst, attack) {
+    const v = voices[id];
+    const spec = INSTRUMENTS[inst];
+    if (!v || !spec) return;
+    const old = v.sampler;
+    old.releaseAll();
+    v.sampler = new Tone.Sampler({ urls: bufferMap(inst), attack: attack ?? spec.attack, release: spec.release }).connect(v.filter);
+    v.db = spec.db;
+    applyMix();
+    setTimeout(() => old.dispose(), 3000);
   }
 
   function applyMix(time) {
@@ -288,6 +315,9 @@ export function createEngine(base) {
   return {
     load,
     setVoices,
+    setInstrument,
+    ensureInstrument,
+    hasInstrument: (inst) => Boolean(n && n.buffers[inst] && n.buffers[inst].loaded),
     start,
     pause,
     releaseAll,

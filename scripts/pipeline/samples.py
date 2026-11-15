@@ -7,12 +7,13 @@ plus public/samples/samples.json (Tone.Sampler "urls" per voice, scientific pitc
 VSCO names its notes one octave lower than scientific pitch (its middle C is C3), so octave + 1.
 The upright piano files are numbered: index NNN plays MIDI key 21 + 2*NNN (Keys/Upright Piano/MappingChart.txt).
 
-Usage: python scripts/pipeline/samples.py      Needs: Python 3, ffmpeg on PATH.
+Usage: python scripts/pipeline/samples.py [instrument ...]   (no argument: all)   Needs: Python 3, ffmpeg on PATH.
 """
 import json
 import os
 import re
 import subprocess
+import sys
 import urllib.parse
 import urllib.request
 
@@ -47,7 +48,25 @@ def plan():
     files['marimba'] = []
     for n in ['G2', 'B2', 'C4', 'G4', 'B4', 'F5', 'C6']:
         files['marimba'].append((f'Percussion/Marimba/Marimba_hit_Outrigger_{n}_loud_01.wav', vsco_to_scientific(n)))
+    # Alternative instruments a listener can pick for any voice (the data mapping does not change).
+    # Long notes are cut at MAX_SECONDS with a fade, to keep the download small.
+    files['harp'] = [(f'Strings/Harp/KSHarp_{n}_mf.wav', vsco_to_scientific(n))
+                     for n in ['B1', 'D2', 'F2', 'A2', 'C3', 'E3', 'G3', 'B3', 'D4', 'F4', 'A4', 'C5', 'E5', 'G5', 'B5', 'D6', 'F6', 'A6']]
+    files['flute'] = [(f'Woodwinds/Flute/susNV/LDFlute_susNV_{n}_v1_1.wav', vsco_to_scientific(n))
+                      for n in ['C3', 'E3', 'A3', 'C4', 'E4', 'A4', 'C5', 'E5', 'A5', 'C6']]
+    files['clarinet'] = [(f'Woodwinds/Clarinet/susLong/DCClar_susLong_{n}_v2_rr1_sum.wav', vsco_to_scientific(n))
+                         for n in ['D2', 'F2', 'A#2', 'D3', 'F3', 'A#3', 'D4', 'F4', 'A#4', 'D5', 'F#5']]
+    files['xylo'] = [(f'Percussion/Xylo/Xylo_Medium_{n}_ff_01_far.wav', vsco_to_scientific(n))
+                     for n in ['G3', 'C4', 'G4', 'C5', 'G5', 'C6', 'G6', 'C7']]
+    files['pizz'] = [(f'Strings/Violin Section/Pizz/VlnEns_Pizz_{n}_v2_rr1.wav', vsco_to_scientific(n))
+                     for n in ['G2', 'A2', 'B2', 'D3', 'F#3', 'A3', 'C4', 'E4', 'G4', 'B4', 'D5']]
+    files['horn'] = [(f'Brass/F Horn/sus/MOHorn_sus_{n}_v2_1.wav', vsco_to_scientific(n))
+                     for n in ['C1', 'D#1', 'G1', 'A#1', 'D2', 'F2', 'A2', 'C3']]
+    files['horn'] += [(f'Brass/F Horn/sus/MOHorn_sus_{n}_v1_1.wav', vsco_to_scientific(n)) for n in ['D4', 'F4']]
     return files
+
+
+MAX_SECONDS = {'harp': 4, 'flute': 4, 'clarinet': 4, 'xylo': 3, 'pizz': 2, 'horn': 4}
 
 
 def fetch(path):
@@ -61,9 +80,24 @@ def fetch(path):
     return local
 
 
+def trim_filter(voice):
+    f = 'areverse,silenceremove=start_periods=1:start_threshold=-60dB,areverse'
+    if voice in MAX_SECONDS:
+        m = MAX_SECONDS[voice]
+        f += f',atrim=0:{m},afade=t=out:st={m - 0.6}:d=0.6'
+    return f
+
+
 def main():
-    index = {}
+    only = set(sys.argv[1:])  # e.g. `python samples.py harp flute`: only these instruments
+    old = {}
+    if only and os.path.exists(os.path.join(OUT, 'samples.json')):
+        with open(os.path.join(OUT, 'samples.json'), encoding='utf-8') as f:
+            old = json.load(f)
+    index = dict(old)
     for voice, items in plan().items():
+        if only and voice not in only:
+            continue
         os.makedirs(os.path.join(OUT, voice), exist_ok=True)
         index[voice] = {}
         for path, note in items:
@@ -71,7 +105,7 @@ def main():
             name = note.replace('#', 's') + '.mp3'
             dst = os.path.join(OUT, voice, name)
             subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-ac', '1', '-ar', '44100',
-                            '-af', 'areverse,silenceremove=start_periods=1:start_threshold=-60dB,areverse',
+                            '-af', trim_filter(voice),
                             '-b:a', '128k', dst], check=True)
             index[voice][note] = f'{voice}/{name}'
     with open(os.path.join(OUT, 'samples.json'), 'w', encoding='utf-8') as f:

@@ -1,5 +1,6 @@
 import { useStore } from '../state/store.js';
-import { replayTrack, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
+import { chooseInstrument, replayTrack, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
+import { INSTRUMENT_CHOICES } from '../music/instruments.js';
 import { chipSign, describeValue, TRACK_TEXT } from '../state/tracks.js';
 import { chipValue, formatDate, longDate } from '../lib/format.js';
 import { t } from '../i18n/strings.js';
@@ -10,12 +11,27 @@ function openPanel(name) {
   setPanel(name);
 }
 
-/** Top corners: brand and About. */
+function InfoIcon({ size = 15 }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <circle cx="12" cy="12" r="9.2" />
+      <path d="M12 11v5.5" />
+      <circle cx="12" cy="7.6" r="0.6" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Top corners: brand, 'What am I hearing?' and About. */
 export function Corners() {
   const lang = useStore((s) => s.lang);
+  const hint = useStore((s) => s.hint);
   return (
     <>
       <div className="brand" aria-hidden="true">{t(lang, 'brand')}</div>
+      <button type="button" className={`hearing-link ${hint ? 'hint' : ''}`} onClick={() => openPanel('liner')}>
+        <InfoIcon size={14} />
+        {t(lang, 'linerNotes')}
+      </button>
       <button type="button" className="about-link" onClick={() => openPanel('about')}>
         {t(lang, 'about')}
       </button>
@@ -73,7 +89,26 @@ export function Chips() {
         return (
           <li key={`${trackId}-${sv.voice}`} className={`chip glass ${off ? 'off' : ''}`}>
             <span className="chip-name">
-              <span className="chip-voice">{instrument}</span>
+              <span className="chip-voice">
+                <select
+                  className="chip-instrument"
+                  value={voice.instrument}
+                  aria-label={t(lang, 'instrumentFor', { variable })}
+                  onChange={(e) => chooseInstrument(sv.voice, e.target.value)}
+                >
+                  {INSTRUMENT_CHOICES.map((inst) => (
+                    <option key={inst} value={inst}>
+                      {t(lang, `instrument.${inst}`)}
+                    </option>
+                  ))}
+                </select>
+                <span className="chip-caret" aria-hidden="true">
+                  ▾
+                </span>
+                <span className="chip-instrument-label" aria-hidden="true">
+                  {instrument}
+                </span>
+              </span>
               <span className="chip-sep" aria-hidden="true">
                 {' · '}
               </span>
@@ -131,6 +166,7 @@ export function Footer() {
   const panel = useStore((s) => s.panel);
   const trackId = useStore((s) => s.trackId);
   const switching = useStore((s) => s.switching);
+  const hint = useStore((s) => s.hint);
   const shownId = switching || trackId;
   // Buttons stay focusable while a record changes (aria-disabled, not disabled) so keyboard focus
   // is not thrown to the page; the controller ignores them meanwhile.
@@ -159,10 +195,12 @@ export function Footer() {
         type="button"
         aria-expanded={panel === 'liner'}
         aria-disabled={busy}
-        className={panel === 'liner' ? 'on' : ''}
+        aria-label={t(lang, 'linerNotes')}
+        className={`hearing ${panel === 'liner' ? 'on' : ''} ${hint ? 'hint' : ''}`}
         onClick={() => openPanel('liner')}
       >
-        {t(lang, 'linerNotes')}
+        <InfoIcon />
+        <span className="hearing-label">{t(lang, 'linerNotes')}</span>
       </button>
     </nav>
   );

@@ -104,6 +104,11 @@ flowchart LR
 
 > **Decisão de 15/11/2026 (N1 na abertura):** o navegador só toca som depois de um clique, então a voz entra no clique. Na primeira visita: clique no idioma → a voz diz *"Put on headphones."* enquanto a tela preta some e a câmera já desce → em seguida *"Welcome to the Earth Jukebox…"* durante a descida (a música entra por baixo, abaixada) → ~2,5 s de música sozinha → narração de abertura da faixa. A descida não espera a voz. Retornos (abertura já vista) e "Replay opening" não repetem o N1.
 
+> **Decisão de 15/11/2026 (arrastar, instrumentos e "O que estou ouvindo?", frente C):**
+> - **Arrastar o globo** para os lados com o mouse ou o dedo, tocando ou pausado (setas ↑ ↓ fazem o mesmo pelo teclado). Enquanto arrasta, a data para e a agulha **toca o que passa embaixo dela**; ao soltar, o disco volta ao estado de antes (tocando continua tocando, pausado continua pausado). Um clique curto continua sendo play/pause.
+> - **Escolher o instrumento de cada voz** no cartão da voz (menu com o nome do instrumento). Muda só o timbre: notas, ritmo e mapeamento dado → som ficam iguais, e continua no máximo 3 vozes por faixa. Instrumentos: os 4 de antes + harpa, flauta, clarinete, trompa, pizzicato e xilofone (VSCO 2 CE, CC0), baixados só quando escolhidos.
+> - **O encarte vira "O que estou ouvindo?"** e passa a abrir por três caminhos: aba com texto e ícone ⓘ na borda direita, botão destacado no rodapé e botão no canto superior direito (ao lado de "Sobre"); a tecla L continua. Na primeira visita, quando a introdução falada termina, a aba e o botão brilham por alguns segundos com o balão "Entenda o que cada som significa". A narração **não** foi alterada.
+
 > **Decisão de 15/11/2026 (repetir com narração, frente C):** o disco gira em loop só com a música; a narração do narrador (introdução, marcos e encerramento) é falada **uma vez** por disco. O botão **repetir** no rodapé (ao lado do play/pause; tecla Home) volta o disco ao primeiro passo e fala a narração de novo, do começo. É o único jeito de ouvir a voz outra vez; pausar e retomar ou o loop não repetem a voz.
 
 > **Decisão de 15/11/2026 (idioma na abertura):** o seletor **EN · PT · ES** sai do rodapé e fica só na cold open; escolher o idioma **é** o gesto de iniciar (libera espaço na tela principal; idioma do navegador pré-selecionado).
@@ -119,7 +124,7 @@ flowchart LR
 | Data | Mês abreviado + ano ("MAR 2007"); faixas de um dia: dia + mês + ano ("19 AUG 2025"); faixas de um passo por ano (luzes noturnas, `time.unit = 'year'`): só o ano ("2012") |
 | Legenda da narração | Uma linha abaixo da data; vazia quando não há fala |
 | Chip de instrumento | "Instrumento · variável" + valor com unidade em mono + botões "M" e "S". **Sem ícone**. Por faixa: temperatura do mar = Cordas / Piano / Glockenspiel · águas do norte / trópicos / águas do sul, em °C; raios = Marimba · raios do norte / dos trópicos / do sul, em % da área coberta por pontos; luzes noturnas = Piano · luz (brilho 0–255, "/255"), Cordas · luzes apagadas e Glockenspiel · luzes novas (% de mudança sobre o ano anterior, com sinal). Sem valor: "—" na tela e o motivo no texto acessível (terra, sem dado, mar, sem ano anterior) |
-| Rodapé | Uma pílula: play/pause · repetir · nome da faixa · "Records" · "Liner notes" · "Listen \| Explore \| Compare". **Sem seletor de idioma** (idioma só na cold open, §5.2). Cada segmento de modo só aparece quando o modo existe (Explore é P1, Compare é P2; §16) |
+| Rodapé | Uma pílula: play/pause · repetir · nome da faixa · "Records" · "What am I hearing?" (antes "Liner notes") · "Listen \| Explore \| Compare". **Sem seletor de idioma** (idioma só na cold open, §5.2). Cada segmento de modo só aparece quando o modo existe (Explore é P1, Compare é P2; §16) |
 | Agulha | Braço fino de cromo, simples, sem marca; vem sempre do canto superior direito |
 | Capas (Records) | Capa + nome da faixa + período. Nada além |
 | Cold open | "Put on headphones." · "Select a language to start." · "EN · PT · ES" (navegador pré-selecionado; clicar no idioma inicia) |

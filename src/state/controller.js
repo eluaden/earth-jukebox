@@ -4,6 +4,7 @@ import { live } from './live.js';
 import { loadTrack } from '../data/loadTrack.js';
 import { readColumn, lonToIndex } from '../data/grid.js';
 import { lonUnderNeedle, SECONDS_PER_TURN } from '../data/needle.js';
+import { INSTRUMENTS } from '../music/instruments.js';
 import { shouldFireMarker, stepAt, timeOfStep, trackDuration } from './clock.js';
 import { createEngine } from '../music/engine.js';
 import { TRACK_MUSIC } from '../music/tracks/index.js';
@@ -92,18 +93,106 @@ function activate(bundle, skin) {
   live.read = emptyRead;
   live.summary = music.summary(emptyRead);
   live.dots = [];
-  c.engine.setVoices(engineVoices(bundle.id));
+  const voices = pickedVoices(bundle.id);
+  c.engine.setVoices(voices);
   const ids = music.voices.map((v) => v.id);
   useStore.setState({
     trackId: bundle.id,
     meta: bundle.meta,
     grid: bundle.grid,
-    voices: music.voices,
+    voices: music.voices.map((v) => ({ ...v, instrument: voices.find((x) => x.id === v.id).instrument })),
     summary: live.summary,
     step: 0,
     mute: allOff(ids),
     solo: allOff(ids),
   });
+}
+
+/** The track's voices with the listener's instrument picks (only picks whose samples are decoded). */
+function pickedVoices(id) {
+  const choice = useStore.getState().instrumentChoice;
+  return engineVoices(id).map((v) => {
+    const inst = choice[`${id}:${v.id}`];
+    return inst && inst !== v.instrument && c.engine.hasInstrument(inst) ? { ...v, instrument: inst, attack: undefined } : v;
+  });
+}
+
+/**
+ * The chips' instrument menu: play one voice of the current record on another instrument. Only the
+ * timbre changes (direction 6.1: notes and mapping stay; never more than the track's 3 voices).
+ */
+export async function chooseInstrument(voiceId, inst) {
+  if (!c.track || !INSTRUMENTS[inst]) return;
+  const { id } = c.track;
+  const token = c.token;
+  try {
+    await c.engine.ensureInstrument(inst);
+  } catch (err) {
+    console.error(err);
+    useStore.getState().announce(t(useStore.getState().lang, 'loadError'));
+    return;
+  }
+  if (token !== c.token) return; // the record changed meanwhile: the pick is kept for next time
+  const base = engineVoices(id).find((v) => v.id === voiceId);
+  if (!base) return;
+  c.engine.setInstrument(voiceId, inst, inst === base.instrument ? base.attack : undefined);
+  c.musicState = c.track.music.initialState(); // held notes start again on the new instrument
+  useStore.setState((s) => ({
+    instrumentChoice: { ...s.instrumentChoice, [`${id}:${voiceId}`]: inst },
+    voices: s.voices.map((v) => (v.id === voiceId ? { ...v, instrument: inst } : v)),
+  }));
+}
+
+/**
+ * Dragging the globe (src/ui/globeDrag.js, arrow keys up / down). The date stands still and the
+ * needle plays what passes under it, paused or not; scrubEnd puts the record back as it was.
+ */
+export function scrubStart() {
+  const s = useStore.getState();
+  if (!c.track || s.phase !== 'playing' || s.switching || s.panel === 'records' || s.panel === 'about') return false;
+  if (c.scrub) return true;
+  c.scrub = { wasPlaying: s.playing };
+  c.track.skin.pause();
+  if (!s.playing) {
+    c.engine.start(onTick);
+    if (s.arm !== 'down') {
+      useStore.setState({ arm: 'down' });
+      c.engine.needleDrop();
+    }
+  }
+  useStore.setState({ scrubbing: true });
+  return true;
+}
+
+export function scrubBy(radians) {
+  if (c.scrub) live.rotation += radians;
+}
+
+export function scrubEnd() {
+  clearTimeout(c.nudgeTimer);
+  if (!c.scrub) return;
+  const { wasPlaying } = c.scrub;
+  c.scrub = null;
+  useStore.setState({ scrubbing: false });
+  if (!c.track) return;
+  const s = useStore.getState();
+  if (wasPlaying && s.playing) {
+    if (s.arm === 'down') c.track.skin.play();
+  } else {
+    useStore.setState({ arm: 'up' });
+    c.engine.needleLift();
+    c.engine.pause();
+  }
+}
+
+const NUDGE = (12 * Math.PI) / 180;
+
+/** Arrow keys up / down: turn the globe 12 degrees, with sound, as a short drag. */
+export function nudgeGlobe(dir) {
+  if (!scrubStart()) return;
+  scrubBy(dir * NUDGE);
+  clearTimeout(c.nudgeTimer);
+  c.nudgeTimer = setTimeout(scrubEnd, 700);
 }
 
 /** Loads the list of records, the first record and the samples. Safe to call many times. */
@@ -194,7 +283,9 @@ function sayIntroWhenFree() {
       c.fired.delete('intro'); // spoken on the next play instead
       return;
     }
-    say('intro');
+    Promise.resolve(say('intro')).then(() => {
+      if (token === c.token) hintOnce();
+    });
   });
 }
 
@@ -211,6 +302,7 @@ function schedulePrefetch() {
 }
 
 export function togglePlay() {
+  if (c.scrub) scrubEnd();
   const s = useStore.getState();
   if (s.phase !== 'playing' || s.switching) return;
   if (s.playing) {
@@ -371,7 +463,22 @@ export function progress() {
 
 function say(id) {
   const { lang } = useStore.getState();
-  c.narrator.say(narrationLine(c.track.id, c.track.meta, id, lang), lang);
+  return c.narrator.say(narrationLine(c.track.id, c.track.meta, id, lang), lang);
+}
+
+const HINT_MS = 9000;
+
+/** First visit: after the record's intro, the 'What am I hearing?' openers glow once. */
+function hintOnce() {
+  try {
+    if (localStorage.getItem('ej-hint-seen') === '1') return;
+    localStorage.setItem('ej-hint-seen', '1');
+  } catch {
+    /* storage blocked: show it anyway */
+  }
+  if (useStore.getState().panel === 'liner') return;
+  useStore.setState({ hint: true });
+  setTimeout(() => useStore.setState({ hint: false }), HINT_MS);
 }
 
 /** "V": speak the date and every voice's value (screen reader live region). */
@@ -399,7 +506,7 @@ export function playLegend() {
 
 function onTick(tick, time) {
   const s = useStore.getState();
-  if (!s.playing || !c.track) return null;
+  if ((!s.playing && !s.scrubbing) || !c.track) return null;
   const { music, view, meta, emptyRead } = c.track;
   // Needle up (paused, Records open, a record changing, opening replay): nothing is read, so held
   // notes release and nothing plays.
@@ -425,7 +532,7 @@ export function advance(dt) {
   if (!c.track || s.phase !== 'playing') return;
   const { meta, grid, music, skin } = c.track;
   // Long gaps (tab in the background) are capped so the globe does not jump half a turn.
-  if (s.playing) live.rotation -= Math.min(dt, 0.5) * ((2 * Math.PI) / SECONDS_PER_TURN);
+  if (s.playing && !s.scrubbing) live.rotation -= Math.min(dt, 0.5) * ((2 * Math.PI) / SECONDS_PER_TURN);
   if (s.seekTo != null) {
     skin.seek(s.seekTo);
     useStore.setState({ seekTo: null });

@@ -30,6 +30,9 @@ export const useStore = create((set) => ({
   seekTo: null,
   introKey: 0,
   introAnimated: true,
+  scrubbing: false, // the globe is being dragged: date stands still, the needle plays what passes under it
+  instrumentChoice: {}, // 'trackId:voiceId' -> instrument picked by the listener
+  hint: false, // first visit: the 'What am I hearing?' openers glow once after the intro
 
   setLang: (lang) => {
     try {
