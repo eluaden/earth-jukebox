@@ -163,4 +163,17 @@ Put on headphones. This is the Atlantic Ocean, in the summer of 2007. Every note
 
 ### 2.5 Narração das faixas (N2) e do pitch (N3)
 
-- *(A escrever depois da exploração E1 e do roteiro do vídeo.)*
+- Originais em `media-src/elevenlabs/voice/<en|pt|es>/<faixa>-<id>.mp3`. No site, cada fala vive em `public/narration/<idioma>/<chave>.mp3`, listada em `public/narration/manifest.json` (`lines`: chave → arquivo; `info`: faixa, idioma, tipo e texto). A chave é `lineKey(idioma, texto)` de `src/narration/key.js`, um hash do **texto exato**: se o texto mudar, o site volta para a voz do navegador até a fala ser gravada de novo.
+- As gravações já em `public/narration/` (15/11/2026, `eleven_multilingual_v2`, voz clonada de um integrante) são das faixas antigas. As falas da SST abaixo ainda precisam ser gravadas com a mesma voz.
+- Os textos são os mesmos de `src/i18n/tracks/<faixa>.js` (fonte única); se mudar um, mude o outro.
+- `{date}` é preenchido pelo site com o mês e o ano; os textos abaixo já estão com a data exata que o site gera (calculada da grade da faixa), então a chave bate.
+- Pitch (N3): *(a escrever com o roteiro do vídeo.)*
+
+**Temperatura do mar (SST)**
+
+| ID | EN | PT | ES |
+|---|---|---|---|
+| `sst-intro` | This is the surface of the ocean, from March 2007 to March 2008. Every note is a temperature read from a NASA map: the warmer the water, the higher the note. | Esta é a superfície do oceano, de março de 2007 a março de 2008. Cada nota é uma temperatura lida de um mapa da NASA: quanto mais quente a água, mais aguda a nota. | Esta es la superficie del océano, de marzo de 2007 a marzo de 2008. Cada nota es una temperatura leída de un mapa de la NASA: cuanto más cálida el agua, más aguda la nota. |
+| `sst-north-warmest` | September 2007: the northern waters reach their warmest of the year. | Setembro de 2007: as águas do norte chegam ao ponto mais quente do ano. | Septiembre de 2007: las aguas del norte llegan a su punto más cálido del año. |
+| `sst-south-warmest` | February 2008: now it is the turn of the southern waters, at their warmest of the year. | Fevereiro de 2008: agora é a vez das águas do sul, no ponto mais quente do ano. | Febrero de 2008: ahora es el turno de las aguas del sur, en su punto más cálido del año. |
+| `sst-outro` | One year of ocean has passed under the needle. The record starts again. | Um ano de oceano passou sob a agulha. O disco recomeça. | Un año de océano ha pasado bajo la aguja. El disco vuelve a empezar. |

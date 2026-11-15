@@ -1,6 +1,6 @@
 # Earth Jukebox — Direcionamento atual
 
-> Fonte de verdade do projeto (ver [`AGENTS.md`](../AGENTS.md)). Definido em 15/11/2026.
+> Fonte de verdade do projeto (ver [`AGENTS.md`](../AGENTS.md)). Definido em 15/11/2026; resultados de E1 (SST), E2 e E3 em §14.1.
 > Substitui todas as decisões anteriores: o código, as faixas e o README atuais **não** valem como referência.
 > Contexto e pesquisa: [análise estratégica](analise-estrategica.md), [recursos do desafio](recursos-do-desafio.md), [projetos anteriores](earth-jukebox-projetos-anteriores.md).
 
@@ -56,8 +56,10 @@ flowchart LR
 1. O mapa plano da NASA (cor = temperatura, legenda 0–32 °C) é enrolado no globo.
 2. A agulha fica parada num meridiano; o globo gira embaixo dela.
 3. A cada instante, a agulha lê a coluna do mapa sob ela, de norte a sul, dividida em faixas de latitude; a cor de cada faixa vira temperatura pela legenda.
-4. Cada faixa de latitude é uma nota: **latitude → altura** (norte agudo, sul grave); **temperatura → intensidade e brilho**; **terra firme → silêncio**.
+4. A coluna é dividida em 3 zonas (norte, trópicos, sul), cada uma tocada por um instrumento e dividida em 2 sub-faixas de latitude (até 2 notas por voz). **Temperatura → altura na escala** (mais quente = mais agudo) **e brilho**; **terra firme → silêncio** daquela sub-faixa. A latitude aparece pelo instrumento da zona e pelo ponto de luz na agulha.
 5. Resultado: o Pacífico soa como um acorde largo e longo, as Américas quase em silêncio, depois o Atlântico. Com o vídeo avançando, as estações mudam a melodia volta após volta.
+
+> **Decisão de 15/11/2026:** nesta faixa, **temperatura → altura** (como no §6.2) em vez de latitude → altura. Com latitude → altura cada faixa tocaria sempre a mesma nota e a temperatura viraria só volume, difícil de ouvir.
 
 ## 3. Escopo
 
@@ -203,7 +205,7 @@ Painel de vidro que desliza da direita, com:
 | Faixa | Vozes |
 |---|---|
 | Aerossóis | Fumaça → violoncelo grave · Poeira → marimba · Sal marinho → celesta (sulfato só se couber no limite de 3 vozes, ver Q2) |
-| Temperatura do mar | 3 zonas da coluna sob a agulha: águas do norte (acima de 23,5° N) → cordas · trópicos → piano · águas do sul (abaixo de 23,5° S) → celesta. Temperatura → altura na escala; água mais quente → timbre mais brilhante |
+| Temperatura do mar | 3 zonas da coluna sob a agulha: águas do norte (acima de 23,5° N) → cordas · trópicos → piano · águas do sul (abaixo de 23,5° S) → glockenspiel (o VSCO 2 CE não tem celesta, ver E2). Cada zona = 2 sub-faixas de latitude = até 2 notas. Temperatura → altura na escala, a mesma para as 3 vozes (mesma temperatura = mesmo grau); água mais quente → timbre mais brilhante. Regra emocional não se aplica: a série é um ciclo de estações, não uma tendência |
 | Raios | Cada raio → batida de percussão afinada; latitude → altura (migração norte/sul audível) |
 | Luzes noturnas | Quantidade de luz → densidade de notas de piano; luz apagada → notas descendo em menor; luz nova → sinos subindo |
 | Nível do mar (bônus) | Nível → tom sustentado subindo; marcos por década |
@@ -355,6 +357,8 @@ earth-jukebox/media-src/
 - Motor de som atual (onda dente-de-serra, ruído e tique).
 - O extrator atual **pode ser reaproveitado** se servir à agulha; não é obrigatório mantê-lo.
 
+> **Feito em 15/11/2026 (fatia SST):** tudo acima saiu. O extrator antigo não foi reaproveitado: a leitura agora é offline, por script (`scripts/pipeline/`). As pastas de raios e nível do mar em `public/tracks/` ficam paradas até as próximas fatias.
+
 ## 13. Como cobrimos os critérios
 
 | Critério | Como pontuamos |
@@ -376,15 +380,32 @@ Fazer antes de implementar os itens bloqueados. Resultado entra neste documento.
 | E3 | Desempenho de vídeo como textura do globo em notebook comum e celular; tamanho e codec necessários | §5.3, §10 (site) |
 | E4 | É viável ler o CO₂ DYAMOND (câmera móvel) com qualidade? | Inclusão do CO₂ em §8 |
 
+**Regra para E1 (15/11/2026):** usamos **só os arquivos que a NASA publica nos recursos do desafio**; não procuramos versões alternativas. Quando um vídeo não for 2:1 de polo a polo, ele veste só a faixa de latitudes que cobre (o resto do globo fica escuro), em vez de ser trocado por outro arquivo.
+
+### 14.1 Resultados
+
+| # | Faixa | Resultado |
+|---|---|---|
+| E1 | Temperatura do mar | **Feito.** `ecco2_sst_flow.mp4` (SVS 3912): 2048×1024, 2:1 equirretangular de polo a polo, câmera fixa, 2001 frames a 30 fps, sem legenda nem data no frame. Serve como **textura e como leitura**: a legenda é o arquivo oficial `sst_ecco2_cbar.png` (0–32 °C, linear entre x=15 e x=291 na linha 47). O matiz da legenda cai de forma monótona de 228° (0 °C) a −6° (32 °C), então cada cor vira temperatura pelo matiz, inclusive nas linhas de corrente esmaecidas. Pixels válidos: saturação > 0,45, brilho > 0,22, matiz dentro da legenda (~22% do frame; a terra é cinza e fica de fora). Datas exatas por frame: `flat_ecco2_dates.txt` (25/03/2007 12:00Z a 03/03/2008 12:00Z, ~4 h por frame). Checagem física: 40° N a 10 °C e 40° S a 17 °C em março; 22 °C e 11 °C em setembro |
+| E1 | Raios, luzes noturnas | Pendente (próximas fatias) |
+| E2 | — | **VSCO 2 CE: CC0** (cordas em seção, piano de armário, glockenspiel, marimba, xilofone, harpa; **sem celesta**). **Usado na fatia SST:** seções de violoncelo e violino (cordas), piano de armário, glockenspiel; 35 arquivos, 3,1 MB (`scripts/pipeline/samples.py`). O Salamander Grand Piano (CC-BY 3.0) não foi usado |
+| E3 | Temperatura do mar | O vídeo é denso (linhas de corrente): 2048×1024 em H.264 fica com 122 MB mesmo comprimido. **Escolha:** 1536×768 (20 MB, computador) e 1024×512 (11 MB, celular e telas pequenas), H.264, 30 fps, sem áudio. O vídeo veste o globo e toca no navegador (Chromium, verificado). **Fluidez (FPS) em notebook comum e celular real: pendente** (o teste automático rodou com a janela fora da tela, sem quadros por segundo confiáveis) |
+
+**Achados da fatia SST (15/11/2026):**
+- Cada voz toca a média de duas faixas largas de latitude, então a música quase nunca para: em qualquer longitude pelo menos 4 das 6 notas encontram oceano. **R5 (silêncio longo sobre a terra) praticamente não acontece** com esse desenho; o estalo de vinil do Q5 fica só como textura.
+- O exemplo do §2.3 ("as Américas quase em silêncio") **não vale** com faixas largas; o encarte diz o que o dado mostra.
+- Média do planeta inteiro, calculada da grade: águas do norte de 9,0 °C (mar/2008) a 15,4 °C (set/2007); sul de 7,5 °C (set/2007) a 11,6 °C (fev/2008); trópicos entre 26,6 e 27,7 °C o ano todo. Marcos da narração: norte mais quente em 2/9/2007, sul em 10/2/2008.
+- Com a agulha levantada (Records aberto) a música para, como num toca-discos de verdade.
+
 ## 15. Perguntas em aberto
 
 | # | Pergunta | Afeta | Recomendação |
 |---|---|---|---|
-| Q1 | Velocidade de rotação do globo e quanto tempo de dado passa por volta | §2, §6 | Definir de ouvido por faixa; ponto de partida ~10 s por volta |
+| Q1 | Velocidade de rotação do globo e quanto tempo de dado passa por volta | §2, §6 | Definir de ouvido por faixa; ponto de partida ~10 s por volta. Na SST: vídeo a 1× (66,7 s por ano de dado), ~6,7 voltas por ano |
 | Q2 | Aerossóis têm 4 categorias e o limite é 3 vozes: corta sulfato ou abre exceção? | §6.2 | Testar com 4; cortar se embolar |
 | Q3 | Quantos testadores cegos ou com baixa visão conseguimos, e quando? | §9, §10 | Pelo menos 3 reais + 5 de olhos fechados |
-| Q4 | Qual voz do ElevenLabs será o narrador? | §7.2 (N1–N3) | Voz calma, quente, de documentário; testar 3–4 com a frase de teste de `prompts-assets.md` |
-| Q5 | O que soa quando a agulha passa sobre terra numa faixa de oceano? | §6.3, R5 | Testar de ouvido: um som de fundo muito baixo e contínuo, que não vem do dado e é declarado no encarte, contra o globo girando mais rápido sobre a terra |
+| Q4 | Qual voz do ElevenLabs será o narrador? | §7.2 (N1–N3) | Voz calma, quente, de documentário; testar 3–4 com a frase de teste de `prompts-assets.md`. **Em 15/11/2026 o time gravou as falas das faixas antigas com a voz clonada de um integrante (`eleven_multilingual_v2`), em `public/narration/`**; falta registrar aqui se essa é a voz escolhida |
+| Q5 | O que soa quando a agulha passa sobre terra numa faixa de oceano? | §6.3, R5 | Testar de ouvido: um som de fundo muito baixo e contínuo, que não vem do dado e é declarado no encarte, contra o globo girando mais rápido sobre a terra. **Primeira versão (fatia SST):** estalo de vinil sintetizado, muito baixo e contínuo, declarado no encarte; trocado pelo S2 quando existir |
 
 ## 16. Prioridade
 

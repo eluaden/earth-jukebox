@@ -51,17 +51,17 @@
 
 | NASA resource | What we use | Status |
 |---|---|---|
-| [SVS 5235](https://svs.gsfc.nasa.gov/5235/) — Sea Level Through a Porthole, 1993–2023 | Global sea level read from the ruler on the frame | In the site |
-| [SVS 5011](https://svs.gsfc.nasa.gov/5011/) — Lightning Events Detected from the ISS, 2017–2023 | Map coverage of lightning, north vs south | In the site |
-| [SVS 4993](https://svs.gsfc.nasa.gov/4993/) — Spread of the Dixie Fire, 2021 | Burned area read from the chart on the frame | In the site (leaving, see direcionamento §8) |
-| [SVS 5113](https://svs.gsfc.nasa.gov/5113/) — Active Fires as Observed by VIIRS | Map coverage of fire detections by region | In the site (leaving) |
-| [SVS 5175](https://svs.gsfc.nasa.gov/5175/) — TEMPO nitrogen dioxide, Chicago/Toronto | NO₂ read from the color legend | In the site (leaving) |
+| [SVS 5235](https://svs.gsfc.nasa.gov/5235/) — Sea Level Through a Porthole, 1993–2023 | Global sea level read from the ruler on the frame | Planned (bonus 2D track; old frames kept in `public/tracks/`, not in the new app yet) |
+| [SVS 5011](https://svs.gsfc.nasa.gov/5011/) — Lightning Events Detected from the ISS, 2017–2023 | Lightning under the needle, latitude → pitch | Planned (to be redone for the needle) |
+| [SVS 4993](https://svs.gsfc.nasa.gov/4993/) — Spread of the Dixie Fire, 2021 | Burned area read from the chart on the frame | Removed (direcionamento §8) |
+| [SVS 5113](https://svs.gsfc.nasa.gov/5113/) — Active Fires as Observed by VIIRS | Map coverage of fire detections by region | Removed |
+| [SVS 5175](https://svs.gsfc.nasa.gov/5175/) — TEMPO nitrogen dioxide, Chicago/Toronto | NO₂ read from the color legend | Removed |
 | [SVS 5669](https://svs.gsfc.nasa.gov/5669/) — GEOS Aerosols 2025 | Aerosol types, one instrument per type | Planned |
-| [SVS 3912](https://svs.gsfc.nasa.gov/3912/) — ECCO2 Sea Surface Temperature | Temperature from the 0–32 °C legend | Planned |
+| [SVS 3912](https://svs.gsfc.nasa.gov/3912/) — ECCO2 Sea Surface Temperature | `ecco2_sst_flow.mp4` as the globe skin; temperature read from its flow-line colours with the official colour bar `sst_ecco2_cbar.png` (0–32 °C); exact dates from `flat_ecco2_dates.txt` | In the site |
 | [SVS 5313](https://svs.gsfc.nasa.gov/5313/) — Night Lights 2012–2023 | Amount of light, Compare mode | Planned |
 | [SVS 5533](https://svs.gsfc.nasa.gov/5533/) — EIC Air Quality | Studied as a candidate track | Research |
 | [SVS 13786](https://svs.gsfc.nasa.gov/13786/) — Data Sonification: Caldwell 73 | Reference for "latitude → pitch" scanning | Method reference |
-| NASA Blue Marble Next Generation (Dec 2004) | Globe texture | In the site |
+| NASA Blue Marble Next Generation (Dec 2004) | Globe texture of the old landing page | Removed |
 | [Earth Information Center gallery](https://svs.gsfc.nasa.gov/gallery/earth-information-center/) and the [challenge page](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/) | Source list and challenge brief | Reference |
 
 Keep this table in sync with `public/tracks/` and the README track table.
@@ -73,17 +73,18 @@ Keep this table in sync with `public/tracks/` and the README track table.
 | Type | Resource | License / terms | Use |
 |---|---|---|---|
 | Data | NASA SVS videos and images (§3) | NASA media guidelines, public domain unless noted | Data source, video in the player |
-| Font | [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) (Google Fonts) | SIL Open Font License | Interface text |
+| Font | [Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif), [Geist Mono](https://fonts.google.com/specimen/Geist+Mono) (Google Fonts) | SIL Open Font License | Dates and titles; data values |
 | Font | [Atkinson Hyperlegible](https://fonts.google.com/specimen/Atkinson+Hyperlegible) (Google Fonts) | SIL Open Font License | Readable interface text |
-| Tool | [Vite](https://vitejs.dev/) | MIT | Build and dev server |
-| Browser API | Web Audio API, Web Speech API | Browser standard | Sound synthesis, fallback narration |
+| Tool | [Vite](https://vitejs.dev/), [Vitest](https://vitest.dev/) | MIT | Build, dev server, tests |
+| Library | [React](https://react.dev/), [three.js](https://threejs.org/), [React Three Fiber](https://github.com/pmndrs/react-three-fiber), [drei](https://github.com/pmndrs/drei), [postprocessing](https://github.com/pmndrs/postprocessing), [zustand](https://github.com/pmndrs/zustand), [Tone.js](https://tonejs.github.io/) | MIT | Interface, 3D globe, state, audio |
+| Library | [GSAP](https://gsap.com/) | GSAP standard license (free) | Camera and needle animation |
+| Samples | [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE), Versilian Studios: cello and violin sections, upright piano, glockenspiel (subset, converted to MP3 by `scripts/pipeline/samples.py`) | CC0 1.0 | Instruments |
+| Tool | Python, numpy, Pillow, ffmpeg | PSF / BSD / HPND / LGPL | Reading NASA frames (`scripts/pipeline/`) |
+| Browser API | Web Audio API, Web Speech API, WebGL | Browser standard | Sound synthesis, fallback narration, 3D |
 | Hosting | GitHub Pages | GitHub terms | Live site |
 | SI tool | Anthropic Claude (Claude Code, Cursor) | Anthropic / Cursor terms | AI-assisted coding, documentation and translation (§1) |
 | SI tool (planned) | Google Veo | Google terms | Opening clip and abstract pitch shots, watermarked |
 | SI tool (planned) | ElevenLabs | ElevenLabs terms (check commercial/attribution clause) | Narration and sound effects, tagged |
-| Planned | three.js, React Three Fiber, drei, postprocessing, GSAP, Tone.js | MIT / GSAP standard license | 3D globe, animation, audio |
-| Planned | Instrument samples (e.g. Salamander Piano, VSCO 2 CE) | To be confirmed (direcionamento E2) | Instruments |
-| Planned | Fonts Instrument Serif, Geist Mono | SIL Open Font License | Titles and data values |
 | Research | Past Space Apps projects ([`earth-jukebox-projetos-anteriores.md`](earth-jukebox-projetos-anteriores.md)) | Public project pages | Inspiration and differentiation only; no code or assets reused |
 
 No copyrighted material is used without permission.
