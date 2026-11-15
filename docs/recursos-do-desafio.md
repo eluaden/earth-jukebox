@@ -364,6 +364,8 @@ Medido nos vídeos:
 
 Folhas de contato: frames espaçados igualmente ao longo de cada vídeo, em ordem da esquerda para a direita e de cima para baixo.
 
+Os cinco vídeos abaixo são baixados para `sources/` (ignorada pelo git) com `npm run fetch-sources`.
+
 | Vídeo | Arquivo baixado | Tamanho |
 |---|---|---|
 | Night Lights | `nightlights_flat_series_and_change_wZooms_13_EIC_2160p30_h265.mp4` | 32.7 MB |

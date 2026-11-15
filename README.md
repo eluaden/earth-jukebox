@@ -22,6 +22,11 @@ npm run build      # static site in dist/
 
 `npm run deploy` builds the site and publishes `dist/` to the `gh-pages` branch, which GitHub Pages serves.
 
+`npm run fetch-sources` downloads the NASA reference videos inspected in
+[`docs/recursos-do-desafio.md`](docs/recursos-do-desafio.md) into `sources/` (about 920 MB, ignored by git:
+GitHub rejects files over 100 MB). `-- --list` shows them; `-- <name>...` fetches only those. Files
+already present with the expected size are skipped.
+
 ## Architecture
 
 Vite + plain JavaScript, no framework and no back end. Sound uses the Web Audio API directly.
