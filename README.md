@@ -1,95 +1,121 @@
 # Earth Jukebox
 
-NASA Space Apps Challenge 2026 — *The Earth Information Jukebox*.
+**Team Lucas** · NASA Space Apps Challenge 2026 · challenge *The Earth Information Jukebox*.
 
-Pick a "track" (a NASA Earth Information Center visualization, as a sequence of frames),
-press play, and **hear the data**. Each variable becomes a sound layer synthesized live in
-the browser, with spoken narration for context. Built to be fully usable without sight.
+**Live site:** https://eluaden.github.io/earth-jukebox/
+
+A jukebox that plays NASA Earth Information Center visualizations as sound. Pick a record, press
+play, and **hear the data**: each variable becomes a sound layer synthesized live in the browser,
+while the NASA video plays in step and a voice gives the context in English, Portuguese or
+Spanish. It is built to be usable without sight.
+
+Nothing is pre-recorded, and nothing is invented: every value you hear is read in your browser
+from frames of NASA Scientific Visualization Studio videos.
 
 ## Run
 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm run build      # static site in dist/ (GitHub Pages or Vercel)
+npm run build      # static site in dist/
 ```
+
+Pushing to `main` deploys to GitHub Pages (`.github/workflows/deploy.yml`).
 
 ## Architecture
 
+Vite + plain JavaScript, no framework and no back end. Sound uses the Web Audio API directly.
+
 | Folder | Owns | Must not know about |
 |---|---|---|
-| `src/data/` | Loading tracks, (soon) pixel → value extraction with the track's color legend, contract validation | sound |
-| `src/audio/` | Real-time synthesis (Tone.js). Takes 0..1 series, plays them | images |
-| `src/narration/` | Speech (Web Speech API) for intro, audio legend, events, outro | — |
-| `src/ui/` | Jukebox: track list, player, controls, accessibility | — |
-| `public/tracks/<id>/` | `track.json` + frames for each track | — |
+| `src/data/` | Loading tracks, reading values from the frames' pixels (`extract.js`), contract validation | sound |
+| `src/audio/` | Real-time synthesis. Takes values 0..1 and plays them | images, the page |
+| `src/narration/` | Speech (Web Speech API) and captions | — |
+| `src/ui/` | Landing page, listen page, vinyl transition, full screen, globe | — |
+| `src/i18n/` | Interface texts in en / pt / es | — |
+| `public/tracks/<id>/` | `track.json`, the frames and the video of each track | — |
+
+`public/earth.jpg` is NASA's Blue Marble Next Generation (December 2004), used as the texture of
+the globe on the landing page. Without it the page falls back to a simple drawing.
+
+### Adding a track
+
+1. Create `public/tracks/<id>/` with `track.json`, the frames and (optionally) `video.mp4`.
+2. Add the id to `public/tracks/index.json`.
+
+The sleeves on the landing page and the record list on the listen page are built from that list.
 
 ## Track contract (`track.json`)
 
-The boundary between `data` and `audio`. Defined and validated in
-[`src/data/contract.js`](src/data/contract.js). **Required fields don't change without telling the team.**
+Defined and validated in [`src/data/contract.js`](src/data/contract.js).
 
 ```jsonc
 {
-  "id": "arctic-sea-ice",
+  "id": "dixie-fire-2021",
+  "code": "A2",                             // jukebox key
+  "short": "DIXIE FIRE",                    // text on the sleeve
+  "cover": ["#FFE1B8", "#F0703A", "#5A1408"], // sleeve colours
+  "period": "Jul–Sep 2021",
+  "meta": { "en": "...", "pt": "...", "es": "..." },     // dataset and dates, on the sleeve
+  "summary": { "en": "Burned area → pitch and volume · ..." }, // mapping, on the sleeve
   "title": { "en": "...", "pt": "...", "es": "..." },
-  "source": "NASA dataset name and URL",
-  "secondsPerFrame": 0.5,
-  "frames": ["frame_000.png"],            // may be [] for synthetic tracks
-  "labels": ["1979"],                     // one per frame
-  "series": { "ice": [0.82] },            // normalized 0..1, one per frame; null = no data
+  "source": "NASA visualization name and URL",
+  "secondsPerFrame": 0.5,                   // one step of sound
+  "clockEvery": 1,                          // tick every N steps (optional)
+  "frames": ["frame_001.jpg"],              // the stills the values are read from
+  "labels": ["Jul 16"],                     // one per frame
+  "video": { "file": "video.mp4", "times": [0.25] }, // video time of each frame (optional)
+  "extraction": { "type": "cursor" },       // how values are read from the frames (see below)
   "mapping": {
-    "ice": {
-      "layer": "drone",                   // drone | texture | pulse (each at most once)
-      "meaning": { "en": "lower pitch = less ice" },
-      "legend": { "min": { "en": "This is the least ice." }, "max": { "en": "This is the most ice." } },
-      "loudWhen": "high",                 // texture only: high | low
-      "physicalRange": { "min": "...", "max": "..." }  // optional, real units for 0 and 1
+    "area": {
+      "layer": "drone",                     // drone = tone | texture = wind | pulse = pitch of the tick
+      "tube": "AREA",                       // label on the jukebox tube
+      "name": { "en": "Burned area" },
+      "meaning": { "en": "higher, louder tone = more land burned" },
+      "physicalRange": { "min": "0 km²", "max": "3900 km²" },
+      "params": { "underwater": false }     // optional timbre
     }
   },
-  "events": [ { "frame": 33, "type": "record", "say": { "en": "2012, record low" } } ],
-  "narration": { "intro": { "en": "..." }, "outro": { "en": "..." } },
-  "placeholder": false,                   // true = synthetic / not real data (shown in the UI)
-  "clock": true                           // pulse ticks once per frame (default true)
+  "events": [ { "frame": 16, "type": "milestone", "say": { "en": "August" } } ], // or "record"
+  "narration": { "intro": { "en": "..." }, "outro": { "en": "..." } }
 }
 ```
+
+`series` (values 0..1) and `values` (physical units) are filled in the browser by
+`src/data/extract.js` from the frames; a track may also ship a ready `series`.
 
 ## Sound mapping (same rules for every track)
 
 | Layer | Sound | Driven by |
 |---|---|---|
-| **drone** | Warm continuous tone | Value → pitch on a log scale, `f = 110 Hz × 4^v` (110–440 Hz, two octaves), and loudness (quieter when low, never silent). Glides smoothly between frames. |
-| **texture** | Filtered pink noise ("wind") | Intensity = value (or 1 − value with `loudWhen: "low"`) → loudness and brightness (cutoff 300–3000 Hz). |
-| **pulse** | Soft tick, once per frame | Time. Strong (louder, octave up) tick on `milestone` events. If a series is mapped to `pulse`, its value sets the tick pitch (160–640 Hz, log). |
-| **bell** | FM bell | Rung on `record` events. |
+| **Tone** (`drone`) | Sawtooth + sub octave through a low-pass filter | Value → pitch on a log scale, `f = 98 Hz × 4^v` (98–392 Hz, two octaves), and loudness. |
+| **Wind** (`texture`) | Band-passed white noise | Value → loudness (`0.02 + 0.5 v²`) and brightness (300–1200 Hz). Silent in tracks with no second series. |
+| **Tick** (`pulse`) | Short sine blip, once per step (or every `clockEvery` steps) | Time. A stronger tick on `milestone` events. If a series is mapped to it, its value sets the pitch (`1000 Hz × 3^v`). |
+| **Bell** | Three decaying partials (880 Hz × 1, 2.76, 5.4) | Rung on `record` events. |
 
-**Audio legend:** before a track (and any time with the *Hear lowest / Hear highest* buttons), each
-layer is played alone at value 0 and value 1 so listeners learn the scale.
+The sea level track uses an "underwater" timbre (lower filter with a slow sweep); pitch and
+loudness follow the data in the same way.
 
-**Scientific honesty:** sound is driven by the **data value**, recovered from each pixel through the
-track's color legend, not by raw brightness. Anything not taken from the frames or a NASA source is
-marked as a placeholder.
+**Scientific honesty:** sound is driven by the **data value** read from the frame (colour legend,
+ruler, chart or coverage, described per track below), not by raw brightness. The current values,
+with units, are shown under the player and in the slider's `aria-valuetext`.
 
 ## Narration
 
-- Languages: English (en-US), Portuguese (pt-BR), Spanish (es-ES), chosen with the *Narration language* selector.
-- Order: title → intro → **audio legend** (each layer alone at its minimum, then its maximum) → the track,
-  with events spoken over lowered music → outro. *Skip introduction* jumps straight to the track.
-- Voice: the browser's speech synthesis by default. A track may ship recorded MP3s, used instead when present:
-  `narration.audio.intro.pt`, `narration.audio.outro.pt`, `mapping.<series>.legend.audio.min.pt` / `.max.pt`,
-  `events[].audio.pt` (file paths relative to the track folder).
-- Every spoken line is also shown as a caption. With *Spoken narration* off, lines go to the screen-reader
-  live region instead, so nothing is ever said twice.
+- English (en-US), Portuguese (pt-BR), Spanish (es-ES), chosen with the EN / PT / ES buttons.
+- Order: intro → the track, with milestones and records spoken over lowered music → outro.
+- Voice: the browser's speech synthesis (Web Speech API).
+- Every spoken line is also shown as a caption on the video and written to the live region.
+  *Spoken narration* and *Captions* can each be switched off.
 
 ## Tracks
 
-| id | Status | Mapping |
+| id | NASA source | Mapping |
 |---|---|---|
-| `sea-level-porthole` | **Real NASA frames.** [SVS 5235](https://svs.gsfc.nasa.gov/5235/), Sea Level Through a Porthole, 1993–2023, 91 frames (three per year) | Global sea level (cm above 1993) → drone. Strong tick every ten years, bell on the highest point |
-| `dixie-fire-2021` | **Real NASA frames.** [SVS 4993](https://svs.gsfc.nasa.gov/4993/), Spread of the Dixie Fire, 16 Jul – 11 Sep 2021, one frame per day | Total burned area (km²) → drone, growth since the previous day → texture. Strong tick on the 1st of each month, bell on the fastest day |
-| `active-fires-viirs` | **Real NASA frames.** [SVS 5113](https://svs.gsfc.nasa.gov/5113/), Active Fires As Observed by VIIRS, 13 Nov 2024 – 13 Nov 2026, one frame every 5 days | Share of each region's map covered by fire detections (%): Africa north of the equator → drone, Africa south of the equator → texture, South and Southeast Asia → pulse pitch. Strong tick on each new year, bell at each African peak |
-| `tempo-no2-great-lakes` | **Real NASA frames.** [SVS 5175](https://svs.gsfc.nasa.gov/5175/), TEMPO nitrogen dioxide, Chicago/Toronto view, 31 Aug 2023, 12 scans | Chicago area → drone, Detroit area → texture, Toronto area → pulse pitch. Bell on Chicago's highest scan |
-| `demo-synthetic` | **PLACEHOLDER — synthetic numbers** generated by `scripts/make-demo-track.mjs` (seed 42), for testing the engine only | `level` → drone, `stress` → texture (louder when high) |
+| `sea-level-porthole` | **Real NASA frames.** [SVS 5235](https://svs.gsfc.nasa.gov/5235/), Sea Level Through a Porthole, 1993–2023, 91 frames (three per year) | Global sea level (cm above 1993) → tone. Strong tick every ten years, bell on the highest point |
+| `dixie-fire-2021` | **Real NASA frames.** [SVS 4993](https://svs.gsfc.nasa.gov/4993/), Spread of the Dixie Fire, 16 Jul – 11 Sep 2021, one frame per day | Total burned area (km²) → tone, growth since the previous day → wind. Strong tick on the 1st of each month, bell on the fastest day |
+| `active-fires-viirs` | **Real NASA frames.** [SVS 5113](https://svs.gsfc.nasa.gov/5113/), Active Fires As Observed by VIIRS, 13 Nov 2024 – 13 Nov 2026, one frame every 5 days | Share of each region's map covered by fire detections (%): Africa north of the equator → tone, Africa south of the equator → wind, South and Southeast Asia → pitch of the tick. Strong tick on each new year, bell at each African peak |
+| `tempo-no2-great-lakes` | **Real NASA frames.** [SVS 5175](https://svs.gsfc.nasa.gov/5175/), TEMPO nitrogen dioxide, Chicago/Toronto view, 31 Aug 2023, 12 scans | Chicago area → tone, Detroit area → wind, Toronto area → pitch of the tick. Bell on Chicago's highest scan |
 
 ### How `tempo-no2-great-lakes` is read from the frames
 
@@ -144,6 +170,19 @@ The player shows the video in step with the sound; the still frames are what the
 
 ## Accessibility
 
-- Everything works from the keyboard. Space or K plays and pauses, Escape stops. Arrow keys on the position slider move one frame.
-- Labelled buttons, slider with `aria-valuetext` (label, frame and the real data values), and a `role="status"` live region that announces what is playing.
+- Everything works from the keyboard. Space or K plays and pauses, arrow keys on the slider move one step, Escape leaves full screen. A "Skip to content" link comes first.
+- Buttons are labelled; the slider has `aria-valuetext` with the date and the real data values; an `aria-live` region announces narration, loading and pauses.
 - Audio starts only after a click or key press.
+- `prefers-reduced-motion` turns off the vinyl transition, the turning globe and other animation.
+- Each sound layer also has its own colour and shape (solid, striped, dotted), so nothing depends on colour alone.
+
+## Data sources and credits
+
+- NASA Scientific Visualization Studio: [SVS 5235](https://svs.gsfc.nasa.gov/5235/), [SVS 4993](https://svs.gsfc.nasa.gov/4993/), [SVS 5113](https://svs.gsfc.nasa.gov/5113/), [SVS 5175](https://svs.gsfc.nasa.gov/5175/), all from the [Earth Information Center gallery](https://svs.gsfc.nasa.gov/gallery/earth-information-center/).
+- NASA Blue Marble Next Generation (globe texture).
+- Fonts: Space Grotesk and Atkinson Hyperlegible (Google Fonts).
+
+## Placeholders still open
+
+On the landing page, the listening-test result (`[X/5]`) and the tester's quote are placeholders
+in square brackets until the test is done.

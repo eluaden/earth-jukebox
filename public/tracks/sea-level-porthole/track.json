@@ -1,5 +1,23 @@
 {
  "id": "sea-level-porthole",
+ "code": "A1",
+ "short": "SEA LEVEL",
+ "cover": [
+  "#DDF3FF",
+  "#4FA6DE",
+  "#0B3A6B"
+ ],
+ "period": "1993–2023",
+ "meta": {
+  "en": "Sea level rise, 1993–2023",
+  "pt": "Subida do nível do mar, 1993–2023",
+  "es": "Subida del nivel del mar, 1993–2023"
+ },
+ "summary": {
+  "en": "Sea level → pitch and volume · year → tick · highest level → bell",
+  "pt": "Nível do mar → altura e volume · ano → tique · nível mais alto → sino",
+  "es": "Nivel del mar → tono y volumen · año → tic · nivel más alto → campana"
+ },
  "title": {
   "en": "Thirty years of rising seas, 1993 to 2023",
   "pt": "Trinta anos de mar subindo, de 1993 a 2023",
@@ -255,6 +273,12 @@
    },
    "params": {
     "underwater": true
+   },
+   "tube": "SEA",
+   "name": {
+    "en": "Sea level",
+    "pt": "Nível do mar",
+    "es": "Nivel del mar"
    }
   }
  },

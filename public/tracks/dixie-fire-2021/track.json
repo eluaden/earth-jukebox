@@ -1,5 +1,23 @@
 {
  "id": "dixie-fire-2021",
+ "code": "A2",
+ "short": "DIXIE FIRE",
+ "cover": [
+  "#FFE1B8",
+  "#F0703A",
+  "#5A1408"
+ ],
+ "period": "Jul–Sep 2021",
+ "meta": {
+  "en": "California, 16 Jul – 11 Sep 2021",
+  "pt": "Califórnia, 16 jul – 11 set 2021",
+  "es": "California, 16 jul – 11 sep 2021"
+ },
+ "summary": {
+  "en": "Burned area → pitch and volume · growth that day → wind · day → tick",
+  "pt": "Área queimada → altura e volume · crescimento no dia → vento · dia → tique",
+  "es": "Área quemada → tono y volumen · crecimiento del día → viento · día → tic"
+ },
  "title": {
   "en": "The Dixie Fire spreads, California 2021",
   "pt": "O incêndio Dixie se espalha, Califórnia 2021",
@@ -263,6 +281,12 @@
    "physicalRange": {
     "min": "0 km²",
     "max": "3900 km²"
+   },
+   "tube": "AREA",
+   "name": {
+    "en": "Burned area",
+    "pt": "Área queimada",
+    "es": "Área quemada"
    }
   },
   "growth": {
@@ -288,6 +312,12 @@
    "physicalRange": {
     "min": "0 km² per day",
     "max": "600 km² per day"
+   },
+   "tube": "GROWTH",
+   "name": {
+    "en": "Growth that day",
+    "pt": "Crescimento no dia",
+    "es": "Crecimiento del día"
    }
   }
  },

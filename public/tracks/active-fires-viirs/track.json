@@ -1,5 +1,23 @@
 {
  "id": "active-fires-viirs",
+ "code": "B1",
+ "short": "FIRE SEASONS",
+ "cover": [
+  "#FFF3C4",
+  "#E8A52B",
+  "#3A2A08"
+ ],
+ "period": "2024–2026",
+ "meta": {
+  "en": "World, Nov 2024 – Nov 2026",
+  "pt": "Mundo, nov 2024 – nov 2026",
+  "es": "Mundo, nov 2024 – nov 2026"
+ },
+ "summary": {
+  "en": "Africa north of the equator → tone · south of it → wind · South Asia → pitch of the tick",
+  "pt": "África ao norte do equador → tom · ao sul → vento · Sul da Ásia → altura do tique",
+  "es": "África al norte del ecuador → tono · al sur → viento · Sur de Asia → altura del tic"
+ },
  "title": {
   "en": "Two years of fire seasons, seen from orbit",
   "pt": "Dois anos de temporadas de fogo, vistos da órbita",
@@ -536,6 +554,12 @@
    "physicalRange": {
     "min": "0 % of the region's pixels",
     "max": "20 %"
+   },
+   "tube": "NORTH",
+   "name": {
+    "en": "Africa, north of the equator",
+    "pt": "África, norte do equador",
+    "es": "África, norte del ecuador"
    }
   },
   "africaSouth": {
@@ -561,6 +585,12 @@
    "physicalRange": {
     "min": "0 % of the region's pixels",
     "max": "20 %"
+   },
+   "tube": "SOUTH",
+   "name": {
+    "en": "Africa, south of the equator",
+    "pt": "África, sul do equador",
+    "es": "África, sur del ecuador"
    }
   },
   "southAsia": {
@@ -585,6 +615,12 @@
    "physicalRange": {
     "min": "0 % of the region's pixels",
     "max": "20 %"
+   },
+   "tube": "ASIA",
+   "name": {
+    "en": "South and Southeast Asia",
+    "pt": "Sul e Sudeste da Ásia",
+    "es": "Sur y Sudeste de Asia"
    }
   }
  },

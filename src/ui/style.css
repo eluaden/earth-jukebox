@@ -334,3 +334,18 @@ body.fs{overflow:hidden}
   .bust{border-radius:50% 50% 0 0 / 140px 140px 0 0}
   .bust-face{border-radius:50% 50% 0 0 / 130px 130px 0 0;padding-top:40px}
 }
+
+/* ===== real tracks ===== */
+.sleeves{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.sleeve{cursor:pointer}
+.cover.real .cc{color:#0A0D14}
+.cover.real .ct{color:#F5EFE6;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.screen .yr.long{font-size:clamp(22px,3.6vw,44px)}
+.readout{font-size:17px;color:var(--ink);min-height:1.5em;font-variant-numeric:tabular-nums}
+.tube.off,.fs-meter.off{opacity:.3}
+.tube .tlabel{white-space:nowrap;font-size:10px}
+.disc small{font-variant-numeric:tabular-nums}
+.legend div{align-items:flex-start}
+.legend .sw{margin-top:5px}
+@media (max-width:1000px){.sleeves{grid-template-columns:minmax(0,1fr)}}
+.screen video{object-fit:contain;background:#000}

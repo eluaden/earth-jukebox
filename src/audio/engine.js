@@ -1,10 +1,11 @@
 /**
  * Sound engine (Web Audio, synthesized live). Knows nothing about images or the page:
  * it receives values 0..1 and plays them.
- *   layers(v)  steady tone (pitch + loudness follow v) and wind (grows as v falls)
+ *   tone(v)    steady tone: pitch and loudness follow v
+ *   wind(w)    filtered noise: loudness and brightness follow w
  *   tick()     one step of time; bell() a record; duck() lowers the music under the voice
  */
-let ctx, master, analyser, drone, sub, dGain, dFilt, wGain, wFilt;
+let ctx, master, analyser, drone, sub, dGain, dFilt, wGain, wFilt, lfo, lfoGain;
 
 export function ensureAudio() {
   if (ctx) return;
@@ -17,6 +18,9 @@ export function ensureAudio() {
   drone = ctx.createOscillator(); drone.type = 'sawtooth'; sub = ctx.createOscillator(); sub.type = 'sine';
   const sg = ctx.createGain(); sg.gain.value = .6;
   drone.connect(dFilt); sub.connect(sg); sg.connect(dFilt); dFilt.connect(dGain); dGain.connect(master); drone.start(); sub.start();
+  // Slow sweep of the tone's filter, only used by the 'underwater' timbre.
+  lfo = ctx.createOscillator(); lfo.frequency.value = .22; lfoGain = ctx.createGain(); lfoGain.gain.value = 0;
+  lfo.connect(lfoGain); lfoGain.connect(dFilt.frequency); lfo.start();
   const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), ch = buf.getChannelData(0);
   for (let i = 0; i < len; i++) ch[i] = Math.random() * 2 - 1;
   const nz = ctx.createBufferSource(); nz.buffer = buf; nz.loop = true;
@@ -31,6 +35,30 @@ export const hasAudio = () => !!ctx;
 
 const f = (v) => 98 * Math.pow(2, 2 * v);
 
+/** Steady tone: value 0..1 -> pitch (98 to 392 Hz, log scale) and loudness. */
+export function tone(v) {
+  const n = ctx.currentTime;
+  drone.frequency.setTargetAtTime(f(v), n, .08); sub.frequency.setTargetAtTime(f(v) / 2, n, .08);
+  dGain.gain.setTargetAtTime(.06 + .12 * v, n, .1);
+}
+
+/** Wind: value 0..1 -> loudness and brightness of filtered noise. null = this track has no wind. */
+export function wind(w) {
+  const n = ctx.currentTime;
+  wGain.gain.setTargetAtTime(w == null ? 0 : .02 + .5 * w ** 2, n, .15);
+  if (w != null) wFilt.frequency.setTargetAtTime(300 + 900 * w, n, .2);
+}
+
+/** Timbre of the tone. underwater: muffled and slowly swaying (same pitch and loudness mapping). */
+export function setTimbre({ underwater = false } = {}) {
+  if (!ctx) return;
+  const n = ctx.currentTime;
+  dFilt.frequency.setTargetAtTime(underwater ? 420 : 900, n, .1);
+  dFilt.Q.setTargetAtTime(underwater ? 5 : 1, n, .1);
+  lfoGain.gain.setTargetAtTime(underwater ? 200 : 0, n, .1);
+}
+
+/** Prototype demo mapping: one value drives the tone, and the wind grows as it falls. */
 export function layers(v) {
   const n = ctx.currentTime;
   drone.frequency.setTargetAtTime(f(v), n, .08); sub.frequency.setTargetAtTime(f(v) / 2, n, .08);
@@ -42,9 +70,10 @@ export function silence(tc) {
   const n = ctx.currentTime; dGain.gain.setTargetAtTime(0, n, tc); wGain.gain.setTargetAtTime(0, n, tc);
 }
 
-export function tick(strong) {
+/** One step of time. strong = milestone. pitch (0..1, optional) = a third data series: higher value, higher tick (1000 to 3000 Hz). */
+export function tick(strong, pitch = null) {
   const o = ctx.createOscillator(), g = ctx.createGain(), n = ctx.currentTime;
-  o.frequency.value = strong ? 1600 : 2400; g.gain.setValueAtTime(strong ? .25 : .08, n); g.gain.exponentialRampToValueAtTime(.0001, n + (strong ? .08 : .04));
+  o.frequency.value = pitch != null ? 1000 * Math.pow(3, pitch) : strong ? 1600 : 2400; g.gain.setValueAtTime(strong ? .25 : .08, n); g.gain.exponentialRampToValueAtTime(.0001, n + (strong ? .08 : .04));
   o.connect(g); g.connect(master); o.start(n); o.stop(n + .1);
 }
 

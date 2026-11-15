@@ -14,6 +14,13 @@ export async function loadTrackIndex() {
   return res.json();
 }
 
+/** Loads a track's JSON only (titles, labels, mapping): no frames are read. */
+export async function loadTrackMeta(id) {
+  const res = await fetch(trackUrl(id));
+  if (!res.ok) throw new Error(`Could not load track "${id}" (${res.status})`);
+  return res.json();
+}
+
 /**
  * Loads and validates one track.
  * If the track has an `extraction` block (frames + color legend) instead of precomputed

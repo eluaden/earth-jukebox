@@ -1,11 +1,11 @@
-import { $, $$, reduce } from './dom.js';
+import { $, reduce } from './dom.js';
 import { lift } from './router.js';
 
 /* ===== the vinyl zoom into the listen page ===== */
-function goListen(e) {
+function goListen(e, link) {
   e.preventDefault();
   if (location.hash === '#listen') return;
-  const fromSelector = e.currentTarget.closest('.selector') || e.currentTarget.closest('.hero');
+  const fromSelector = link.closest('.selector') || link.closest('.hero');
   if (reduce || !fromSelector || !document.body.animate) { location.hash = 'listen'; return; }
   lift('listen');
   const src = $('#heroEarth').getBoundingClientRect();
@@ -34,4 +34,7 @@ function goListen(e) {
   }, 280);
 }
 
-export function initWarp() { $$('[data-go-listen]').forEach((a) => a.addEventListener('click', goListen)); }
+// Delegated, so links created later (the track sleeves) work too.
+export function initWarp() {
+  document.addEventListener('click', (e) => { const a = e.target.closest('[data-go-listen]'); if (a) goListen(e, a); });
+}

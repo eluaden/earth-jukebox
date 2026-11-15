@@ -1,25 +1,35 @@
 import { $, reduce } from './dom.js';
 import { drawEarth } from './earthDraw.js';
 import { live } from './player.js';
+import { makeGlobe } from './globe.js';
 
 /** Landing: the slowly turning Earth on the turntable. */
 export function initHeroEarth() {
   const hero = $('#heroEarth'), hg = hero.getContext('2d');
+  let globe = null; // set when public/earth.jpg (NASA Blue Marble) loads; until then, the drawing
+  function paint(ts) {
+    const lon = reduce ? -55 : -55 + (ts || 0) / 160;
+    hg.clearRect(0, 0, 760, 760);
+    if (globe) globe(hg, 380, 380, 318, lon); else drawEarth(hg, 380, 380, 318, lon, 26, .6);
+  }
   function heroLoop(ts) {
-    if (document.body.dataset.current === 'home') { hg.clearRect(0, 0, 760, 760); drawEarth(hg, 380, 380, 318, reduce ? -55 : -55 + (ts || 0) / 160, 26, .6); }
+    if (document.body.dataset.current === 'home') paint(ts);
     if (!reduce) requestAnimationFrame(heroLoop);
   }
   requestAnimationFrame(heroLoop);
+  const tex = new Image();
+  tex.onload = () => { try { globe = makeGlobe(tex); if (reduce) paint(0); } catch (e) { globe = null; } };
+  tex.src = `${import.meta.env.BASE_URL}earth.jpg`;
 }
 
 /* ===== the "video": EIC frame stand-in, drawn from the data =====
    Used while a track has no video file. */
 export function initFrameCanvas() {
   const cv = $('#frame'), g = cv.getContext('2d');
-  let shown = live.ice;
+  let shown = live.main;
   function drawFrame(ts) {
     if (document.body.dataset.current === 'listen') {
-      shown += (live.ice - shown) * .08;
+      shown += (live.main - shown) * .08;
       const w = cv.width, h = cv.height;
       const bg = g.createRadialGradient(w / 2, h * .45, 40, w / 2, h / 2, w * .7); bg.addColorStop(0, '#0E1A2E'); bg.addColorStop(1, '#04070D');
       g.fillStyle = bg; g.fillRect(0, 0, w, h);

@@ -1,11 +1,12 @@
 import { $, reduce } from './dom.js';
 import { isPlaying, pause, start } from './player.js';
+import { t } from '../i18n/index.js';
 
 /* ===== fullscreen video ===== */
 const EXP = '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', COL = '<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>';
 let scr, slot, fsT;
 const isFull = () => scr.classList.contains('full');
-function fsUi() { $('#fsIcon').innerHTML = isFull() ? COL : EXP; fsT.setAttribute('aria-label', isFull() ? 'Exit full screen' : 'Full screen'); }
+export function fsUi() { $('#fsIcon').innerHTML = isFull() ? COL : EXP; fsT.setAttribute('aria-label', isFull() ? t('fsExit') : t('fsEnter')); }
 
 export function expand() {
   if (isFull()) return;
@@ -32,6 +33,6 @@ export function initFullscreen() {
   fsT.addEventListener('click', (e) => { e.stopPropagation(); isFull() ? collapse() : expand(); });
   $('#fsPlay').addEventListener('click', (e) => { e.stopPropagation(); isPlaying() ? pause() : start(); });
   scr.addEventListener('click', (e) => { if (e.target.closest('button')) return; if (!isFull()) expand(); else isPlaying() ? pause() : start(); });
-  scr.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isFull()) collapse(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isFull()) collapse(); });
   window.addEventListener('hashchange', () => { if (isFull()) { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); settle(); } });
 }

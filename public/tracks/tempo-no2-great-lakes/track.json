@@ -1,5 +1,23 @@
 {
  "id": "tempo-no2-great-lakes",
+ "code": "B2",
+ "short": "CITY AIR",
+ "cover": [
+  "#EBD9FF",
+  "#8E6BD9",
+  "#2A1A5E"
+ ],
+ "period": "31 Aug 2023",
+ "meta": {
+  "en": "Great Lakes, 31 Aug 2023, hour by hour",
+  "pt": "Grandes Lagos, 31 ago 2023, hora a hora",
+  "es": "Grandes Lagos, 31 ago 2023, hora a hora"
+ },
+ "summary": {
+  "en": "Chicago → tone · Detroit → wind · Toronto → pitch of the tick",
+  "pt": "Chicago → tom · Detroit → vento · Toronto → altura do tique",
+  "es": "Chicago → tono · Detroit → viento · Toronto → altura del tic"
+ },
  "title": {
   "en": "A day of air pollution over Chicago, Detroit and Toronto",
   "pt": "Um dia de poluição do ar sobre Chicago, Detroit e Toronto",
@@ -294,6 +312,12 @@
    "physicalRange": {
     "min": "5 ×10¹⁴ molecules/cm²",
     "max": "40 ×10¹⁴ molecules/cm²"
+   },
+   "tube": "CHI",
+   "name": {
+    "en": "Chicago",
+    "pt": "Chicago",
+    "es": "Chicago"
    }
   },
   "detroit": {
@@ -319,6 +343,12 @@
    "physicalRange": {
     "min": "5 ×10¹⁴ molecules/cm²",
     "max": "40 ×10¹⁴ molecules/cm²"
+   },
+   "tube": "DET",
+   "name": {
+    "en": "Detroit",
+    "pt": "Detroit",
+    "es": "Detroit"
    }
   },
   "toronto": {
@@ -343,6 +373,12 @@
    "physicalRange": {
     "min": "5 ×10¹⁴ molecules/cm²",
     "max": "40 ×10¹⁴ molecules/cm²"
+   },
+   "tube": "TOR",
+   "name": {
+    "en": "Toronto",
+    "pt": "Toronto",
+    "es": "Toronto"
    }
   }
  },
