@@ -537,10 +537,10 @@ export function advance(dt) {
   const s = useStore.getState();
   if (!c.track || s.phase !== 'playing') return;
   const { meta, grid, music, skin } = c.track;
-  // The platter keeps turning with the needle up (pause, Records), like a real turntable; only the
-  // data clock and the music stop. While the user drags the globe (scrubbing) it does not spin on
-  // its own. Long gaps (tab in the background) are capped so the globe does not jump half a turn.
-  if (!s.scrubbing) live.rotation -= Math.min(dt, 0.5) * ((2 * Math.PI) / SECONDS_PER_TURN);
+  // The globe turns only while the record plays with the needle down (not paused, not with Records
+  // open, not while a record changes); a drag turns it by hand.
+  live.spinning = s.playing && s.arm === 'down' && !s.switching && !s.scrubbing;
+  if (live.spinning) live.rotation -= Math.min(dt, 0.5) * ((2 * Math.PI) / SECONDS_PER_TURN);
   if (s.seekTo != null) {
     skin.seek(s.seekTo);
     useStore.setState({ seekTo: null });

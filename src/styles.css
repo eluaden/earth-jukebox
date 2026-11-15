@@ -233,7 +233,7 @@ a {
   left: var(--gutter);
   top: 50%;
   transform: translateY(-50%);
-  max-width: min(28vw, 400px);
+  max-width: min(24vw, 400px); /* src/scene/layout.js cameraFrame keeps the ring clear of this column */
   pointer-events: none;
 }
 .date {
@@ -265,7 +265,7 @@ a {
 .trend {
   position: absolute;
   left: calc(var(--gutter) + 40px);
-  bottom: calc(var(--gutter) + 36px);
+  bottom: calc(var(--gutter) + 64px); /* above the footer pill */
   width: 300px;
   pointer-events: none;
   animation: trend-rise 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
@@ -983,14 +983,9 @@ a {
 }
 
 /* Mid-width screens: the centred footer would reach the chart, so the chart rises above it. */
-@media (max-width: 1180px) {
-  .trend {
-    bottom: calc(var(--gutter) + 64px);
-  }
-}
 
-/* ---------- phones ---------- */
-@media (max-width: 760px) {
+/* ---------- phones and portrait screens (src/scene/layout.js stackedLayout) ---------- */
+@media (max-width: 760px), (orientation: portrait) {
   .brand {
     font-size: 11px;
   }
@@ -1153,64 +1148,7 @@ body.dragging-globe * {
   touch-action: pan-y; /* horizontal finger drags turn the globe; vertical still scrolls */
 }
 
-/* ---------- instrument menu on the chips ---------- */
-.chip-voice {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-}
-.chip-instrument {
-  /* the native select sits invisibly over the label, so the menu is the system one (accessible) */
-  position: absolute;
-  inset: -4px -6px;
-  opacity: 0;
-  cursor: pointer;
-  font: inherit;
-  width: calc(100% + 12px);
-}
-.chip-instrument-label {
-  border-bottom: 1px dashed currentColor;
-  padding-bottom: 1px;
-}
-.chip-caret {
-  order: 2;
-  font-size: 10px;
-  opacity: 0.7;
-}
-.chip-voice:hover .chip-instrument-label,
-.chip-instrument:focus-visible ~ .chip-instrument-label {
-  color: var(--fg);
-}
-.chip-voice:has(.chip-instrument:focus-visible) {
-  outline: 2px solid var(--amber);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
 /* ---------- "What am I hearing?" openers ---------- */
-.hearing-link {
-  position: absolute;
-  top: calc(var(--gutter) - 10px);
-  right: calc(var(--gutter) + 64px);
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 13.5px;
-  color: var(--fg);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--glass-border);
-  animation: fade-in 1s ease 0.3s both;
-  transition: background 0.2s ease;
-}
-.hearing-link:hover {
-  background: rgba(255, 255, 255, 0.16);
-}
-.panel-liner .hearing-link {
-  visibility: hidden;
-}
 .footer button.hearing {
   display: inline-flex;
   align-items: center;
@@ -1222,28 +1160,6 @@ body.dragging-globe * {
 }
 .footer button.hearing:hover {
   background: rgba(255, 255, 255, 0.18);
-}
-/* The pull-tab now says what it is: icon + vertical label. */
-.liner-tab {
-  width: 34px;
-  height: auto;
-  min-height: 56px;
-  padding: 12px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: var(--fg);
-}
-.liner-tab-label {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-size: 12.5px;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-.liner-shell .liner-tab-icon {
-  transform: none !important;
 }
 /* First visit, after the intro: the openers glow for a few seconds. */
 .hint {
@@ -1261,32 +1177,6 @@ body.dragging-globe * {
     box-shadow: 0 0 0 6px rgba(255, 200, 120, 0.28);
   }
 }
-.liner-hint {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(calc(-100% - 46px), -50%);
-  max-width: 210px;
-  margin: 0;
-  padding: 9px 13px;
-  border-radius: 12px;
-  background: rgba(255, 244, 228, 0.95);
-  color: #111;
-  font-size: 13.5px;
-  line-height: 1.35;
-  pointer-events: none;
-  animation: fade-in 0.5s ease both;
-}
-.liner-hint::after {
-  content: '';
-  position: absolute;
-  right: -6px;
-  top: 50%;
-  margin-top: -6px;
-  border: 6px solid transparent;
-  border-right: 0;
-  border-left-color: rgba(255, 244, 228, 0.95);
-}
 @media (prefers-reduced-motion: reduce) {
   .hint,
   .liner-shell.hint .liner-tab {
@@ -1294,19 +1184,147 @@ body.dragging-globe * {
     box-shadow: 0 0 0 4px rgba(255, 200, 120, 0.35);
   }
 }
-@media (max-width: 760px) {
-  .hearing-link {
-    display: none; /* the footer and the tab are enough on a phone */
+@media (max-width: 760px), (orientation: portrait) {
+  .hearing-hint {
+    display: none; /* no free spot near the button on a phone: the button and the arrow glow instead */
   }
   .footer button.hearing {
     padding: 5px 9px;
   }
 }
-@media (max-width: 430px) {
+@media (max-width: 359px) {
   .hearing-label {
     display: none;
   }
-  .liner-hint {
-    max-width: 150px;
+}
+
+/* ---------- instrument menu on the chips (glass, like the rest of the HUD) ---------- */
+.inst {
+  position: relative;
+  display: inline-block;
+}
+.inst-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: -3px -6px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  font: inherit;
+  color: inherit;
+  transition: background 0.2s ease;
+}
+.inst-button:hover,
+.inst.is-open .inst-button {
+  background: rgba(255, 255, 255, 0.1);
+}
+.inst-caret {
+  opacity: 0.7;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.inst.is-open .inst-caret {
+  transform: rotate(180deg);
+}
+.inst-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: -6px; /* opens over its own chip column, away from the record */
+  z-index: 20;
+  min-width: 170px;
+  margin: 0;
+  padding: 5px;
+  list-style: none;
+  border-radius: 12px;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shine);
+  backdrop-filter: blur(18px);
+  animation: inst-in 0.18s ease both;
+}
+@keyframes inst-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+.inst-list li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: var(--fg-dim);
+  cursor: pointer;
+  outline: none;
+}
+.inst-list li.is-active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--fg);
+}
+.inst-list li:focus-visible {
+  box-shadow: inset 0 0 0 1.5px var(--amber);
+}
+.inst-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid var(--fg-faint);
+  flex: none;
+}
+.inst-list li[aria-selected='true'] {
+  color: var(--fg);
+}
+.inst-list li[aria-selected='true'] .inst-dot {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+.chip-voice:has(.inst) {
+  overflow: visible; /* the instrument menu opens below the name; instrument names are short */
+}
+.chip:has(.inst.is-open) {
+  z-index: 25; /* the open menu sits above the chips below it */
+}
+
+/* ---------- first-visit bubble, beside the footer on its right ---------- */
+/* The only free spot near the button that never reaches the record's ring (hidden when stacked). */
+.hearing-hint {
+  position: absolute;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: max-content;
+  max-width: min(250px, calc(50vw - 50% - var(--gutter) - 14px));
+  margin: 0;
+  padding: 9px 13px;
+  border-radius: 12px;
+  background: rgba(255, 244, 228, 0.96);
+  color: #111;
+  font-size: 13.5px;
+  line-height: 1.35;
+  white-space: normal;
+  pointer-events: none;
+  animation: fade-in 0.5s ease both;
+}
+.hearing-hint::after {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  margin-top: -7px;
+  border: 7px solid transparent;
+  border-left: 0;
+  border-right-color: rgba(255, 244, 228, 0.96);
+}
+@media (max-width: 760px), (orientation: portrait) {
+  /* Stacked layout: the chips are a row at the bottom, so the menu opens upward. */
+  .inst-list {
+    top: auto;
+    bottom: calc(100% + 8px);
+    min-width: 150px;
+  }
+  .chip:last-child .inst-list {
+    left: auto;
+    right: -6px;
   }
 }

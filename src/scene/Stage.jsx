@@ -10,7 +10,7 @@ import { Backdrop } from './Backdrop.jsx';
 import { Atmosphere, Globe } from './Globe.jsx';
 import { MeridianLine, Tonearm } from './Needle.jsx';
 import { Platter } from './Platter.jsx';
-import { FOV, GLOBE_Y, TILT, cameraDistance, cameraY } from './layout.js';
+import { FOV, GLOBE_Y, TILT, cameraFrame } from './layout.js';
 
 const START_Z = 60;
 
@@ -25,13 +25,13 @@ function CameraRig() {
   const introKey = useStore((s) => s.introKey);
   const tween = useRef(null);
   const handled = useRef({ intro: false, key: 0 });
-  const aspect = size.width / size.height;
 
-  // Follow the window's shape once the globe is in view.
+  // Follow the window's size once the globe is in view (cameraFrame keeps the ring clear of the HUD).
   useEffect(() => {
-    camera.position.y = cameraY(aspect);
-    if (!tween.current && useStore.getState().phase !== 'cold') camera.position.z = cameraDistance(aspect);
-  }, [camera, aspect]);
+    const frame = cameraFrame(size.width, size.height);
+    camera.position.y = frame.y;
+    if (!tween.current && useStore.getState().phase !== 'cold') camera.position.z = frame.z;
+  }, [camera, size.width, size.height]);
 
   // Opening (first time, or "Replay opening" from About).
   useEffect(() => {
@@ -39,7 +39,7 @@ function CameraRig() {
     const replay = introKey !== handled.current.key;
     if (!firstIntro && !replay) return;
     handled.current = { intro: true, key: introKey };
-    const target = cameraDistance(size.width / size.height);
+    const target = cameraFrame(size.width, size.height).z;
     tween.current?.kill();
     if (!useStore.getState().introAnimated) {
       camera.position.z = target;

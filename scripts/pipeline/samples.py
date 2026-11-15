@@ -48,25 +48,20 @@ def plan():
     files['marimba'] = []
     for n in ['G2', 'B2', 'C4', 'G4', 'B4', 'F5', 'C6']:
         files['marimba'].append((f'Percussion/Marimba/Marimba_hit_Outrigger_{n}_loud_01.wav', vsco_to_scientific(n)))
-    # Alternative instruments a listener can pick for any voice (the data mapping does not change).
+    # Alternative instruments a listener can pick on a record (src/music/instruments.js; the data mapping does not change).
     # Long notes are cut at MAX_SECONDS with a fade, to keep the download small.
     files['harp'] = [(f'Strings/Harp/KSHarp_{n}_mf.wav', vsco_to_scientific(n))
                      for n in ['B1', 'D2', 'F2', 'A2', 'C3', 'E3', 'G3', 'B3', 'D4', 'F4', 'A4', 'C5', 'E5', 'G5', 'B5', 'D6', 'F6', 'A6']]
     files['flute'] = [(f'Woodwinds/Flute/susNV/LDFlute_susNV_{n}_v1_1.wav', vsco_to_scientific(n))
                       for n in ['C3', 'E3', 'A3', 'C4', 'E4', 'A4', 'C5', 'E5', 'A5', 'C6']]
-    files['clarinet'] = [(f'Woodwinds/Clarinet/susLong/DCClar_susLong_{n}_v2_rr1_sum.wav', vsco_to_scientific(n))
-                         for n in ['D2', 'F2', 'A#2', 'D3', 'F3', 'A#3', 'D4', 'F4', 'A#4', 'D5', 'F#5']]
     files['xylo'] = [(f'Percussion/Xylo/Xylo_Medium_{n}_ff_01_far.wav', vsco_to_scientific(n))
                      for n in ['G3', 'C4', 'G4', 'C5', 'G5', 'C6', 'G6', 'C7']]
     files['pizz'] = [(f'Strings/Violin Section/Pizz/VlnEns_Pizz_{n}_v2_rr1.wav', vsco_to_scientific(n))
                      for n in ['G2', 'A2', 'B2', 'D3', 'F#3', 'A3', 'C4', 'E4', 'G4', 'B4', 'D5']]
-    files['horn'] = [(f'Brass/F Horn/sus/MOHorn_sus_{n}_v2_1.wav', vsco_to_scientific(n))
-                     for n in ['C1', 'D#1', 'G1', 'A#1', 'D2', 'F2', 'A2', 'C3']]
-    files['horn'] += [(f'Brass/F Horn/sus/MOHorn_sus_{n}_v1_1.wav', vsco_to_scientific(n)) for n in ['D4', 'F4']]
     return files
 
 
-MAX_SECONDS = {'harp': 4, 'flute': 4, 'clarinet': 4, 'xylo': 3, 'pizz': 2, 'horn': 4}
+MAX_SECONDS = {'harp': 4, 'flute': 4, 'xylo': 3, 'pizz': 2}
 
 
 def fetch(path):

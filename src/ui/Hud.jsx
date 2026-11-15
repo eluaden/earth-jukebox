@@ -1,6 +1,6 @@
 import { useStore } from '../state/store.js';
-import { chooseInstrument, replayTrack, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
-import { INSTRUMENT_CHOICES } from '../music/instruments.js';
+import { replayTrack, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
+import { InstrumentMenu } from './InstrumentMenu.jsx';
 import { chipSign, describeValue, TRACK_TEXT } from '../state/tracks.js';
 import { chipValue, formatDate, longDate } from '../lib/format.js';
 import { t } from '../i18n/strings.js';
@@ -21,17 +21,12 @@ function InfoIcon({ size = 15 }) {
   );
 }
 
-/** Top corners: brand, 'What am I hearing?' and About. */
+/** Top corners: brand and About. */
 export function Corners() {
   const lang = useStore((s) => s.lang);
-  const hint = useStore((s) => s.hint);
   return (
     <>
       <div className="brand" aria-hidden="true">{t(lang, 'brand')}</div>
-      <button type="button" className={`hearing-link ${hint ? 'hint' : ''}`} onClick={() => openPanel('liner')}>
-        <InfoIcon size={14} />
-        {t(lang, 'linerNotes')}
-      </button>
       <button type="button" className="about-link" onClick={() => openPanel('about')}>
         {t(lang, 'about')}
       </button>
@@ -90,24 +85,7 @@ export function Chips() {
           <li key={`${trackId}-${sv.voice}`} className={`chip glass ${off ? 'off' : ''}`}>
             <span className="chip-name">
               <span className="chip-voice">
-                <select
-                  className="chip-instrument"
-                  value={voice.instrument}
-                  aria-label={t(lang, 'instrumentFor', { variable })}
-                  onChange={(e) => chooseInstrument(sv.voice, e.target.value)}
-                >
-                  {INSTRUMENT_CHOICES.map((inst) => (
-                    <option key={inst} value={inst}>
-                      {t(lang, `instrument.${inst}`)}
-                    </option>
-                  ))}
-                </select>
-                <span className="chip-caret" aria-hidden="true">
-                  ▾
-                </span>
-                <span className="chip-instrument-label" aria-hidden="true">
-                  {instrument}
-                </span>
+                <InstrumentMenu lang={lang} trackId={trackId} voiceId={sv.voice} instrument={voice.instrument} variable={variable} />
               </span>
               <span className="chip-sep" aria-hidden="true">
                 {' · '}
@@ -203,6 +181,11 @@ export function Footer() {
         <InfoIcon />
         <span className="hearing-label">{t(lang, 'linerNotes')}</span>
       </button>
+      {hint && panel !== 'liner' && (
+        <p className="hearing-hint" aria-hidden="true">
+          {t(lang, 'hearingHint')}
+        </p>
+      )}
     </nav>
   );
 }

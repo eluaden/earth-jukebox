@@ -20,7 +20,7 @@ export function useKeys() {
         restoreFocus();
         return;
       }
-      if (isField(target)) return;
+      if (isField(target) || target.closest?.('.inst')) return; // the instrument menu handles its own keys
       const key = e.key.toLowerCase();
       if (e.key === ' ' && !isControl(target)) {
         e.preventDefault();

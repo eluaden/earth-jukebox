@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { progress, seekToFraction } from '../state/controller.js';
+import { live } from '../state/live.js';
 import { GLOBE_Y, RINGS } from './layout.js';
 
 const ringVertex = /* glsl */ `
@@ -43,10 +44,11 @@ function Ring({ radius, width, speed, base, timeRing }) {
     [speed, base],
   );
   const reduce = useMemo(() => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches, []);
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const u = mat.current?.uniforms; // the material's own copy (R3F may not keep our object)
     if (!u) return;
-    u.uTime.value = reduce ? 0 : state.clock.elapsedTime;
+    // The glint turns with the record: it stops when the globe stops (pause, Records, a drag).
+    if (!reduce && live.spinning) u.uTime.value += Math.min(delta, 0.1);
     if (timeRing) u.uProgress.value = progress();
   });
   return (

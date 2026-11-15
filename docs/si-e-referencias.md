@@ -78,7 +78,7 @@ Keep this table in sync with `public/tracks/` and the README track table.
 | Tool | [Vite](https://vitejs.dev/), [Vitest](https://vitest.dev/) | MIT | Build, dev server, tests |
 | Library | [React](https://react.dev/), [three.js](https://threejs.org/), [React Three Fiber](https://github.com/pmndrs/react-three-fiber), [drei](https://github.com/pmndrs/drei), [postprocessing](https://github.com/pmndrs/postprocessing), [zustand](https://github.com/pmndrs/zustand), [Tone.js](https://tonejs.github.io/) | MIT | Interface, 3D globe, state, audio |
 | Library | [GSAP](https://gsap.com/) | GSAP standard license (free) | Camera and needle animation |
-| Samples | [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE), Versilian Studios: cello and violin sections (sustained and pizzicato), upright piano, glockenspiel, marimba, harp, flute, clarinet, French horn, xylophone (subset, converted to MP3 by `scripts/pipeline/samples.py`) | CC0 1.0 | Instruments |
+| Samples | [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE), Versilian Studios: cello and violin sections (sustained and pizzicato), upright piano, glockenspiel, marimba, harp, flute, xylophone (subset, converted to MP3 by `scripts/pipeline/samples.py`) | CC0 1.0 | Instruments |
 | Tool | Python, numpy, Pillow, ffmpeg | PSF / BSD / HPND / LGPL | Reading NASA frames (`scripts/pipeline/`) |
 | Browser API | Web Audio API, Web Speech API, WebGL | Browser standard | Sound synthesis, fallback narration, 3D |
 | Hosting | GitHub Pages | GitHub terms | Live site |
