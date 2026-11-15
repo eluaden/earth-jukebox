@@ -100,7 +100,7 @@ export default function FlatStage() {
         s.className = 'flat-dot';
         s.style.left = `${x}%`;
         s.style.top = `${((90 - d.lat) / 180) * 100}%`;
-        s.style.background = d.color;
+        s.style.setProperty('--dot', d.color);
         s.style.opacity = String(1 - ((now - d.t0) / DOT_LIFE) ** 2);
         dots.current.appendChild(s);
       }

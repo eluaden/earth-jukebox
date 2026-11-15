@@ -7,7 +7,7 @@ export const GLOBE_Y = 0;
 export const TILT = 0.12; // rad, about X (positive = north pole toward the camera)
 export const NEEDLE_LAT = 30; // where the stylus touches the meridian line (degrees)
 export const RINGS = [1.15, 1.24]; // platter rings; the time arc runs on RINGS[0]
-export const LINE_LATS = [-70, 74]; // stays on the visible face (the globe is tilted toward the camera)
+export const LINE_LATS = [-72, 88]; // north almost to the visible limb (globe tilted toward the camera)
 
 const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
 const tiltEuler = new THREE.Euler(TILT, 0, 0);

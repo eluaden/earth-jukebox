@@ -12,6 +12,7 @@ import { createSkin } from '../media/skins.js';
 import { longDate } from '../lib/format.js';
 import { t } from '../i18n/strings.js';
 import { TRACK_TEXT, TRACK_VIEW, describeValue, engineVoices, narrationLine } from './tracks.js';
+import { bindUiSounds } from '../ui/sounds.js';
 
 // Orchestrates the current track: its skin (data clock and globe texture), the engine (sound), the
 // narration and the per-frame reading under the needle; and the change of record (Records).
@@ -129,6 +130,7 @@ export function preload() {
     const first = await getBundle(ids[0]);
     const skin = createSkin(first.meta, first.dir);
     await c.engine.load();
+    bindUiSounds((id) => c.engine.playSfx(id));
     activate(first, skin);
     useStore.setState({ loading: false });
   })().catch((err) => {
@@ -150,6 +152,7 @@ async function speakOpening() {
 export async function begin() {
   await Tone.start();
   await preload();
+  c.engine.playSfx('space-whoosh');
   const firstVisit = !introSeen();
   if (firstVisit) c.opening = speakOpening();
   c.landed = false;
@@ -171,6 +174,7 @@ export function introDone() {
 function startPlayback() {
   useStore.setState({ phase: 'playing', playing: true });
   c.track.skin.play();
+  c.engine.playSfx('platter-spin-up');
   c.engine.start(onTick);
   sayIntroWhenFree();
   schedulePrefetch();
@@ -225,6 +229,7 @@ export function togglePlay() {
   // Resume: drop the needle unless Records is holding it up.
   const keepUp = s.panel === 'records';
   useStore.setState({ playing: true, ...(keepUp ? {} : { arm: 'down' }) });
+  c.engine.playSfx('platter-spin-up');
   c.engine.start(onTick);
   if (!keepUp) {
     setTimeout(() => c.engine.needleDrop(), ARM_MS);
@@ -279,6 +284,7 @@ export async function selectTrack(id) {
     c.track.skin.pause();
   }
   useStore.setState({ panel: null, switching: id, arm: 'up' });
+  c.engine.playSfx('record-swap');
   useStore.getState().announce(t(s.lang, 'loadingTrack', { track: TRACK_TEXT[id][s.lang].title }));
 
   let bundle;

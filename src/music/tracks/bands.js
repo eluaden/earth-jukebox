@@ -1,5 +1,7 @@
 import { cellCenterLat } from '../../data/grid.js';
 
+export { bandWeightedLat } from '../../data/grid.js';
+
 /** Mean of the cells of a column (index 0 = 89 N) whose centre lies in [south, north); NaN if none has data. */
 export function bandMean(col, north, south) {
   let sum = 0;

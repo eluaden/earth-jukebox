@@ -29,7 +29,7 @@ flowchart LR
   X -->|valores por latitude| A
   A --> S[Motor musical<br/>instrumentos + escala]
   S --> O[Som estéreo / espacial]
-  A --> L[Pontos de luz na agulha]
+  A --> L[Flash da nota no meridiano]
 ```
 
 **Por quê:** junta a metáfora do jukebox com o recurso oficial de sonificação; nenhum projeto anterior do Space Apps fez isso; o efeito aparece em 5 segundos de demo.
@@ -129,7 +129,7 @@ flowchart LR
 | Região | O que aparece |
 |---|---|
 | Centro | Globo grande (~70% da altura, levemente abaixo do centro), vídeo NASA projetado, halo de atmosfera e brilho suave. Em volta, anéis concêntricos leves girando devagar (o "prato") |
-| Agulha | Braço de cromo fino vindo do canto superior direito; a ponta toca o meridiano, desenhado como uma linha de luz. Cada nota acende um ponto na linha, na latitude da nota e na cor do instrumento |
+| Agulha | Braço de cromo fino vindo do canto superior direito; a ponta toca o meridiano. **Meridiano** = sulco hairline prata (baixa opacidade) na superfície: só marca onde a agulha lê — não é UI. **Flash da nota** = luz aditiva na linha quando uma nota toca, na cor do instrumento/dado (§5.4). O flash marca a **faixa musical que tocou**, não uma cidade: a latitude é o centro ponderado pelo valor na coluna sob a agulha (ex.: luzes de SP puxam o flash para ~23° S, não para o meio geométrico da faixa 20° S–45° S). Aparece no pulso da música (com arpejo), não no instante em que a cidade cruza a linha |
 | Esquerda | Data enorme em serifa editorial (ex.: "AUG 2007"); abaixo, a legenda da narração em uma linha |
 | Direita | Coluna de chips de vidro, um por instrumento: ícone, nome da variável, valor ao vivo com unidade, botões de mudo e solo |
 | Anel do prato | Arco de progresso do tempo, arrastável (substitui o slider) |
@@ -142,7 +142,7 @@ flowchart LR
 - **Cada capa é um "vinil de dados":** a série inteira do dataset desenhada como sulcos circulares (cada anel = um passo de tempo, cor = valor). Gerada a partir do próprio dado, não de imagem decorativa. Faixa de um instante só (aerossóis): cada anel = uma faixa de latitude (norte por fora, sul por dentro).
 - Ao escolher: a agulha levanta (com som), a textura do globo faz crossfade para o novo vídeo, a agulha desce.
 - **Decisão de 15/11/2026 (como a troca acontece):** abrir Records já levanta a agulha (o disco silencia e a data para). Escolher a capa do disco que já toca só fecha o painel. Escolher outra capa: o painel desce, o globo segue escurecido enquanto a faixa nova carrega (o nome dela aparece no rodapé, pulsando), a pele do globo faz crossfade de 1,2 s, o globo clareia e a agulha desce; a faixa nova começa do primeiro passo com a narração de abertura dela. Mudo e solo voltam ao normal. Se estava pausado, a agulha desce e a faixa espera o play. Durante a troca, Records e Liner notes ficam bloqueados. As outras faixas (grade e capa) são baixadas em segundo plano alguns segundos depois de a música começar, para a troca ser imediata; o vídeo só é baixado ao escolher.
-- **Pontos de luz na agulha (por faixa):** temperatura do mar = cor da legenda da NASA na temperatura da nota; raios = amarelo dos pontos de raio da NASA; luzes noturnas = âmbar-claro (luz), laranja (luzes apagadas) e roxo (luzes novas), as cores do mapa de mudança da própria NASA (SVS 5313).
+- **Flash na agulha (por faixa; cor do flash, não da linha):** temperatura do mar = cor da legenda da NASA na temperatura da nota; raios = amarelo dos pontos de raio da NASA; luzes noturnas = âmbar-claro (luz), laranja (luzes apagadas) e roxo (luzes novas), as cores do mapa de mudança da própria NASA (SVS 5313). Latitude do flash = centro ponderado pelo valor na faixa (§5.3).
 - **Luzes noturnas (faixa de imagens):** a textura troca de ano com fade de 1,2 s no começo de cada ano; o relógio do dado é do próprio app (10 s por ano, `time.secondsPerStep`), parado quando a agulha está levantada, como o vídeo nas outras faixas.
 - **Faixa bônus 2D (nível do mar):** o globo recua e esmaece; o vídeo da NASA aparece numa escotilha circular de vidro no centro; o resto da UI continua igual.
 
@@ -189,7 +189,7 @@ Drawer de vidro que desliza da direita (música continua tocando), com:
 | Tela | O que faz | Desvios do mock (no produto segue o §5) |
 |---|---|---|
 | 1. Abertura | Tela preta com "Put on headphones." + EN/PT/ES; clique na frase leva à descida até o globo | Falta o ponto final da frase; mock sem seletor de idioma |
-| 2. Ouvir | Tela principal: globo com o mapa da NASA, agulha lendo o meridiano, pontos = notas tocando, data e legenda à esquerda, chips com valor ao vivo à direita, arco âmbar = tempo; rodapé sem idioma | A linha branca passa um pouco para fora do globo; no produto fica só na superfície. A ponta da agulha não encosta exatamente na linha |
+| 2. Ouvir | Tela principal: globo com o mapa da NASA, agulha lendo o meridiano (hairline + flashes = notas), data e legenda à esquerda, chips com valor ao vivo à direita, arco âmbar = tempo; rodapé sem idioma | Mock: linha branca grossa e bolinhas opacas; no produto: sulco hairline + flash aditivo (§5.3). A ponta da agulha não encosta exatamente na linha |
 | 3. Records | Agulha levanta, globo escurece, 5 capas "vinil de dados" com nome e período; clicar troca a pele do globo e a agulha desce | Globo pouco escurecido; "Listen" aparece em negrito junto com "Records" |
 | 4. Liner notes | Drawer à direita com aba/seta, música continua: o que você ouve, tabela dado → som, legenda da NASA + "Hear the legend", limites, fonte, "Download album", "×"; fecha ao clicar fora | Sumiu o "About"; a agulha virou uma linha diagonal solta, sem meridiano; "Liner notes" não aparece destacado no rodapé; mock sem aba |
 | 5. Explorar | Sem agulha; ponto branco segue o cursor; o chip da zona sob o cursor acende com o valor, os outros mostram "—" | Nenhum relevante |
@@ -272,14 +272,16 @@ Prompts de cada item: [`prompts-assets.md`](prompts-assets.md). Créditos dispon
 
 | ID | Item | Quando fazer | Arquivo |
 |---|---|---|---|
-| S1 | Agulha pousando no disco (2 s) | Agora | `media-src/elevenlabs/sfx/needle-drop.mp3` |
-| S2 | Estalo de vinil em loop (10 s) | Agora | `media-src/elevenlabs/sfx/vinyl-crackle-loop.mp3` |
-| S3 | Agulha levantando (1,5 s) | Agora | `media-src/elevenlabs/sfx/needle-lift.mp3` |
-| S4 | Prato do toca-discos ligando (3 s) | Agora | `media-src/elevenlabs/sfx/platter-spin-up.mp3` |
-| S5 | Disco saindo da capa e indo para o prato (2,5 s) | Agora | `media-src/elevenlabs/sfx/record-swap.mp3` |
-| S6 | Toque em vidro, som de interface (0,5 s) | Agora | `media-src/elevenlabs/sfx/glass-tap.mp3` |
-| S7 | Whoosh suave pelo espaço (3 s) | Agora | `media-src/elevenlabs/sfx/space-whoosh.mp3` |
+| S1 | Agulha pousando no disco (2 s) | Agora | `media-src/elevenlabs/sfx/needle-drop.mp3` → `public/sfx/` |
+| S2 | Estalo de vinil em loop (10 s) | Agora | `media-src/elevenlabs/sfx/vinyl-crackle-loop.mp3` → `public/sfx/` |
+| S3 | Agulha levantando (1,5 s) | Agora | `media-src/elevenlabs/sfx/needle-lift.mp3` → `public/sfx/` |
+| S4 | Prato do toca-discos ligando (3 s) | Agora | `media-src/elevenlabs/sfx/platter-spin-up.mp3` → `public/sfx/` |
+| S5 | Disco saindo da capa e indo para o prato (2,5 s) | Agora | `media-src/elevenlabs/sfx/record-swap.mp3` → `public/sfx/` |
+| S6 | Toque em vidro, som de interface (0,5 s) | Agora | `media-src/elevenlabs/sfx/glass-tap.mp3` → `public/sfx/` |
+| S7 | Whoosh suave pelo espaço (3 s) | Agora | `media-src/elevenlabs/sfx/space-whoosh.mp3` → `public/sfx/` |
 | M1 | Vinheta de abertura (6 s, opcional) | Agora | `media-src/elevenlabs/music/opening-sting.mp3` |
+
+> **Decisão de 15/11/2026 (S1–S7 no site + motion da UI):** a frente B liga os efeitos no motor e na interface. **Quando toca o quê:** S7 no clique que inicia a abertura; S4 quando o prato começa a girar (primeira vez e ao retomar do pause); S1 / S3 com a agulha pousando / levantando (substitui o thump sintetizado); S2 como cama de vinil sob a agulha (substitui o hiss/crackle sintetizado; se o arquivo falhar, o sintetizado fica de reserva); S5 ao trocar de disco em Records; S6 em todo botão da UI (toque curto, sem atrapalhar a música). **Volumes:** `glass-tap` e `record-swap` são normalizados ao copiar para `public/sfx/` (originais baixos); S7 toca baixo para não cobrir a voz. **Motion (mesmo commit):** micro-animações só onde há feedback real — cold open, chips, rodapé, painéis, botões — com `prefers-reduced-motion` a zerar duração como já faz o site. Sem partículas, sem glow genérico, sem animação decorativa fora da lista fechada (§5.2.1).
 | N1 | Falas fixas da UI: `put-on-headphones`, `welcome` | Depois de escolher a voz | `media-src/elevenlabs/voice/<en\|pt\|es>/<id>.mp3` |
 | N2 | Narração das faixas: intro, marcos e encerramento de cada faixa | **Depois da E1** (o roteiro vai para `prompts-assets.md`) | `media-src/elevenlabs/voice/<en\|pt\|es>/<faixa>-<intro\|outro\|marco-N>.mp3` |
 | N3 | Narração do vídeo do pitch | Depois do roteiro do vídeo | `media-src/elevenlabs/voice/en/pitch.mp3` |
@@ -424,7 +426,7 @@ Fazer antes de implementar os itens bloqueados. Resultado entra neste documento.
 | Q2 | Aerossóis têm 4 categorias e o limite é 3 vozes: corta sulfato ou abre exceção? | §6.2 | Testar com 4; cortar se embolar |
 | Q3 | Quantos testadores cegos ou com baixa visão conseguimos, e quando? | §9, §10 | Pelo menos 3 reais + 5 de olhos fechados |
 | Q4 | Qual voz do ElevenLabs será o narrador? | §7.2 (N1–N3) | **Resolvida em 15/11/2026:** voz clonada (Professional Voice Clone do ElevenLabs) do integrante Lucas Souza, gravada com consentimento dele, modelo `eleven_multilingual_v2`, stability 50, similarity 75, style 10. N1 e N2 (temperatura do mar, raios e luzes noturnas) gravadas com ela, em `public/narration/` e `media-src/elevenlabs/voice/` |
-| Q5 | O que soa quando a agulha passa sobre terra numa faixa de oceano? | §6.3, R5 | Testar de ouvido: um som de fundo muito baixo e contínuo, que não vem do dado e é declarado no encarte, contra o globo girando mais rápido sobre a terra. **Primeira versão (fatia SST):** estalo de vinil sintetizado, muito baixo e contínuo, declarado no encarte; trocado pelo S2 quando existir |
+| Q5 | O que soa quando a agulha passa sobre terra numa faixa de oceano? | §6.3, R5 | **Resolvida em 15/11/2026:** S2 (`vinyl-crackle-loop`) como cama sob a agulha, declarado no encarte; sintetizado só se o arquivo não carregar. Validar de ouvido o nível (§6.1) |
 
 ## 16. Prioridade
 
@@ -436,7 +438,7 @@ Fazer antes de implementar os itens bloqueados. Resultado entra neste documento.
 | **P1 — Fortalece** | Explorar (§5.6), funcionando sem fone (áudio espacial é bônus com fone) · aerossóis (4ª faixa, depende de E1) · capas "vinil de dados" (no P0 a capa pode ser um frame da faixa) · modo Audio-first · efeitos S1–S7 · faixa bônus nível do mar | Exploração interativa e feedback tátil, sugeridos pelo enunciado |
 | **P2 — Diferencial** | Comparar (§5.7) · abertura com Veo (V1) · vinheta M1 · exportar álbum (§7.4) · script aberto para qualquer vídeo do SVS (§7.5) | Impressiona, mas tem custo ou risco próprio (ver R6) |
 
-**Em paralelo desde já, fora do código:** contato com testadores (§9), escolha da voz (Q4) e N1; depois S1–S7 e V2–V6 para o pitch.
+**Em paralelo desde já, fora do código:** contato com testadores (§9); V2–V6 para o pitch. S1–S7 já estão no site (§7.2); falta aprovação de ouvido.
 
 ## 17. Riscos e verificação
 

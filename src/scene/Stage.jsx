@@ -120,7 +120,8 @@ export default function Stage() {
       <CameraRig />
       <Driver />
       <EffectComposer>
-        <Bloom intensity={0.45} luminanceThreshold={0.72} luminanceSmoothing={0.2} mipmapBlur />
+        {/* Threshold above note-flash peaks so bloom does not smear over the tonearm; atmosphere rim still blooms. */}
+        <Bloom intensity={0.4} luminanceThreshold={0.9} luminanceSmoothing={0.25} mipmapBlur />
       </EffectComposer>
     </Canvas>
   );

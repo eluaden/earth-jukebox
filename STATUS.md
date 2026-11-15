@@ -68,7 +68,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Aerossóis (4ª faixa) | §8, Q2 | **A fazer** | A | Depende de E1 (1920×1080) e de Q2 |
 | Capas "vinil de dados" | §5.4 | **A fazer** | A (gerar), B (mostrar) | Hoje a capa é um frame da faixa |
 | Modo Audio-first (tecla A) | §5.8 | **A fazer** | B | |
-| Efeitos S1–S7 | §7.2 | **Parcial** | C (gravar), B (tocar) | Gerados em 15/11 (uma tomada de cada, sem escolha de ouvido) em `media-src/elevenlabs/sfx/`. Falta ouvir e aprovar, e a frente B trocar os sons sintetizados pelos arquivos. `glass-tap` e `record-swap` saíram baixos (pico de −26 e −30 dB): normalizar ao copiar para `public/` |
+| Efeitos S1–S7 | §7.2 | **Parcial** | C (gravar), B (tocar) | No site: `public/sfx/` (glass-tap e record-swap normalizados). Ligados: S7 abertura, S4 prato, S1/S3 agulha, S2 cama de vinil, S5 troca de disco, S6 tap nos botões. Micro-animações de UI no mesmo passe. Falta **aprovação de ouvido** do time |
 | Faixa bônus nível do mar | §8, §5.4 | **A fazer** | A, B | Frames antigos ainda em `public/tracks/sea-level-porthole/` |
 
 ## 4. P2 — Diferencial (pode ficar de fora)
@@ -93,7 +93,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Q2 | **A fazer** | A | Aerossóis: 3 ou 4 vozes |
 | Q3 | **A fazer** | C | Quantos testadores e quando |
 | Q4 | **Feito** | C | Voz clonada (PVC) do Lucas Souza, registrada no direcionamento §7.2 |
-| Q5 | **Parcial** | B | Estalo de vinil baixo. Achado: com faixas largas pelo menos 4 de 6 notas sempre soam (R5 quase não ocorre) |
+| Q5 | **Parcial** | B | S2 no site como cama; sintetizado só se o arquivo falhar. Falta validar nível de ouvido. Achado: com faixas largas pelo menos 4 de 6 notas sempre soam (R5 quase não ocorre) |
 
 ## 6. Assets de IA para o pitch (podem andar em paralelo, §16)
 

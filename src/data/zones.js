@@ -1,4 +1,4 @@
-import { cellCenterLat } from './grid.js';
+import { bandWeightedLat, cellCenterLat } from './grid.js';
 
 // The column under the needle is split into three zones, one voice each, and every zone into two
 // latitude bands (one note each). Bands are [north edge, south edge] in degrees.
@@ -30,6 +30,9 @@ export function zonesFromColumn(col) {
     id: z.id,
     voice: z.voice,
     mean: meanOf(col, z.bands[0][0], z.bands[1][1]),
-    bands: z.bands.map(([north, south]) => ({ lat: (north + south) / 2, temp: meanOf(col, north, south) })),
+    bands: z.bands.map(([north, south]) => ({
+      lat: bandWeightedLat(col, north, south),
+      temp: meanOf(col, north, south),
+    })),
   }));
 }

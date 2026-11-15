@@ -6,19 +6,44 @@ import { live } from '../state/live.js';
 import { useStore } from '../state/store.js';
 import { GLOBE_Y, LINE_LATS, NEEDLE_LAT, meridianPoint, pivotFor } from './layout.js';
 
-const DOT_LIFE = 650; // ms a note stays lit on the needle line
+const DOT_LIFE = 650; // ms a note flash lasts on the meridian
 const POOL = 16;
 
-/** The meridian the needle reads, drawn as a line of light on the surface, and the note dots. */
+/** Soft radial disc for note flashes. Bright enough to read; peak kept under the bloom threshold so it stays under the tonearm. */
+function softFlashMap() {
+  const size = 64;
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.25, 'rgba(255,255,255,0.55)');
+  grad.addColorStop(0.55, 'rgba(255,255,255,0.15)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, size, size);
+  const map = new THREE.CanvasTexture(c);
+  map.colorSpace = THREE.SRGBColorSpace;
+  return map;
+}
+
+const FLASH_OUT = new THREE.Vector3(0, 0, 1); // planeGeometry faces +Z; we align that to the surface normal
+const FLASH_N = new THREE.Vector3();
+
+/**
+ * The meridian the needle reads (a hairline groove on the surface) and the note flashes.
+ * The line marks where the stylus reads; each flash is one note lighting that latitude — not a city pin.
+ */
 export function MeridianLine() {
   const geom = useMemo(() => {
     const pts = [];
     for (let lat = LINE_LATS[0]; lat <= LINE_LATS[1]; lat += 2) {
       const r = THREE.MathUtils.degToRad(lat);
-      pts.push(new THREE.Vector3(0, Math.sin(r) * 1.003, Math.cos(r) * 1.003));
+      pts.push(new THREE.Vector3(0, Math.sin(r) * 1.002, Math.cos(r) * 1.002));
     }
-    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 160, 0.0038, 6, false);
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 160, 0.00115, 6, false);
   }, []);
+  const flashMap = useMemo(() => softFlashMap(), []);
   const dots = useRef([]);
 
   useFrame(() => {
@@ -34,24 +59,37 @@ export function MeridianLine() {
         return;
       }
       const age = (now - d.t0) / DOT_LIFE;
-      const r = THREE.MathUtils.degToRad(d.lat);
+      const lat = THREE.MathUtils.clamp(d.lat, LINE_LATS[0] + 2, LINE_LATS[1] - 2);
+      const r = THREE.MathUtils.degToRad(lat);
+      const y = Math.sin(r);
+      const z = Math.cos(r);
       m.visible = true;
-      m.position.set(0, Math.sin(r) * 1.008, Math.cos(r) * 1.008);
-      m.scale.setScalar(1.25 - 0.55 * age);
+      // On the globe surface, under the tonearm (depthTest on). Additive glow, but capped so bloom does not smear over the headshell.
+      m.position.set(0, y * 1.004, z * 1.004);
+      m.quaternion.setFromUnitVectors(FLASH_OUT, FLASH_N.set(0, y, z).normalize());
+      const grow = 1 + 0.25 * (1 - age);
+      m.scale.setScalar(0.07 * grow);
       m.material.color.set(d.color);
-      m.material.opacity = 1 - age * age;
+      m.material.opacity = (1 - age * age) * 0.7;
     });
   });
 
   return (
     <group>
       <mesh geometry={geom}>
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.85} toneMapped={false} />
+        <meshBasicMaterial color="#e8eaed" transparent opacity={0.4} toneMapped={false} depthWrite={false} />
       </mesh>
       {Array.from({ length: POOL }, (_, i) => (
-        <mesh key={i} ref={(m) => (dots.current[i] = m)} visible={false}>
-          <sphereGeometry args={[0.024, 16, 12]} />
-          <meshBasicMaterial transparent toneMapped={false} />
+        <mesh key={i} ref={(m) => (dots.current[i] = m)} visible={false} scale={0.07}>
+          <planeGeometry args={[1, 1]} />
+          <meshBasicMaterial
+            map={flashMap}
+            transparent
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            toneMapped={false}
+            side={THREE.DoubleSide}
+          />
         </mesh>
       ))}
     </group>

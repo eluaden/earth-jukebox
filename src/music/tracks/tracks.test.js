@@ -132,6 +132,12 @@ describe('night lights', () => {
     for (let i = 1; i < pitches.length; i++) expect(pitches[i]).toBeLessThan(pitches[i - 1]);
   });
 
+  it('puts the flash where the light is inside the band, not at the geometric centre', () => {
+    const col = column((lat) => (lat === -23 ? 40 : 0));
+    const band = m.read(col, col).find((b) => b.south === -45);
+    expect(band.lat).toBe(-23);
+  });
+
   it('more light means more piano notes over a bar', () => {
     const count = (level) => {
       const col = column((lat) => (lat > 35 && lat < 50 ? level : NaN));

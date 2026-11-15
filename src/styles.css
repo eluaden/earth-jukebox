@@ -39,6 +39,10 @@ button {
   border: 0;
   padding: 0;
   cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+button:active:not(:disabled):not([aria-disabled='true']) {
+  transform: scale(0.96);
 }
 
 :focus-visible {
@@ -125,10 +129,19 @@ a {
   color: inherit;
   background: transparent;
   border: 0;
-  padding: 6px 4px;
+  padding: 6px 10px;
   cursor: pointer;
   font: inherit;
   letter-spacing: inherit;
+  border-radius: 999px;
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cold-langs button:hover {
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.06);
 }
 .cold-langs button.on {
   color: var(--fg);
@@ -142,6 +155,11 @@ a {
 .cold.leaving {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cold.leaving .cold-copy {
+  transform: translateY(-8px) scale(0.98);
+  transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .cold-error {
   position: absolute;
@@ -190,6 +208,7 @@ a {
   letter-spacing: 0.18em;
   font-weight: 700;
   pointer-events: none;
+  animation: fade-in 1s ease 0.15s both;
 }
 .about-link {
   position: absolute;
@@ -199,7 +218,10 @@ a {
   font-size: 14px;
   letter-spacing: 0.02em;
   color: var(--fg-dim);
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: fade-in 1s ease 0.25s both;
 }
 .about-link:hover {
   color: var(--fg);
@@ -221,6 +243,13 @@ a {
   line-height: 0.95;
   letter-spacing: 0.01em;
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6);
+  animation: date-settle 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes date-settle {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 .caption {
   margin: 16px 0 0;
@@ -229,6 +258,7 @@ a {
   line-height: 1.45;
   color: var(--fg-dim);
   text-wrap: balance;
+  transition: opacity 0.35s ease;
 }
 
 .chips {
@@ -248,7 +278,26 @@ a {
 .chip {
   border-radius: 16px;
   padding: 14px 16px 14px;
-  transition: opacity 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.25s ease;
+  animation: chip-rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.chips .chip:nth-child(1) {
+  animation-delay: 0.35s;
+}
+.chips .chip:nth-child(2) {
+  animation-delay: 0.45s;
+}
+.chips .chip:nth-child(3) {
+  animation-delay: 0.55s;
+}
+@keyframes chip-rise {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
 }
 .chip.off {
   opacity: 0.45;
@@ -301,7 +350,8 @@ a {
   transition:
     background 0.2s ease,
     color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .chip-buttons button:hover {
   color: var(--fg);
@@ -327,11 +377,21 @@ a {
   font-size: 14px;
   max-width: calc(100vw - 2 * var(--gutter));
   transition: left 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: footer-rise 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+}
+@keyframes footer-rise {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 18px);
+  }
 }
 .footer button {
   padding: 6px 4px;
   color: var(--fg-dim);
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background 0.25s ease,
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .footer button.on,
 .footer button:hover {
@@ -346,11 +406,18 @@ a {
   place-items: center;
   color: #000;
   padding: 0;
-  transition: transform 0.2s ease;
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.22s ease;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
 }
 .footer .play:hover {
   color: #000;
   transform: scale(1.06);
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.08);
+}
+.footer .play:active {
+  transform: scale(0.94);
 }
 .track-name {
   color: var(--fg);
@@ -395,11 +462,14 @@ a {
   color: var(--fg-dim);
   transition:
     color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .close:hover {
   color: var(--fg);
   border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
 }
 .close:focus-visible {
   border-radius: 50%;
@@ -413,7 +483,7 @@ a {
   padding: 22px 64px 22px 22px;
   border-radius: 22px;
   background: var(--glass-strong);
-  animation: rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 @keyframes rise {
   from {
@@ -434,12 +504,29 @@ a {
   display: flex;
   gap: 20px;
 }
+.covers > li {
+  animation: cover-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(0.06s * var(--cover-i, 0) + 0.08s);
+}
+@keyframes cover-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
 .cover {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 0;
   text-align: left;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cover:hover {
+  transform: translateY(-3px);
+}
+.cover:active {
+  transform: translateY(0) scale(0.98);
 }
 /* Sleeve (the track's frame) with the record peeking out on the right. */
 .cover-art {
@@ -652,9 +739,14 @@ a {
   border-radius: 999px;
   border: 1px solid var(--glass-border);
   font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .hear:hover {
   border-color: var(--fg);
+  background: rgba(255, 255, 255, 0.05);
 }
 .hear[disabled] {
   opacity: 0.6;
@@ -668,6 +760,7 @@ a {
   display: grid;
   place-items: center;
   padding: var(--gutter);
+  animation: liner-dim 0.35s ease both;
 }
 .about {
   position: relative;
@@ -679,6 +772,13 @@ a {
   background: var(--glass-strong);
   font-size: 15px;
   line-height: 1.55;
+  animation: about-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes about-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
 }
 
 /* ---------- 2D version ---------- */
@@ -719,22 +819,26 @@ a {
   position: absolute;
   top: 5%;
   bottom: 5%;
-  width: 2px;
-  margin-left: -1px;
-  background: #fff;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  width: 1px;
+  margin-left: -0.5px;
+  background: rgba(216, 220, 226, 0.35);
+  box-shadow: none;
 }
 .flat-dots {
   position: absolute;
   inset: 0;
+  overflow: visible;
+  pointer-events: none;
 }
 .flat-dot {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  margin: -5px 0 0 -5px;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
   border-radius: 50%;
-  box-shadow: 0 0 10px currentColor;
+  background: radial-gradient(circle, var(--dot, #ffd9a0) 0%, transparent 55%);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--dot, #ffd9a0) 55%, transparent);
+  mix-blend-mode: screen;
 }
 
 /* ---------- phones ---------- */

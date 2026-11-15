@@ -1,4 +1,4 @@
-import { arpeggio, bandMean } from './bands.js';
+import { arpeggio, bandMean, bandWeightedLat } from './bands.js';
 
 // Night lights (SVS 5313). Direction 6.2: amount of light -> density of piano notes; lights going out ->
 // a falling minor figure; new lights -> rising bells. Direction 6.1 (emotional rule): loss of light
@@ -69,7 +69,7 @@ export const NIGHT_LIGHTS_MUSIC = {
   read(col, prevCol) {
     return NIGHT_BANDS.map((b) => ({
       ...b,
-      lat: (b.north + b.south) / 2,
+      lat: bandWeightedLat(col, b.north, b.south),
       value: bandMean(col, b.north, b.south),
       prev: prevCol ? bandMean(prevCol, b.north, b.south) : NaN,
     }));

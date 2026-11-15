@@ -27,3 +27,22 @@ export function lonToIndex(lon, lons = DEFAULT_GRID.lons) {
 export function cellCenterLat(j) {
   return 89 - 2 * j;
 }
+
+/**
+ * Latitude for a needle flash in [south, north): weighted by positive cell values.
+ * Pulls the point toward where the data is (e.g. city lights), not the geometric band centre.
+ * Falls back to the mid-latitude of the band when nothing weighs.
+ */
+export function bandWeightedLat(col, north, south) {
+  let wSum = 0;
+  let latSum = 0;
+  for (let j = 0; j < col.length; j++) {
+    const lat = cellCenterLat(j);
+    const v = col[j];
+    if (lat < north && lat >= south && Number.isFinite(v) && v > 0) {
+      wSum += v;
+      latSum += lat * v;
+    }
+  }
+  return wSum > 0 ? latSum / wSum : (north + south) / 2;
+}

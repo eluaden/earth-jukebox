@@ -127,8 +127,10 @@ each one has its file.
   accessible text.
 - Screen readers: the scene is described in text; narration and requested values go to a polite
   live region; a hidden time slider gives the date as its value.
-- Audio starts only after a click or key press. `prefers-reduced-motion` skips the camera descent
-  and stops the rings; `prefers-reduced-transparency` turns the glass solid.
+- Audio starts only after a click or key press. Turntable and UI sound effects (ElevenLabs S1–S7 in
+  `public/sfx/`) play on needle drop/lift, platter start, record change, opening whoosh and button
+  taps. `prefers-reduced-motion` skips the camera descent and stops the rings;
+  `prefers-reduced-transparency` turns the glass solid.
 
 ## Credits
 

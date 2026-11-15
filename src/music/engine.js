@@ -4,8 +4,9 @@ import { isAudible } from './mix.js';
 // Plays what a track's music module decides (src/music/tracks/index.js). Every voice of the current
 // track gets its own sampled instrument (VSCO 2 CE, CC0) through a low-pass filter and a gain (mute /
 // solo), then ducking, reverb and a limiter. The samples are decoded once and shared, so changing
-// track only rebuilds the voices. A very quiet vinyl crackle (not data, declared in the liner notes)
-// runs underneath while the needle is on the record; with the needle up the record is silent.
+// track only rebuilds the voices. Vinyl crackle (S2, not data, declared in the liner notes) runs
+// underneath while the needle is on the record; with the needle up the record is silent. One-shot
+// SFX (S1, S3–S7) sit on a separate bus so they do not duck with the narration.
 
 const INSTRUMENTS = {
   strings: { db: -7, attack: 0.25, release: 1.6 },
@@ -20,6 +21,18 @@ const DUCK_DB = -10;
 const MAKEUP_DB = 18;
 const VOICE_FADE = 0.3; // s: old voices fade out when the track changes
 
+// Direction §7.2: files in public/sfx/. Gain is linear after the file's own level (glass-tap /
+// record-swap are normalised on copy; whoosh stays quiet so it does not cover the welcome voice).
+const SFX = {
+  'needle-drop': { file: 'needle-drop.mp3', gain: 0.7 },
+  'needle-lift': { file: 'needle-lift.mp3', gain: 0.5 },
+  'platter-spin-up': { file: 'platter-spin-up.mp3', gain: 0.45 },
+  'record-swap': { file: 'record-swap.mp3', gain: 0.75 },
+  'glass-tap': { file: 'glass-tap.mp3', gain: 0.4 },
+  'space-whoosh': { file: 'space-whoosh.mp3', gain: 0.28 },
+  'vinyl-crackle-loop': { file: 'vinyl-crackle-loop.mp3', gain: 0.14 },
+};
+
 const noteOf = (midi) => Tone.Frequency(midi, 'midi').toNote();
 
 export function createEngine(base) {
@@ -31,10 +44,41 @@ export function createEngine(base) {
   let tick = 0;
   let lifted = false;
   let mix = { mute: {}, solo: {} };
+  let sfx = {}; // id -> Tone.Player
+  let useSampleBed = false; // true when S2 loaded; otherwise the synthesised hiss/crackle
 
   function bufferMap(instrument) {
     const b = n.buffers[instrument];
     return Object.fromEntries(Object.keys(n.urls[instrument]).map((note) => [note, b.get(note)]));
+  }
+
+  async function loadSfx(sfxBus) {
+    const loaded = {};
+    await Promise.all(
+      Object.entries(SFX).map(async ([id, spec]) => {
+        try {
+          const player = new Tone.Player({
+            url: `${base}sfx/${spec.file}`,
+            fadeIn: 0.01,
+            fadeOut: 0.04,
+          });
+          await player.load();
+          const gain = new Tone.Gain(spec.gain);
+          player.connect(gain);
+          if (id === 'vinyl-crackle-loop') {
+            player.loop = true;
+            gain.connect(n.bed);
+          } else {
+            gain.connect(sfxBus);
+          }
+          loaded[id] = player;
+        } catch (err) {
+          console.warn(`SFX ${id} missing; falling back where needed`, err);
+        }
+      }),
+    );
+    sfx = loaded;
+    useSampleBed = Boolean(sfx['vinyl-crackle-loop']);
   }
 
   async function load() {
@@ -54,7 +98,7 @@ export function createEngine(base) {
     const reverb = new Tone.Reverb({ decay: 4, preDelay: 0.02, wet: 0.28 }).connect(makeup);
     const music = new Tone.Gain(1).connect(reverb);
 
-    // Vinyl bed: soft hiss plus sparse crackles. Not data.
+    // Vinyl bed: S2 when present, otherwise soft hiss plus sparse crackles. Not data.
     const bed = new Tone.Gain(0).connect(limiter);
     const hiss = new Tone.Noise('pink');
     hiss.chain(new Tone.Filter({ type: 'highpass', frequency: 900 }), new Tone.Gain(Tone.dbToGain(-44)), bed);
@@ -67,9 +111,26 @@ export function createEngine(base) {
       envelope: { attack: 0.001, decay: 0.28, sustain: 0, release: 0.05 },
       volume: -16,
     }).connect(limiter);
+    const sfxBus = new Tone.Gain(1).connect(limiter);
 
     await reverb.ready;
-    n = { urls, buffers, limiter, reverb, music, bed, hiss, crackle, crackleEnv, thump };
+    n = { urls, buffers, limiter, reverb, music, bed, hiss, crackle, crackleEnv, thump, sfxBus };
+    await loadSfx(sfxBus);
+  }
+
+  /** One-shot SFX; safe to call before load (no-op) or while a previous take is still ringing. */
+  function playSfx(id, time) {
+    const player = sfx[id];
+    if (!player || !n) return false;
+    const at = time ?? Tone.now() + 0.02;
+    try {
+      if (player.state === 'started') player.stop(at);
+      player.start(at);
+      return true;
+    } catch (err) {
+      console.warn(`SFX ${id} failed to start`, err);
+      return false;
+    }
   }
 
   /**
@@ -130,6 +191,16 @@ export function createEngine(base) {
     }
   }
 
+  function ensureBedSources() {
+    if (useSampleBed) {
+      const vinyl = sfx['vinyl-crackle-loop'];
+      if (vinyl && vinyl.state !== 'started') vinyl.start();
+      return;
+    }
+    if (n.hiss.state !== 'started') n.hiss.start();
+    if (n.crackle.state !== 'started') n.crackle.start();
+  }
+
   /** onTick(tick, time) -> { events, filters }: called on every pulse while playing. */
   function start(onTick) {
     if (!n) return;
@@ -140,12 +211,13 @@ export function createEngine(base) {
         const r = onTick(tick++, time);
         if (r) apply(r.events, r.filters, time);
       }, PULSE).start(0);
-      crackleLoop = new Tone.Loop((time) => {
-        if (Math.random() < 0.22) n.crackleEnv.triggerAttackRelease(0.004, time + Math.random() * 0.1, 0.25 + Math.random() * 0.75);
-      }, '16n').start(0);
-      n.hiss.start();
-      n.crackle.start();
+      if (!useSampleBed) {
+        crackleLoop = new Tone.Loop((time) => {
+          if (Math.random() < 0.22) n.crackleEnv.triggerAttackRelease(0.004, time + Math.random() * 0.1, 0.25 + Math.random() * 0.75);
+        }, '16n').start(0);
+      }
     }
+    ensureBedSources();
     applyMix();
     if (!lifted) n.bed.gain.rampTo(1, 0.8);
     transport.start('+0.05');
@@ -197,17 +269,22 @@ export function createEngine(base) {
     if (!n) return;
     lifted = false;
     const now = Tone.now() + 0.02;
-    n.thump.triggerAttackRelease('C1', 0.2, now);
+    if (!playSfx('needle-drop', now)) {
+      n.thump.triggerAttackRelease('C1', 0.2, now);
+      if (!useSampleBed) burst(now + 0.04, 6);
+    }
+    ensureBedSources();
     if (Tone.getTransport().state === 'started') n.bed.gain.rampTo(1, 0.05, now);
-    burst(now + 0.04, 6);
   }
 
   function needleLift() {
     if (!n) return;
     lifted = true;
     const now = Tone.now() + 0.02;
-    n.thump.triggerAttackRelease('G1', 0.08, now, 0.35);
-    burst(now, 3);
+    if (!playSfx('needle-lift', now)) {
+      n.thump.triggerAttackRelease('G1', 0.08, now, 0.35);
+      if (!useSampleBed) burst(now, 3);
+    }
     n.bed.gain.rampTo(0, 0.3, now + 0.12);
   }
 
@@ -220,6 +297,7 @@ export function createEngine(base) {
     setMix,
     duck,
     playLegend,
+    playSfx,
     needleDrop,
     needleLift,
     pulseSeconds,

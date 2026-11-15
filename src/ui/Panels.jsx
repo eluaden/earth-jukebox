@@ -49,10 +49,10 @@ export function Records() {
     <section className="records glass" role="dialog" aria-label={t(lang, 'records')}>
       <CloseButton lang={lang} autoFocus />
       <ul className="covers">
-        {tracks.map((tr) => {
+        {tracks.map((tr, i) => {
           const current = tr.id === trackId;
           return (
-            <li key={tr.id}>
+            <li key={tr.id} style={{ '--cover-i': i }}>
               <button type="button" className={`cover ${current ? 'is-current' : ''}`} aria-current={current ? 'true' : undefined} onClick={() => pick(tr.id)}>
                 <span className="cover-art">
                   <img src={tr.cover} alt="" />

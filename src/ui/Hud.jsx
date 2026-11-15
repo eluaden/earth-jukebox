@@ -32,10 +32,15 @@ export function DateCaption() {
   if (!meta) return null;
   const iso = meta.dates[step];
   const unit = meta.time?.unit;
+  const label = formatDate(iso, lang, unit);
   return (
     <div className="when">
-      <p className="date" aria-label={longDate(iso, lang, unit)}>{formatDate(iso, lang, unit)}</p>
-      <p className="caption" aria-hidden="true">{caption}</p>
+      <p key={label} className="date" aria-label={longDate(iso, lang, unit)}>
+        {label}
+      </p>
+      <p className="caption" aria-hidden="true">
+        {caption}
+      </p>
     </div>
   );
 }

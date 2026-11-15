@@ -39,7 +39,7 @@ export function ColdOpen() {
                 type="button"
                 lang={l}
                 aria-pressed={l === lang}
-                className={l === lang ? 'on' : ''}
+                className={`cold-lang ${l === lang ? 'on' : ''}`}
                 onClick={() => startWith(l)}
               >
                 {l.toUpperCase()}

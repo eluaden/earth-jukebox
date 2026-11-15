@@ -1,4 +1,4 @@
-import { arpeggio, bandMean } from './bands.js';
+import { arpeggio, bandMean, bandWeightedLat } from './bands.js';
 
 // Lightning (SVS 5011). Direction 6.2: every lightning band is a hit of tuned percussion (marimba) and
 // latitude sets the pitch, so the yearly north-south migration is heard as the register moving.
@@ -34,7 +34,11 @@ export const LIGHTNING_MUSIC = {
   ],
 
   read(col) {
-    return LIGHTNING_BANDS.map((b) => ({ ...b, lat: (b.north + b.south) / 2, value: bandMean(col, b.north, b.south) }));
+    return LIGHTNING_BANDS.map((b) => ({
+      ...b,
+      lat: bandWeightedLat(col, b.north, b.south),
+      value: bandMean(col, b.north, b.south),
+    }));
   },
 
   summary(bands) {

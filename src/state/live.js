@@ -7,5 +7,5 @@ export const live = {
   lon: -90,
   read: null, // the track's reading of the column under the needle (TRACK_MUSIC[id].read)
   summary: [], // values for the chips: [{ voice, value, unit }]
-  dots: [], // notes lit on the needle line: { lat, color, t0 }
+  dots: [], // note flashes on the meridian: { lat, color, t0 } (lat = value-weighted band centre)
 };

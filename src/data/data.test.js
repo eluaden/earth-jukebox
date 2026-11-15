@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cellCenterLat, decodeValue, lonToIndex, readColumn } from './grid.js';
+import { bandWeightedLat, cellCenterLat, decodeValue, lonToIndex, readColumn } from './grid.js';
 import { lonUnderNeedle } from './needle.js';
 import { ZONES, zonesFromColumn } from './zones.js';
 
@@ -33,6 +33,13 @@ describe('grid', () => {
   it('gives the centre latitude of each row', () => {
     expect(cellCenterLat(0)).toBe(89);
     expect(cellCenterLat(89)).toBe(-89);
+  });
+
+  it('weights the flash latitude by positive cell values inside the band', () => {
+    const col = Float32Array.from({ length: 90 }, () => 0);
+    col[56] = 40; // cell centre -23° (São Paulo–ish)
+    expect(bandWeightedLat(col, -20, -45)).toBe(-23);
+    expect(bandWeightedLat(col, 70, 50)).toBe(60); // empty band -> geometric mid
   });
 });
 
@@ -78,14 +85,14 @@ describe('zones', () => {
     }
   });
 
-  it('averages the ocean cells of each band and places the band at its middle latitude', () => {
+  it('averages the ocean cells of each band and places the flash at the value-weighted latitude', () => {
     const col = empty();
     for (const lat of [61, 63, 65]) col[rowOf(lat)] = 20;
     col[rowOf(1)] = 27;
     col[rowOf(3)] = 29;
     const [north, tropics] = zonesFromColumn(col);
     expect(north.bands[0].temp).toBe(20);
-    expect(north.bands[0].lat).toBe(62.5);
+    expect(north.bands[0].lat).toBe(63); // (61+63+65)/3, not the geometric mid of [80, 45]
     expect(Number.isNaN(north.bands[1].temp)).toBe(true);
     expect(north.mean).toBe(20);
     expect(tropics.bands[0].temp).toBe(28);
