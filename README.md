@@ -196,6 +196,11 @@ The player shows the video in step with the sound; the still frames are what the
 - NASA Blue Marble Next Generation (globe texture).
 - Fonts: Space Grotesk and Atkinson Hyperlegible (Google Fonts).
 
+## Planning docs
+
+- [`docs/recursos-do-desafio.md`](docs/recursos-do-desafio.md): every resource on the challenge's Resources tab, its files, and how it compares with what the project has (Portuguese).
+- [`docs/analise-estrategica.md`](docs/analise-estrategica.md): judging criteria, past winners and award strategy (Portuguese).
+
 ## Placeholders still open
 
 On the landing page, the listening-test result (`[X/5]`) and the tester's quote are placeholders
