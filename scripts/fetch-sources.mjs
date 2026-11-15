@@ -1,4 +1,4 @@
-// Downloads the NASA SVS reference videos inspected in docs/recursos-do-desafio.md (section 3.11)
+// Downloads the NASA SVS reference videos (and small companion files such as legends) inspected in docs/recursos-do-desafio.md (section 3.11)
 // into sources/, which git ignores: GitHub rejects files over 100 MB, and these are 33 to 334 MB.
 // A file already present with the expected size is skipped, so the script can be re-run.
 // Usage: npm run fetch-sources              (all videos)
@@ -16,9 +16,12 @@ const VIDEOS = [
   { name: 'air-quality-eic', svs: 5533, path: 'a005500/a005533/EIC_AirQuality_Preview_3840x1080.mp4', bytes: 187482511 },
   { name: 'lightning-sphere', svs: 5011, path: 'a005000/a005011/iss_lightning_sphere_07312023.mp4', bytes: 133203670 },
   { name: 'lightning-flat', svs: 5011, path: 'a005000/a005011/iss_lightning_sos_yearly_07312023_2048p60.mp4', bytes: 350207237 },
+  // Small companion files of the SST track (legend and per-frame dates); bytes: null = any size.
+  { name: 'sst-legend', svs: 3912, path: 'a003900/a003912/sst_ecco2_cbar.png', bytes: null },
+  { name: 'sst-dates', svs: 3912, path: 'a003900/a003912/flat_ecco2_dates.txt', bytes: null },
 ];
 
-const mb = (n) => `${(n / 2 ** 20).toFixed(1)} MB`;
+const mb = (n) => (n == null ? 'small' : `${(n / 2 ** 20).toFixed(1)} MB`);
 const fileOf = (v) => `${DIR}/${v.svs}-${v.path.split('/').pop()}`;
 
 const args = process.argv.slice(2);
@@ -36,7 +39,7 @@ const wanted = args.length ? VIDEOS.filter((v) => args.includes(v.name)) : VIDEO
 mkdirSync(DIR, { recursive: true });
 for (const v of wanted) {
   const file = fileOf(v);
-  if (existsSync(file) && statSync(file).size === v.bytes) {
+  if (existsSync(file) && (v.bytes == null || statSync(file).size === v.bytes)) {
     console.log(`ok    ${file}`);
     continue;
   }
@@ -46,7 +49,7 @@ for (const v of wanted) {
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
   await pipeline(Readable.fromWeb(res.body), createWriteStream(`${file}.part`));
   const size = statSync(`${file}.part`).size;
-  if (size !== v.bytes) throw new Error(`${url}: got ${size} bytes, expected ${v.bytes}. The file on SVS may have changed; partial download left at ${file}.part`);
+  if (v.bytes != null && size !== v.bytes) throw new Error(`${url}: got ${size} bytes, expected ${v.bytes}. The file on SVS may have changed; partial download left at ${file}.part`);
   renameSync(`${file}.part`, file);
 }
 console.log(`Done: ${wanted.length} video(s) in ${DIR}/.`);

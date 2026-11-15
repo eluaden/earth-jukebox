@@ -1,0 +1,43 @@
+{
+ "strings": {
+  "C2": "strings/C2.mp3",
+  "E2": "strings/E2.mp3",
+  "G2": "strings/G2.mp3",
+  "B2": "strings/B2.mp3",
+  "D3": "strings/D3.mp3",
+  "F3": "strings/F3.mp3",
+  "A3": "strings/A3.mp3",
+  "C4": "strings/C4.mp3",
+  "E4": "strings/E4.mp3",
+  "G4": "strings/G4.mp3",
+  "B4": "strings/B4.mp3",
+  "D5": "strings/D5.mp3",
+  "F5": "strings/F5.mp3",
+  "G5": "strings/G5.mp3",
+  "B5": "strings/B5.mp3",
+  "D6": "strings/D6.mp3"
+ },
+ "piano": {
+  "F3": "piano/F3.mp3",
+  "A3": "piano/A3.mp3",
+  "C#4": "piano/Cs4.mp3",
+  "F4": "piano/F4.mp3",
+  "A4": "piano/A4.mp3",
+  "C#5": "piano/Cs5.mp3",
+  "F5": "piano/F5.mp3",
+  "A5": "piano/A5.mp3",
+  "C#6": "piano/Cs6.mp3",
+  "F6": "piano/F6.mp3",
+  "A6": "piano/A6.mp3",
+  "C#7": "piano/Cs7.mp3",
+  "F7": "piano/F7.mp3"
+ },
+ "glock": {
+  "G5": "glock/G5.mp3",
+  "C6": "glock/C6.mp3",
+  "G6": "glock/G6.mp3",
+  "C7": "glock/C7.mp3",
+  "G7": "glock/G7.mp3",
+  "C8": "glock/C8.mp3"
+ }
+}
