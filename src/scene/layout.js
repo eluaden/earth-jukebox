@@ -41,6 +41,30 @@ export function viewHalfSize(aspect) {
   return { w: h * aspect, h };
 }
 
+/**
+ * Near star dust: a shell around the globe, beyond the camera once the opening ends (about 5 units
+ * away on wide screens, under 10 on tall phones), so no grain ever sits in front of the record.
+ * The opening flies through it.
+ * Returns flat arrays ready for the GPU: positions (xyz), sizes (px at 30 units), seeds (0..1).
+ */
+export const DUST_RADII = [14, 42];
+export function dustPositions(count, random = Math.random) {
+  const positions = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const seeds = new Float32Array(count);
+  const [r0, r1] = DUST_RADII;
+  for (let i = 0; i < count; i++) {
+    const z = random() * 2 - 1;
+    const a = random() * Math.PI * 2;
+    const s = Math.sqrt(1 - z * z);
+    const r = r0 + (r1 - r0) * Math.cbrt(random());
+    positions.set([Math.cos(a) * s * r, Math.sin(a) * s * r, z * r], i * 3);
+    sizes[i] = 1 + random() * 1.6;
+    seeds[i] = random();
+  }
+  return { positions, sizes, seeds };
+}
+
 /** Tonearm pivot: off the platter, top right, always inside the view (counterweight included). */
 export function pivotFor(aspect) {
   const { w, h } = viewHalfSize(aspect);

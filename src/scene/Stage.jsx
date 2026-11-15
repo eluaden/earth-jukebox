@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Environment, Lightformer, Stars } from '@react-three/drei';
+import { Environment, Lightformer } from '@react-three/drei';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import gsap from 'gsap';
 import { advance, introDone, togglePlay } from '../state/controller.js';
 import { useStore } from '../state/store.js';
+import { Backdrop } from './Backdrop.jsx';
 import { Atmosphere, Globe } from './Globe.jsx';
 import { MeridianLine, Tonearm } from './Needle.jsx';
 import { Platter } from './Platter.jsx';
@@ -101,7 +102,7 @@ export default function Stage() {
       }}
     >
       <color attach="background" args={['#000000']} />
-      <Stars radius={90} depth={50} count={2200} factor={2.4} saturation={0} fade speed={reduce ? 0 : 0.25} />
+      <Backdrop still={reduce} />
       <Environment resolution={256}>
         <color attach="background" args={['#1a1c20']} />
         <Lightformer intensity={3} position={[0, 4, 3]} scale={[10, 2, 1]} />

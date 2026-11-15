@@ -88,7 +88,7 @@ flowchart LR
 
 | Elemento | Decisão |
 |---|---|
-| Fundo | Espaço preto profundo, estrelas sutis |
+| Fundo | Espaço preto profundo, estrelas sutis. Reage ao mouse sem chamar atenção: duas camadas de estrelas em parallax que acompanham o cursor (a poeira próxima mexe mais que as estrelas distantes), a poeira acende um pouco perto do cursor e um brilho azul muito fraco segue o ponteiro atrás do globo, mais forte enquanto o mouse se move. Nada disso é dado. Toque não move o fundo (o arrasto é do globo); com redução de movimento, o fundo fica parado |
 | Cor | As únicas cores fortes vêm do dado da NASA. UI em preto, branco e vidro, com acento âmbar mínimo. **O coral atual sai.** O acabamento do globo não conta como cor forte: o halo azul fino de atmosfera, a borda escurecida e a terra cinza mais escura (só onde o cinza é terra sem dado, como na temperatura do mar; nas luzes noturnas o branco é o próprio dado e não é escurecido). Onde a agulha lê, a cor é a da legenda |
 | Controles | Liquid glass (vidro fosco translúcido, borda clara fina). Com redução de transparência ativa, vira sólido com o mesmo contraste |
 | Tipografia | Serifa editorial fina e grande para datas e títulos (ex.: Instrument Serif); mono para valores de dado (ex.: Geist Mono); Atkinson Hyperlegible onde a leitura importar mais |
