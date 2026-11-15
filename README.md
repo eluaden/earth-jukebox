@@ -116,6 +116,7 @@ with units, are shown under the player and in the slider's `aria-valuetext`.
 | `dixie-fire-2021` | **Real NASA frames.** [SVS 4993](https://svs.gsfc.nasa.gov/4993/), Spread of the Dixie Fire, 16 Jul – 11 Sep 2021, one frame per day | Total burned area (km²) → tone, growth since the previous day → wind. Strong tick on the 1st of each month, bell on the fastest day |
 | `active-fires-viirs` | **Real NASA frames.** [SVS 5113](https://svs.gsfc.nasa.gov/5113/), Active Fires As Observed by VIIRS, 13 Nov 2024 – 13 Nov 2026, one frame every 5 days | Share of each region's map covered by fire detections (%): Africa north of the equator → tone, Africa south of the equator → wind, South and Southeast Asia → pitch of the tick. Strong tick on each new year, bell at each African peak |
 | `tempo-no2-great-lakes` | **Real NASA frames.** [SVS 5175](https://svs.gsfc.nasa.gov/5175/), TEMPO nitrogen dioxide, Chicago/Toronto view, 31 Aug 2023, 12 scans | Chicago area → tone, Detroit area → wind, Toronto area → pitch of the tick. Bell on Chicago's highest scan |
+| `iss-lightning` | **Real NASA frames.** [SVS 5011](https://svs.gsfc.nasa.gov/5011/), Lightning Events Detected from the ISS, 2017–2023, flat map version | Share of each hemisphere's map covered by lightning dots (%): north of the equator → tone, south → wind. Strong tick on each new year, bell at the northern maximum. **Years are inferred, see below** |
 
 ### How `tempo-no2-great-lakes` is read from the frames
 
@@ -163,6 +164,19 @@ dots blend with the background, so their colour cannot be read against the 0–8
 and we do not pretend it can. Against the same measure on 2048×1024 frames the three regions
 correlate at 0.996 or better (the small frames read about 25% higher because the dots blur).
 
+### How `iss-lightning` is read from the frames, and its assumption about time
+
+Same `coverage` extractor as the fires track: the share of pixels drawn in the yellow of the
+lightning dots, in a band north of the equator and a band south of it. It is map coverage, not a
+count of flashes.
+
+**Assumption.** This flat-map video prints no date. NASA states that the data runs from March 2017
+to July 2023. We measured that the video does not advance at a constant rate, so the track gives
+no dates. It gives only the **year**, inferred from the data: lightning swings north, then south,
+once a year; the video shows seven northern peaks (2017 to 2023); each new year starts in the
+middle of the stretch where the south leads. A year label can be off by a few months around each
+new year. The narration says so.
+
 ### Video
 
 Each real track also ships the NASA video the frames came from (`video.mp4`, re-encoded smaller).
@@ -178,7 +192,7 @@ The player shows the video in step with the sound; the still frames are what the
 
 ## Data sources and credits
 
-- NASA Scientific Visualization Studio: [SVS 5235](https://svs.gsfc.nasa.gov/5235/), [SVS 4993](https://svs.gsfc.nasa.gov/4993/), [SVS 5113](https://svs.gsfc.nasa.gov/5113/), [SVS 5175](https://svs.gsfc.nasa.gov/5175/), all from the [Earth Information Center gallery](https://svs.gsfc.nasa.gov/gallery/earth-information-center/).
+- NASA Scientific Visualization Studio: [SVS 5235](https://svs.gsfc.nasa.gov/5235/), [SVS 4993](https://svs.gsfc.nasa.gov/4993/), [SVS 5113](https://svs.gsfc.nasa.gov/5113/), [SVS 5175](https://svs.gsfc.nasa.gov/5175/), [SVS 5011](https://svs.gsfc.nasa.gov/5011/), all from the [Earth Information Center gallery](https://svs.gsfc.nasa.gov/gallery/earth-information-center/).
 - NASA Blue Marble Next Generation (globe texture).
 - Fonts: Space Grotesk and Atkinson Hyperlegible (Google Fonts).
 
