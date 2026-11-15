@@ -25,6 +25,7 @@ from datetime import datetime, timedelta
 import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cover import write_cover  # noqa: E402
 from common import (LATS, LONS, NO_DATA, ROOT, SRC, cell_share, decode_frame_at, encode_video,  # noqa: E402
                     equirect_cells, quantize_share, write_json)
 
@@ -147,7 +148,6 @@ def main():
     start = frames[0]
     step_frames = [(f - start) * OUT_FPS // SRC_FPS for f in frames]
     total_frames = (SRC_FRAMES - start) * OUT_FPS // SRC_FPS
-    save_frame(frames[north_peak], 512, 256, 'cover.jpg')
     save_frame(start, 1536, 768, 'poster.jpg')
     if not skip_video:
         print('encoding web videos (a few minutes)...')
@@ -175,6 +175,7 @@ def main():
         'poster': 'poster.jpg',
     }
     write_json(os.path.join(OUT, 'track.json'), track)
+    write_cover('lightning')
     print(f'wrote {OUT}')
 
 

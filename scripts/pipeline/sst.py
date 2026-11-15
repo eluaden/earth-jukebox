@@ -7,7 +7,8 @@ The browser never reads colours: it only looks values up in the grid this script
 Inputs (npm run fetch-sources -- sea-surface-temperature sst-legend sst-dates):
   sources/3912-ecco2_sst_flow.mp4, sources/3912-sst_ecco2_cbar.png, sources/3912-flat_ecco2_dates.txt
 Outputs: public/tracks/sst/  (grid.bin, track.json, video-1536.mp4, video-1024.mp4, legend.png,
-  cover.jpg, poster.jpg) and public/tracks/index.json.
+  poster.jpg) and the Records cover (cover.py). The Records order, public/tracks/index.json, is
+  edited by hand: no pipeline writes it.
 
 Usage: python scripts/pipeline/sst.py [--skip-video]
 Needs: Python 3, numpy, Pillow, ffmpeg on PATH.
@@ -20,6 +21,9 @@ import sys
 
 import numpy as np
 from PIL import Image
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cover import write_cover  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SRC = os.path.join(ROOT, 'sources')
@@ -246,8 +250,6 @@ def main():
     print(f'ocean cells {ocean:.1%}, valid pixels per frame {np.mean(valid_share):.1%}, markers {marks}')
 
     shutil.copyfile(LEGEND, os.path.join(OUT, 'legend.png'))
-    north = next(m for m in marks if m['id'] == 'north-warmest')
-    save_frame(north['step'] * STEP_EVERY, 512, 256, 'cover.jpg')
     save_frame(0, 1536, 768, 'poster.jpg')
     if not skip_video:
         print('encoding web videos (a few minutes)...')
@@ -272,8 +274,7 @@ def main():
     }
     with open(os.path.join(OUT, 'track.json'), 'w', encoding='utf-8') as f:
         json.dump(track, f, ensure_ascii=False, indent=1)
-    with open(os.path.join(ROOT, 'public', 'tracks', 'index.json'), 'w', encoding='utf-8') as f:
-        json.dump(['sst'], f)
+    write_cover('sst')
     print(f'wrote {OUT}')
 
 

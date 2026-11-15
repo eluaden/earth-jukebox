@@ -25,6 +25,7 @@ import numpy as np
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cover import write_cover  # noqa: E402
 from common import LATS, LONS, NO_DATA, ROOT, SRC, cell_mean, decode_frames, equirect_cells, write_json  # noqa: E402
 
 VIDEO = os.path.join(SRC, '5313-nightlights_flat_series_and_change_wZooms_13_EIC_2160p30_h265.mp4')
@@ -143,8 +144,6 @@ def main():
         noise = float(np.median(luminance(decoded[f])[dark] - luminance(base)[dark]))
         total = float(np.nansum(light))
         print(f'  {year}: frame {f}, total light {total:8.1f}, median change over dark sea {noise:+.2f}')
-    Image.open(os.path.join(OUT, f'year-{FIRST_YEAR + YEARS - 1}.jpg')).resize((512, 256), Image.LANCZOS).save(
-        os.path.join(OUT, 'cover.jpg'), quality=88)
 
     q = quantize_light(grid)
     q.tofile(os.path.join(OUT, 'grid.bin'))
@@ -179,6 +178,7 @@ def main():
         'poster': f'year-{FIRST_YEAR}.jpg',
     }
     write_json(os.path.join(OUT, 'track.json'), track)
+    write_cover('night-lights')
     print(f'markers {markers}; wrote {OUT}')
 
 

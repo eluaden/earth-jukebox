@@ -41,12 +41,20 @@ values that the app looks up under the needle.
 
 ```bash
 npm run fetch-sources -- sea-surface-temperature sst-legend sst-dates lightning-flat lightning-labels night-lights
-npm run test:pipeline        # reader tests (SST, lightning, night lights)
+npm run test:pipeline        # reader tests (SST, lightning, night lights, covers)
 npm run pipeline:sst         # writes public/tracks/sst/
 npm run pipeline:lightning   # writes public/tracks/lightning/ (one step every 10 days, NASA's labels.txt dates)
 npm run pipeline:nightlights # writes public/tracks/night-lights/ (12 yearly stills + light grid)
 npm run pipeline:samples     # instrument samples into public/samples/
+npm run pipeline:covers      # Records covers from the grids already written (each pipeline also runs it)
 ```
+
+**Records covers** ([`scripts/pipeline/cover.py`](scripts/pipeline/cover.py)) are drawn from each
+track's own grid, as a record seen from above: angle = longitude (in the order the needle reads it),
+three bands = north / tropics / south (the zones the voices play), and inside each band one spiral
+groove turn per time step, first step outside. Colour = the zone's mean in the track's palette (NASA's
+colour bar for SST). `public/tracks/index.json` (the Records order) is edited by hand; no pipeline
+writes it.
 
 [`scripts/pipeline/sst.py`](scripts/pipeline/sst.py) (Python 3, numpy, Pillow, ffmpeg):
 
