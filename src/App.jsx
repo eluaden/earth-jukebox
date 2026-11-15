@@ -6,6 +6,7 @@ import { About, LinerNotes, Records } from './ui/Panels.jsx';
 import { useKeys } from './ui/useKeys.js';
 import FlatStage, { hasWebGL } from './flat/FlatStage.jsx';
 import { t } from './i18n/strings.js';
+import { TRACK_TEXT } from './state/tracks.js';
 
 const Stage = lazy(() => import('./scene/Stage.jsx'));
 
@@ -14,6 +15,8 @@ export default function App() {
   const lang = useStore((s) => s.lang);
   const meta = useStore((s) => s.meta);
   const panel = useStore((s) => s.panel);
+  const trackId = useStore((s) => s.trackId);
+  const switching = useStore((s) => s.switching);
   useKeys();
 
   const flat = useMemo(() => new URLSearchParams(location.search).has('flat') || !hasWebGL(), []);
@@ -23,10 +26,10 @@ export default function App() {
   }, [lang]);
 
   return (
-    <div className={`app phase-${phase} ${panel ? `panel-${panel}` : ''}`}>
+    <div className={`app phase-${phase} ${panel ? `panel-${panel}` : ''} ${switching ? 'switching' : ''}`}>
       {meta && phase !== 'cold' && (
         <>
-          <p className="sr-only">{t(lang, 'sceneDescription')}</p>
+          <p className="sr-only">{t(lang, 'sceneDescription', { track: TRACK_TEXT[trackId][lang].title })}</p>
           {flat ? (
             <FlatStage />
           ) : (

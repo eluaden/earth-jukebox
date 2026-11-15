@@ -1,10 +1,40 @@
-// The NASA video's currentTime is the data clock: frame = floor(t * fps), step = floor(frame / stepEvery).
+import { stepAtFrame, stepAtTime } from '../data/steps.js';
 
-export function stepFromTime(t, meta) {
-  if (!Number.isFinite(t)) return 0;
-  const frame = Math.floor(t * meta.video.fps);
-  const step = Math.floor(frame / meta.grid.stepEvery);
-  return Math.min(meta.grid.steps - 1, Math.max(0, step));
+// The data clock. Video tracks: the NASA video's currentTime (frame = floor(t * fps), step from the
+// frame, see src/data/steps.js). Still-image tracks (night lights): the app's own time,
+// time.secondsPerStep per step, looping.
+
+export const isStills = (meta) => meta.texture?.kind === 'stills';
+
+/** Length of one pass through the record, in seconds. */
+export function trackDuration(meta) {
+  return isStills(meta) ? meta.grid.steps * meta.time.secondsPerStep : meta.video.duration;
+}
+
+/** Grid step at a time of the data clock. */
+export function stepAt(meta, t) {
+  if (isStills(meta)) return stepAtTime(meta, t);
+  const frame = Math.floor((Number.isFinite(t) ? t : 0) * meta.video.fps);
+  return Math.min(meta.grid.steps - 1, Math.max(0, stepAtFrame(meta, frame)));
+}
+
+/** First video frame of a step (video tracks). */
+function frameOfStep(meta, s) {
+  const g = meta.grid;
+  if (Array.isArray(g.stepFrames)) return s < g.stepFrames.length ? g.stepFrames[s] : meta.video.frames;
+  return Math.min(s * g.stepEvery, meta.video.frames);
+}
+
+/**
+ * Time to seek to for a step (arrow keys): the middle of the step on video tracks, so a frame
+ * boundary cannot land on the step before; the start of the step on still-image tracks, so the
+ * year is heard whole.
+ */
+export function timeOfStep(meta, step) {
+  const s = Math.min(meta.grid.steps - 1, Math.max(0, step));
+  if (isStills(meta)) return s * meta.time.secondsPerStep + 0.01;
+  const mid = (frameOfStep(meta, s) + frameOfStep(meta, s + 1)) / 2;
+  return mid / meta.video.fps;
 }
 
 export function clampTime(t, duration, fps) {

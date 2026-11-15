@@ -1,31 +1,55 @@
 import { useEffect, useRef, useState } from 'react';
 import { begin, preload } from '../state/controller.js';
 import { useStore } from '../state/store.js';
-import { t } from '../i18n/strings.js';
+import { LANGS, t } from '../i18n/strings.js';
 
-/** Black screen, one small line: "Put on headphones." Any click or Enter starts (and unlocks audio). */
+/** Black screen: headphones + choose a language to start (no start button). */
 export function ColdOpen() {
   const lang = useStore((s) => s.lang);
+  const setLang = useStore((s) => s.setLang);
   const error = useStore((s) => s.error);
   const [leaving, setLeaving] = useState(false);
-  const ref = useRef();
+  const langRefs = useRef({});
 
   useEffect(() => {
     preload().catch(() => {});
-    ref.current?.focus();
+    langRefs.current[useStore.getState().lang]?.focus();
   }, []);
 
-  const start = () => {
+  const startWith = (next) => {
     if (leaving) return;
+    setLang(next);
     setLeaving(true);
     begin().catch(() => setLeaving(false));
   };
 
   return (
-    <button ref={ref} type="button" className={`cold ${leaving ? 'leaving' : ''}`} onClick={start}>
-      <span className="cold-line">{t(lang, 'putOnHeadphones')}</span>
-      <span className="sr-only">{t(lang, 'startHint')}</span>
+    <div className={`cold ${leaving ? 'leaving' : ''}`}>
+      <div className="cold-copy">
+        <p className="cold-line">{t(lang, 'putOnHeadphones')}</p>
+        <p className="cold-select">{t(lang, 'selectLanguage')}</p>
+        <span className="cold-langs" role="group" aria-label={t(lang, 'language')}>
+          {LANGS.map((l, i) => (
+            <span key={l}>
+              {i > 0 && <span aria-hidden="true"> · </span>}
+              <button
+                ref={(el) => {
+                  langRefs.current[l] = el;
+                }}
+                type="button"
+                lang={l}
+                aria-pressed={l === lang}
+                className={l === lang ? 'on' : ''}
+                onClick={() => startWith(l)}
+              >
+                {l.toUpperCase()}
+              </button>
+            </span>
+          ))}
+        </span>
+        <span className="sr-only">{t(lang, 'startHint')}</span>
+      </div>
       {error && <span className="cold-error" role="alert">{t(lang, 'loadError')}</span>}
-    </button>
+    </div>
   );
 }

@@ -12,7 +12,7 @@ export function useKeys() {
     const onKey = (e) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       const s = useStore.getState();
-      if (s.phase !== 'playing') return;
+      if (s.phase !== 'playing' || s.switching) return; // a record is changing: wait for it
       const target = e.target;
       if (e.key === 'Escape' && s.panel) {
         e.preventDefault();

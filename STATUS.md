@@ -1,7 +1,7 @@
 # Earth Jukebox — Status
 
 > O que já foi feito e quem faz o quê, item a item do [`direcionamento.md`](docs/direcionamento.md) (a fonte de verdade: em caso de dúvida, ele vence este arquivo).
-> Atualizado em 15/11/2026, depois do E1 de raios e luzes noturnas (fatia SST publicada em https://eluaden.github.io/earth-jukebox/).
+> Atualizado em 15/11/2026, depois de ligar raios e luzes noturnas no app (frente B; o site publicado em https://eluaden.github.io/earth-jukebox/ ainda é a fatia SST até o próximo deploy).
 > **Atualize este arquivo no mesmo commit do trabalho.**
 
 **Legenda:** **Feito** · **Parcial** (existe, mas falta algo dito na coluna ao lado) · **A fazer** · **Bloqueado** (depende de outro item)
@@ -41,18 +41,18 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | E1 — luzes noturnas | §14 | **Feito** | A | Quadro 32:9 = duas cópias do mapa; usar a da esquerda (equirretangular 16:9, começa em 168,5° W); série anual nos frames 0–269, mapa sem luzes no 290; textura = 12 imagens (§14.1) |
 | E3 — vídeo como textura | §14 | **Parcial** | B | Tamanhos escolhidos (1536 / 1024). Falta medir fluidez (FPS) em notebook comum e celular real |
 | Globo com agulha | §5.3 | **Feito** | B | Polido em 15/11 (volume do globo, braço em J, vidro) |
-| Motor musical com samples e regras de clareza | §6.1, §6.3 | **Parcial** | B | Feito para a SST. O mapeamento de raios e luzes está pronto e testado (A, `TRACK_MUSIC`); falta o motor tocar a marimba (samples em `public/samples/marimba/`), aceitar eventos com `offset` (arpejo) e a **aprovação de ouvido** |
+| Motor musical com samples e regras de clareza | §6.1, §6.3 | **Parcial** | B | Toca qualquer faixa de `TRACK_MUSIC`: vozes montadas por faixa (cordas, piano, glockenspiel, marimba; samples decodificados uma vez e compartilhados), eventos com `offset` (arpejo), troca de vozes com fade. Falta a **aprovação de ouvido** |
 | Faixa: temperatura do mar | §8 | **Feito** | A | Pipeline, grade, mapeamento, encarte, narração gravada. Textos do encarte: revisar (time) |
-| Faixa: raios | §8, §6.2 | **Parcial** | A feito, B falta | Dados prontos em `public/tracks/lightning/` (`npm run pipeline:lightning`): 236 passos de 10 dias, `grid.stepFrames`, vídeos 1536/1024 a 30 fps. Música (`src/music/tracks/lightning.js`) e textos (`src/i18n/tracks/lightning.js`) prontos. Falta a frente B ligar no app e incluir `lightning` em `public/tracks/index.json` (hoje só tem `sst`, de propósito) |
-| Faixa: luzes noturnas | §8, §6.2 | **Parcial** | A feito, B falta | Dados prontos em `public/tracks/night-lights/` (`npm run pipeline:nightlights`): 12 imagens 2:1 e grade de brilho por ano. Música (`src/music/tracks/nightLights.js`, usa a coluna do ano anterior) e textos prontos. Falta a frente B: textura feita de imagens com fade (`texture.kind = 'stills'`), relógio sem vídeo (`time.secondsPerStep`) e data só com o ano (`time.unit = 'year'`); depois incluir `night-lights` em `public/tracks/index.json` |
-| Records (troca de faixa) | §5.4 | **Parcial** | B | Painel com 1 capa (frame) e agulha levantando. Falta trocar de faixa: crossfade da pele do globo, agulha desce, som novo. Para raios e luzes, o app precisa aceitar passos por lista de frames e textura feita de imagens (§14.1) |
-| Liner notes | §5.5 | **Feito** | A (texto), B (painel) | Inclui "Hear the legend" e limites. Repetir para cada faixa nova |
+| Faixa: raios | §8, §6.2 | **Feito** | A, B | Dados em `public/tracks/lightning/` (`npm run pipeline:lightning`), música e textos da frente A. No app: marimba, pontos amarelos na agulha, chips em % da área ("<0.1" quando há raio abaixo de 0,05%), passos por lista de frames |
+| Faixa: luzes noturnas | §8, §6.2 | **Feito** | A, B | Dados em `public/tracks/night-lights/` (`npm run pipeline:nightlights`), música e textos da frente A. No app: textura de 12 imagens com fade de 1,2 s na virada do ano, relógio próprio (10 s por ano, parado com a agulha levantada), data só com o ano, chips de luz (/255) e de mudança (com sinal; "—" no primeiro ano). O globo não escurece o branco das luzes (é o dado) |
+| Records (troca de faixa) | §5.4 | **Feito** | B | Três capas (`public/tracks/index.json`). Trocar: painel desce, globo escurece com o nome novo pulsando no rodapé, crossfade de 1,2 s da pele do globo (também na versão 2D), agulha desce, faixa nova do passo 0 com a fala de abertura. Grades e capas das outras faixas carregam em segundo plano 5 s depois do play. Tela de celular: capas menores |
+| Liner notes | §5.5 | **Feito** | A (texto), B (painel) | Drawer à direita com aba/seta na borda e fecha ao clicar fora. Por faixa: SST com barra NASA; raios e luzes com "Legenda em som" |
 | Acessibilidade de base | §5.8 | **Parcial** | B | Teclado, leitor de tela, `aria-live`, V para valores, movimento e transparência reduzidos feitos. Falta checar com VoiceOver/NVDA real e medir contraste (R10) |
-| Narração N1 (falas da UI) | §7.2 | **Parcial** | C (gravar), B (tocar) | Gravadas em EN/PT/ES (`media-src/elevenlabs/voice/<idioma>/put-on-headphones.mp3` e `welcome.mp3`, também no manifesto do site). Falta a frente B tocar: o app ainda não fala o `welcome` nem o `put-on-headphones` |
+| Narração N1 (falas da UI) | §7.2 | **Feito** | C (gravar), B (tocar) | Na primeira visita: clique → "Put on headphones." → "Welcome…" durante a descida → 2,5 s só de música → fala de abertura da faixa. Volta à página e "Replay opening" não repetem o N1. Teste confere que toda fala (N1 e N2 das três faixas, com datas) tem MP3 no manifesto |
 | Narração N2 — temperatura do mar | §7.2 | **Feito** | C | 12 falas regravadas com os ajustes de narrador (stability 50, similarity 75, style 10), `public/narration/` |
 | Narração N2 — raios e luzes | §7.2 | **Feito** | C | 12 falas por faixa gravadas e conferidas por transcrição. A introdução dos raios foi gravada a 1,1–1,2× porque o primeiro marco chega aos 8,8 s (ver `prompts-assets.md` §2.5). Se um texto mudar, regravar |
 | Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, com testes (`npm run test:pipeline`) |
-| Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | Volta à página pula a descida; "Replay opening" no About |
+| Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | "Put on headphones." + pedido de idioma; clicar EN/PT/ES inicia; volta à página pula a descida; "Replay opening" no About |
 | Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
 | Site publicado + versão 2D | §10 | **Feito** | B | GitHub Pages; 2D automática sem WebGL (`?flat=1` força) |
 | Vídeo (~30 s) | §10 | **A fazer** | C | Depende de V2–V6, N3 e do resultado do teste |
@@ -101,19 +101,20 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 |---|---|---|
 | V2–V6 (Veo, pitch) | **A fazer** | C |
 | S1–S7 (efeitos) | **Parcial** (gerados; falta aprovar de ouvido) | C |
-| N1 (falas da UI) | **Feito** (gravadas; falta o app tocar) | C |
+| N1 (falas da UI) | **Feito** (gravadas e tocando no app) | C |
 | N3 (narração do pitch) | **Bloqueado** (roteiro do vídeo) | C |
 
-## 7. Verificações pendentes da fatia SST
+## 7. Verificações pendentes (três faixas)
 
-- [ ] Aprovação de ouvido do som por alguém com formação musical (§6.1).
-- [ ] Fluidez em notebook comum e em celular real (E3, R2).
-- [ ] Revisão dos textos do encarte e da narração pelo time (`src/i18n/tracks/sst.js`).
-- [ ] Leitor de tela real (VoiceOver ou NVDA) do começo ao fim (§17.2).
+- [ ] Aprovação de ouvido do som por alguém com formação musical (§6.1), nas três faixas e na "Legenda em som".
+- [ ] Fluidez em notebook comum e em celular real (E3, R2), incluindo a troca de faixa.
+- [ ] Revisão dos textos do encarte e da narração pelo time (`src/i18n/tracks/`).
+- [ ] Leitor de tela real (VoiceOver ou NVDA) do começo ao fim, com uma troca de faixa (§17.2).
 - [ ] Contraste do vidro medido (R10).
+- [ ] `scripts/pipeline/sst.py` reescreve `public/tracks/index.json` só com `["sst"]`: rodar o pipeline da SST tira raios e luzes do Records (frente A).
 
 ## 8. Próximos passos sugeridos (em paralelo, um por frente)
 
-1. **A:** revisar os textos das três faixas com o time; E4 (CO₂) e aerossóis (P1).
-2. **B:** ligar raios e luzes no app (Records com troca de faixa, `TRACK_MUSIC`, marimba, passos por lista de frames, textura de imagens); medir FPS em aparelho real.
-3. **C:** contato com os testadores (prazo longo: começar já); N1; S1–S7.
+1. **A:** revisar os textos das três faixas com o time; fazer o `sst.py` preservar as outras faixas no `index.json`; E4 (CO₂) e aerossóis (P1).
+2. **B:** medir FPS e testar com leitor de tela em aparelho real; depois do P0 verificado, efeitos S1–S7 no lugar dos sons sintetizados (P1).
+3. **C:** contato com os testadores (prazo longo: começar já); ouvir e aprovar S1–S7; atualizar `si-e-referencias.md` com raios e luzes no app.

@@ -90,12 +90,54 @@ a {
   z-index: 20;
   transition: opacity 0.6s ease;
 }
+.cold-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+  padding: 24px;
+}
 .cold-line {
+  margin: 0;
   font-family: var(--serif);
   font-size: clamp(22px, 2.4vw, 32px);
   letter-spacing: 0.01em;
   color: var(--fg-dim);
   animation: fade-in 1.6s ease 0.2s both;
+}
+.cold-select {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--fg-faint);
+  animation: fade-in 1.6s ease 0.4s both;
+}
+.cold-langs {
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: var(--fg-faint);
+  animation: fade-in 1.6s ease 0.55s both;
+}
+.cold-langs button {
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 6px 4px;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.cold-langs button.on {
+  color: var(--fg);
+  font-weight: 700;
+}
+.cold-langs button:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.7);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 .cold.leaving {
   opacity: 0;
@@ -103,7 +145,7 @@ a {
 }
 .cold-error {
   position: absolute;
-  bottom: 15vh;
+  bottom: 12vh;
   font-size: 14px;
   color: var(--fg-dim);
 }
@@ -112,6 +154,12 @@ a {
 .stage {
   position: fixed !important;
   inset: 0;
+  transition: filter 0.5s ease;
+}
+/* A record is loading and crossfading in: the globe stays dimmed until the needle drops. */
+.switching .stage,
+.switching .flat {
+  filter: brightness(0.55);
 }
 
 /* ---------- hud ---------- */
@@ -185,7 +233,8 @@ a {
 
 .chips {
   position: absolute;
-  right: var(--gutter);
+  /* Leave room for the liner pull-tab peeking from the right edge. */
+  right: calc(var(--gutter) + 48px);
   top: 50%;
   transform: translateY(-50%);
   list-style: none;
@@ -230,6 +279,11 @@ a {
   font-size: 20px;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
+}
+.chip-unit {
+  margin-left: 3px;
+  font-size: 0.65em;
+  color: var(--fg-dim);
 }
 .chip-buttons {
   display: flex;
@@ -304,23 +358,22 @@ a {
   padding-right: clamp(4px, 0.6vw, 10px);
   border-right: 1px solid var(--glass-border);
 }
-.modes {
-  display: inline-flex;
+.track-name.is-loading {
+  animation: loading-pulse 1.1s ease-in-out infinite alternate;
 }
-.modes button.on,
+@keyframes loading-pulse {
+  to {
+    opacity: 0.35;
+  }
+}
+.footer button[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: default;
+}
 .footer button[aria-expanded='true'] {
   padding: 5px 12px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
-}
-.langs {
-  color: var(--fg-faint);
-  padding-left: clamp(4px, 0.6vw, 10px);
-  border-left: 1px solid var(--glass-border);
-}
-.langs button.on {
-  color: var(--fg);
-  font-weight: 700;
 }
 /* Liner notes open: the footer moves into the space left of the panel. */
 .panel-liner .footer {
@@ -365,6 +418,12 @@ a {
 @keyframes rise {
   from {
     transform: translate(-50%, 40px);
+    opacity: 0;
+  }
+}
+@keyframes rise-phone {
+  from {
+    transform: translateY(40px);
     opacity: 0;
   }
 }
@@ -436,29 +495,97 @@ a {
   color: var(--fg-dim);
   margin-top: 3px;
 }
+/* The record on the platter: an amber dot before its name. */
+.cover[aria-current='true'] .cover-name::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 8px 1px 0;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+}
 .panel-records .stage {
   filter: brightness(0.4);
   transition: filter 0.5s ease;
 }
 
-.liner {
+.liner-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.28);
+  animation: liner-dim 0.4s ease both;
+}
+/* Shell + tab ride together: closed = off-screen with the tab peeking at the right edge. */
+.liner-shell {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   width: min(460px, 100vw);
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 5;
+  pointer-events: none;
+}
+.liner-shell.is-open {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.liner {
+  position: absolute;
+  inset: 0;
   overflow-y: auto;
   padding: 28px 28px 120px;
   background: var(--glass-strong);
   border-width: 0 0 0 1px;
-  animation: slide 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   font-size: 15px;
   line-height: 1.55;
 }
-@keyframes slide {
+/* Pull-tab on the left edge of the shell (moves with the drawer). */
+.liner-tab {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-100%, -50%);
+  width: 28px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--glass-border);
+  border-right: 0;
+  border-radius: 10px 0 0 10px;
+  background: var(--glass-strong);
+  color: var(--fg-dim);
+  box-shadow: var(--glass-shine);
+  cursor: pointer;
+  z-index: 6;
+  pointer-events: auto;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+.liner-tab svg {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* Closed: chevron points left (pull open). Open: points right (push closed). */
+.liner-shell.is-open .liner-tab svg {
+  transform: scaleX(-1);
+}
+.liner-tab:hover {
+  color: var(--fg);
+  background: rgba(20, 22, 27, 0.95);
+}
+.liner-tab:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+@keyframes liner-dim {
   from {
-    transform: translateX(40px);
-    opacity: 0;
+    background: rgba(0, 0, 0, 0);
   }
 }
 .liner h2,
@@ -566,8 +693,24 @@ a {
   position: relative;
   width: min(48vw, calc((100vh - 240px) * 2));
   aspect-ratio: 2 / 1;
+  cursor: pointer;
 }
-.flat-video {
+.flat {
+  transition: filter 0.5s ease;
+}
+/* One layer per record; the new one fades in over the old (same 1.2 s as the globe). */
+.flat-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.flat-layer.is-current {
+  opacity: 1;
+}
+.flat-media {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
@@ -677,14 +820,49 @@ a {
     width: 32px;
     height: 32px;
   }
-  .modes {
-    padding: 0 4px;
-  }
   .track-name {
     display: none;
   }
   .records {
     bottom: calc(var(--gutter) + 64px);
+    left: var(--gutter);
+    right: var(--gutter);
+    transform: none;
+    padding: 56px 16px 16px;
+    animation-name: rise-phone;
+  }
+  /* Records covers the chips on phones: hide them instead of showing them through the glass. */
+  .panel-records .chips {
+    visibility: hidden;
+  }
+  .covers {
+    gap: 10px;
+    overflow-x: auto;
+  }
+  .cover {
+    width: 94px;
+  }
+  .cover-art {
+    width: 80px;
+    height: 80px;
+    margin-right: 14px;
+  }
+  .cover-art::before {
+    top: 6px;
+    bottom: 6px;
+    left: 20px;
+  }
+  .cover:hover .cover-art::before,
+  .cover[aria-current='true'] .cover-art::before {
+    transform: translateX(8px);
+  }
+  .cover-name {
+    margin-top: 10px;
+    font-size: 12.5px;
+    line-height: 1.3;
+  }
+  .cover-period {
+    font-size: 11px;
   }
   .flat {
     padding: 140px var(--gutter) 180px;

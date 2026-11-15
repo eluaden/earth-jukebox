@@ -165,12 +165,16 @@ export function createNarrator({ base, duck, setCaption, announce }) {
     setCaption('');
   }
 
-  async function say(text, lang) {
+  /**
+   * Speaks a line and resolves when it ends (or is cut by another line or stop()).
+   * opts.announce = false keeps it out of the live region (text the screen reader already read).
+   */
+  async function say(text, lang, opts = {}) {
     stop();
     const mine = token;
     const lines = await loadManifest();
     if (mine !== token) return;
-    announce(text);
+    if (opts.announce !== false) announce(text);
     duck(true);
     const cap = captioner(text, mine);
     const file = lines[lineKey(lang, text)];

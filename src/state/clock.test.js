@@ -1,22 +1,63 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { clampTime, shouldFireMarker, stepFromTime } from './clock.js';
+import { clampTime, isStills, shouldFireMarker, stepAt, timeOfStep, trackDuration } from './clock.js';
 import { pickVideo } from '../media/pickVideo.js';
 
 const meta = {
   video: { hi: 'video-1536.mp4', lo: 'video-1024.mp4', fps: 30, frames: 2001, duration: 66.7 },
   grid: { steps: 334, stepEvery: 6 },
 };
+const track = (id) => JSON.parse(readFileSync(new URL(`../../public/tracks/${id}/track.json`, import.meta.url), 'utf8'));
 
-describe('stepFromTime', () => {
+describe('stepAt (fixed step size, SST)', () => {
   it('turns video time into a grid step', () => {
-    expect(stepFromTime(0, meta)).toBe(0);
-    expect(stepFromTime(0.2, meta)).toBe(1);
-    expect(stepFromTime(66.69, meta)).toBe(333);
+    expect(stepAt(meta, 0)).toBe(0);
+    expect(stepAt(meta, 0.2)).toBe(1);
+    expect(stepAt(meta, 66.69)).toBe(333);
   });
   it('stays inside the grid when time is out of range', () => {
-    expect(stepFromTime(-1, meta)).toBe(0);
-    expect(stepFromTime(999, meta)).toBe(333);
-    expect(stepFromTime(NaN, meta)).toBe(0);
+    expect(stepAt(meta, -1)).toBe(0);
+    expect(stepAt(meta, 999)).toBe(333);
+    expect(stepAt(meta, NaN)).toBe(0);
+  });
+});
+
+describe('stepAt (frame list, lightning)', () => {
+  const m = track('lightning');
+  it('follows the frame where each step starts', () => {
+    const f = m.grid.stepFrames;
+    expect(stepAt(m, 0)).toBe(0);
+    expect(stepAt(m, (f[1] - 0.5) / m.video.fps)).toBe(0);
+    expect(stepAt(m, (f[1] + 0.5) / m.video.fps)).toBe(1);
+    expect(stepAt(m, m.video.duration)).toBe(m.grid.steps - 1);
+  });
+  it('round-trips every step through timeOfStep', () => {
+    for (let s = 0; s < m.grid.steps; s++) expect(stepAt(m, timeOfStep(m, s))).toBe(s);
+  });
+});
+
+describe('stepAt (still images, night lights)', () => {
+  const m = track('night-lights');
+  it('is a track of still images with its own clock', () => {
+    expect(isStills(m)).toBe(true);
+    expect(isStills(meta)).toBe(false);
+    expect(trackDuration(m)).toBe(m.grid.steps * m.time.secondsPerStep);
+  });
+  it('advances one step per secondsPerStep and loops', () => {
+    expect(stepAt(m, 0)).toBe(0);
+    expect(stepAt(m, 10.5)).toBe(1);
+    expect(stepAt(m, trackDuration(m) + 1)).toBe(0);
+  });
+  it('round-trips every step through timeOfStep', () => {
+    for (let s = 0; s < m.grid.steps; s++) expect(stepAt(m, timeOfStep(m, s))).toBe(s);
+  });
+});
+
+describe('timeOfStep (SST)', () => {
+  it('lands in the middle of the step and stays inside the grid', () => {
+    for (const s of [0, 1, 100, 333]) expect(stepAt(meta, timeOfStep(meta, s))).toBe(s);
+    expect(stepAt(meta, timeOfStep(meta, 999))).toBe(333);
+    expect(stepAt(meta, timeOfStep(meta, -4))).toBe(0);
   });
 });
 

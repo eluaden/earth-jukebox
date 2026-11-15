@@ -1,8 +1,8 @@
-import { useStore, VOICES } from '../state/store.js';
+import { useStore } from '../state/store.js';
 import { seekBySteps, setPanel, togglePlay } from '../state/controller.js';
-import { formatDate, formatTemp, longDate } from '../lib/format.js';
-import { LANGS, t } from '../i18n/strings.js';
-import { SST_TEXT } from '../i18n/tracks/sst.js';
+import { chipSign, describeValue, TRACK_TEXT } from '../state/tracks.js';
+import { chipValue, formatDate, longDate } from '../lib/format.js';
+import { t } from '../i18n/strings.js';
 import { rememberOpener } from './focus.js';
 
 function openPanel(name) {
@@ -31,45 +31,62 @@ export function DateCaption() {
   const caption = useStore((s) => s.caption);
   if (!meta) return null;
   const iso = meta.dates[step];
+  const unit = meta.time?.unit;
   return (
     <div className="when">
-      <p className="date" aria-label={longDate(iso, lang)}>{formatDate(iso, lang)}</p>
+      <p className="date" aria-label={longDate(iso, lang, unit)}>{formatDate(iso, lang, unit)}</p>
       <p className="caption" aria-hidden="true">{caption}</p>
     </div>
   );
 }
 
-/** One glass chip per instrument: "Instrument · variable", live value, M and S. */
+/**
+ * One glass chip per voice of the current record: "Instrument · what it plays", the value under the
+ * needle (direction 5.2.1), M and S. A dash when the needle is up or the map has no value there.
+ */
 export function Chips() {
   const lang = useStore((s) => s.lang);
-  const zones = useStore((s) => s.zones);
+  const trackId = useStore((s) => s.trackId);
+  const voices = useStore((s) => s.voices);
+  const summary = useStore((s) => s.summary);
   const mute = useStore((s) => s.mute);
   const solo = useStore((s) => s.solo);
   const toggleMute = useStore((s) => s.toggleMute);
   const toggleSolo = useStore((s) => s.toggleSolo);
-  const reading = useStore((s) => s.arm === 'down');
-  const anySolo = VOICES.some((v) => solo[v]);
+  const reading = useStore((s) => s.arm === 'down' && !s.switching);
+  const anySolo = Object.values(solo).some(Boolean);
   return (
     <ul className="chips">
-      {zones.map((z) => {
-        const name = t(lang, `voice.${z.voice}`);
-        const off = mute[z.voice] || (anySolo && !solo[z.voice]);
+      {summary.map((sv) => {
+        const voice = voices.find((v) => v.id === sv.voice);
+        if (!voice) return null;
+        const instrument = t(lang, `instrument.${voice.instrument}`);
+        const variable = t(lang, `var.${trackId}.${sv.voice}`);
+        const name = `${instrument} · ${variable}`;
+        const off = mute[sv.voice] || (anySolo && !solo[sv.voice]);
+        const shown = reading ? chipValue(sv.unit, sv.value, lang, chipSign(sv.voice)) : { value: '—', suffix: '' };
         return (
-          <li key={z.id} className={`chip glass ${off ? 'off' : ''}`}>
+          <li key={`${trackId}-${sv.voice}`} className={`chip glass ${off ? 'off' : ''}`}>
             <span className="chip-name">
-              <span className="chip-voice">{name}</span>
+              <span className="chip-voice">{instrument}</span>
               <span className="chip-sep" aria-hidden="true">
                 {' · '}
               </span>
-              <span className="chip-zone">{t(lang, `zone.${z.id}`)}</span>
+              <span className="chip-zone">{variable}</span>
             </span>
             <span className="chip-row">
-              <span className="chip-value">{reading ? formatTemp(z.mean, lang) : '—'}</span>
+              <span className="chip-value">
+                <span aria-hidden={reading ? 'true' : undefined}>
+                  {shown.value}
+                  {shown.suffix && <span className="chip-unit">{shown.suffix}</span>}
+                </span>
+                {reading && <span className="sr-only">{describeValue(trackId, sv, lang)}</span>}
+              </span>
               <span className="chip-buttons">
-                <button type="button" aria-pressed={mute[z.voice]} aria-label={t(lang, 'mute', { voice: name })} onClick={() => toggleMute(z.voice)}>
+                <button type="button" aria-pressed={mute[sv.voice]} aria-label={t(lang, 'mute', { voice: name })} onClick={() => toggleMute(sv.voice)}>
                   M
                 </button>
-                <button type="button" aria-pressed={solo[z.voice]} aria-label={t(lang, 'solo', { voice: name })} onClick={() => toggleSolo(z.voice)}>
+                <button type="button" aria-pressed={solo[sv.voice]} aria-label={t(lang, 'solo', { voice: name })} onClick={() => toggleSolo(sv.voice)}>
                   S
                 </button>
               </span>
@@ -93,39 +110,43 @@ function PlayIcon({ playing }) {
   );
 }
 
-/** Glass pill: play/pause · track · Records · Liner notes · Listen · EN · PT · ES. */
+/** Glass pill: play/pause · track · Records · Liner notes. Language lives on the cold open. */
 export function Footer() {
   const lang = useStore((s) => s.lang);
   const playing = useStore((s) => s.playing);
   const panel = useStore((s) => s.panel);
-  const setLang = useStore((s) => s.setLang);
+  const trackId = useStore((s) => s.trackId);
+  const switching = useStore((s) => s.switching);
+  const shownId = switching || trackId;
+  // Buttons stay focusable while a record changes (aria-disabled, not disabled) so keyboard focus
+  // is not thrown to the page; the controller ignores them meanwhile.
+  const busy = switching ? 'true' : undefined;
   return (
     <nav className="footer glass" aria-label="Earth Jukebox">
-      <button type="button" className="play" aria-label={t(lang, playing ? 'pause' : 'play')} onClick={togglePlay}>
+      <button type="button" className="play" aria-label={t(lang, playing ? 'pause' : 'play')} aria-disabled={busy} onClick={togglePlay}>
         <PlayIcon playing={playing} />
       </button>
-      <span className="track-name">{SST_TEXT[lang].title}</span>
-      <button type="button" aria-expanded={panel === 'records'} className={panel === 'records' ? 'on' : ''} onClick={() => openPanel('records')}>
+      <span className={`track-name ${switching ? 'is-loading' : ''}`} aria-busy={busy}>
+        {shownId && TRACK_TEXT[shownId][lang].title}
+      </span>
+      <button
+        type="button"
+        aria-expanded={panel === 'records'}
+        aria-disabled={busy}
+        className={panel === 'records' ? 'on' : ''}
+        onClick={() => openPanel('records')}
+      >
         {t(lang, 'records')}
       </button>
-      <button type="button" aria-expanded={panel === 'liner'} className={panel === 'liner' ? 'on' : ''} onClick={() => openPanel('liner')}>
+      <button
+        type="button"
+        aria-expanded={panel === 'liner'}
+        aria-disabled={busy}
+        className={panel === 'liner' ? 'on' : ''}
+        onClick={() => openPanel('liner')}
+      >
         {t(lang, 'linerNotes')}
       </button>
-      <span className="modes">
-        <button type="button" aria-pressed="true" className="on">
-          {t(lang, 'listen')}
-        </button>
-      </span>
-      <span className="langs" role="group" aria-label={t(lang, 'language')}>
-        {LANGS.map((l, i) => (
-          <span key={l}>
-            {i > 0 && <span aria-hidden="true"> · </span>}
-            <button type="button" lang={l} aria-pressed={l === lang} className={l === lang ? 'on' : ''} onClick={() => setLang(l)}>
-              {l.toUpperCase()}
-            </button>
-          </span>
-        ))}
-      </span>
     </nav>
   );
 }
@@ -136,7 +157,7 @@ export function TimeSlider() {
   const meta = useStore((s) => s.meta);
   const step = useStore((s) => s.step);
   if (!meta) return null;
-  const date = longDate(meta.dates[step], lang);
+  const date = longDate(meta.dates[step], lang, meta.time?.unit);
   return (
     <div className="sr-only">
       <input

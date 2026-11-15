@@ -1,10 +1,8 @@
 import { create } from 'zustand';
 import { initialLang } from '../i18n/strings.js';
-import { zonesFromColumn } from '../data/zones.js';
 
-export const VOICES = ['strings', 'piano', 'glock'];
-const none = () => ({ strings: false, piano: false, glock: false });
-export const EMPTY_ZONES = zonesFromColumn(new Float32Array(90).fill(NaN));
+/** { voiceId: false } for every voice id given. */
+export const allOff = (ids) => Object.fromEntries(ids.map((id) => [id, false]));
 
 // UI state (React renders from this). Per-frame values live in ./live.js instead.
 export const useStore = create((set) => ({
@@ -13,16 +11,20 @@ export const useStore = create((set) => ({
   error: null,
   playing: false,
   lang: initialLang(),
+  tracks: [], // [{ id, period, cover }] in Records order (public/tracks/index.json)
+  trackId: null,
+  switching: null, // track id being loaded and swapped in, or null
   meta: null,
   grid: null,
   base: '',
+  voices: [], // [{ id, instrument }] of the current track
   step: 0,
   lon: -90,
-  zones: EMPTY_ZONES,
-  mute: none(),
-  solo: none(),
+  summary: [], // [{ voice, value, unit }] under the needle (chips)
+  mute: {},
+  solo: {},
   panel: null, // null | 'records' | 'liner' | 'about'
-  arm: 'away', // tonearm pose: 'away' | 'up' | 'down'
+  arm: 'away', // tonearm pose: 'away' | 'up' (paused / Records) | 'down'
   caption: '',
   announcement: '',
   seekTo: null,

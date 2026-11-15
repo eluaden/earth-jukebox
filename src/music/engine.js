@@ -1,51 +1,58 @@
 import * as Tone from 'tone';
 import { isAudible } from './mix.js';
-import { T_MAX } from './mapping.js';
 
-// Plays what src/music/mapping.js decides. Three sampled voices (VSCO 2 CE, CC0), each through a
-// low-pass filter whose brightness follows the zone temperature, then ducking, reverb and a limiter.
-// A very quiet vinyl crackle (not data, declared in the liner notes) runs underneath while the
-// needle is on the record; with the needle up the record is silent, like a real turntable.
+// Plays what a track's music module decides (src/music/tracks/index.js). Every voice of the current
+// track gets its own sampled instrument (VSCO 2 CE, CC0) through a low-pass filter and a gain (mute /
+// solo), then ducking, reverb and a limiter. The samples are decoded once and shared, so changing
+// track only rebuilds the voices. A very quiet vinyl crackle (not data, declared in the liner notes)
+// runs underneath while the needle is on the record; with the needle up the record is silent.
 
-const VOICES = ['strings', 'piano', 'glock'];
-const VOICE_DB = { strings: -7, piano: -3, glock: -13 };
-const SAMPLER_OPTS = {
-  strings: { attack: 0.25, release: 1.6 },
-  piano: { attack: 0, release: 1.2 },
-  glock: { attack: 0, release: 2.2 },
+const INSTRUMENTS = {
+  strings: { db: -7, attack: 0.25, release: 1.6 },
+  piano: { db: -3, attack: 0, release: 1.2 },
+  glock: { db: -13, attack: 0, release: 2.2 },
+  marimba: { db: -6, attack: 0, release: 0.9 },
 };
 const BPM = 84;
+const PULSE = '8n';
+const OPEN_FILTER = 9000; // Hz: voices whose brightness is not driven by the data
 const DUCK_DB = -10;
 const MAKEUP_DB = 18;
+const VOICE_FADE = 0.3; // s: old voices fade out when the track changes
 
 const noteOf = (midi) => Tone.Frequency(midi, 'midi').toNote();
-const brightness = (t) => 1200 + 6800 * Math.min(1, Math.max(0, t / T_MAX));
 
 export function createEngine(base) {
-  let n = null; // audio nodes, built by load()
+  let n = null; // shared audio nodes, built by load()
+  let voices = {}; // voice id -> { sampler, filter, gain, db }
+  let legendSamplers = {};
   let loop = null;
   let crackleLoop = null;
   let tick = 0;
   let lifted = false;
   let mix = { mute: {}, solo: {} };
 
+  function bufferMap(instrument) {
+    const b = n.buffers[instrument];
+    return Object.fromEntries(Object.keys(n.urls[instrument]).map((note) => [note, b.get(note)]));
+  }
+
   async function load() {
     const urls = await (await fetch(`${base}samples/samples.json`)).json();
+    const buffers = {};
+    await Promise.all(
+      Object.keys(INSTRUMENTS).map(
+        (inst) =>
+          new Promise((resolve, reject) => {
+            buffers[inst] = new Tone.ToneAudioBuffers({ urls: urls[inst], baseUrl: `${base}samples/`, onload: resolve, onerror: reject });
+          }),
+      ),
+    );
     const limiter = new Tone.Limiter(-1).toDestination();
     // The VSCO recordings are quiet; make-up gain on the music only (the limiter catches peaks).
     const makeup = new Tone.Gain(Tone.dbToGain(MAKEUP_DB)).connect(limiter);
     const reverb = new Tone.Reverb({ decay: 4, preDelay: 0.02, wet: 0.28 }).connect(makeup);
     const music = new Tone.Gain(1).connect(reverb);
-    const samplers = {};
-    const filters = {};
-    const gains = {};
-    for (const v of VOICES) {
-      gains[v] = new Tone.Gain(Tone.dbToGain(VOICE_DB[v])).connect(music);
-      filters[v] = new Tone.Filter({ type: 'lowpass', frequency: 4000, rolloff: -12, Q: 0.4 }).connect(gains[v]);
-      samplers[v] = new Tone.Sampler({ urls: urls[v], baseUrl: `${base}samples/`, ...SAMPLER_OPTS[v] }).connect(filters[v]);
-    }
-    // "Hear the legend" plays on its own piano so muting the piano voice does not silence it.
-    const legend = new Tone.Sampler({ urls: urls.piano, baseUrl: `${base}samples/`, release: 1.2, volume: -3 }).connect(reverb);
 
     // Vinyl bed: soft hiss plus sparse crackles. Not data.
     const bed = new Tone.Gain(0).connect(limiter);
@@ -61,28 +68,69 @@ export function createEngine(base) {
       volume: -16,
     }).connect(limiter);
 
-    await Promise.all([Tone.loaded(), reverb.ready]);
-    n = { limiter, reverb, music, samplers, filters, gains, legend, bed, hiss, crackle, crackleEnv, thump };
+    await reverb.ready;
+    n = { urls, buffers, limiter, reverb, music, bed, hiss, crackle, crackleEnv, thump };
+  }
+
+  /**
+   * Builds the voices of a track: [{ id, instrument, attack? }]. The previous voices fade out and are
+   * disposed once their tails have rung out.
+   */
+  function setVoices(list) {
+    if (!n) return;
+    const old = voices;
+    const now = Tone.now();
+    for (const v of Object.values(old)) {
+      v.sampler.releaseAll(now);
+      v.gain.gain.rampTo(0, VOICE_FADE, now);
+    }
+    setTimeout(() => {
+      for (const v of Object.values(old)) {
+        v.sampler.dispose();
+        v.filter.dispose();
+        v.gain.dispose();
+      }
+    }, 3000);
+    voices = {};
+    for (const v of list) {
+      const spec = INSTRUMENTS[v.instrument];
+      if (!spec) throw new Error(`No samples for instrument "${v.instrument}"`);
+      const gain = new Tone.Gain(0).connect(n.music);
+      const filter = new Tone.Filter({ type: 'lowpass', frequency: v.filter ?? OPEN_FILTER, rolloff: -12, Q: 0.4 }).connect(gain);
+      const sampler = new Tone.Sampler({
+        urls: bufferMap(v.instrument),
+        attack: v.attack ?? spec.attack,
+        release: spec.release,
+      }).connect(filter);
+      voices[v.id] = { sampler, filter, gain, db: spec.db };
+    }
+    applyMix();
   }
 
   function applyMix(time) {
-    for (const v of VOICES) {
-      const target = isAudible(v, mix.mute, mix.solo) ? Tone.dbToGain(VOICE_DB[v]) : 0;
-      n.gains[v].gain.rampTo(target, 0.15, time);
+    for (const [id, v] of Object.entries(voices)) {
+      const target = isAudible(id, mix.mute, mix.solo) ? Tone.dbToGain(v.db) : 0;
+      v.gain.gain.rampTo(target, 0.15, time);
     }
   }
 
-  function apply(events, zones, time) {
-    for (const z of zones) if (Number.isFinite(z.mean)) n.filters[z.voice].frequency.rampTo(brightness(z.mean), 0.3, time);
+  /** Seconds in one pulse (an eighth note); event offsets are fractions of it. */
+  const pulseSeconds = () => Tone.Time(PULSE).toSeconds();
+
+  function apply(events, filters, time) {
+    if (filters) for (const [id, hz] of Object.entries(filters)) voices[id]?.filter.frequency.rampTo(hz, 0.3, time);
+    const pulse = pulseSeconds();
     for (const e of events) {
-      const s = n.samplers[e.voice];
-      if (e.kind === 'attack') s.triggerAttack(noteOf(e.midi), time, e.velocity);
-      else if (e.kind === 'release') s.triggerRelease(noteOf(e.midi), time);
-      else s.triggerAttackRelease(noteOf(e.midi), e.duration, time, e.velocity);
+      const v = voices[e.voice];
+      if (!v) continue;
+      const at = time + (e.offset || 0) * pulse;
+      if (e.kind === 'attack') v.sampler.triggerAttack(noteOf(e.midi), at, e.velocity);
+      else if (e.kind === 'release') v.sampler.triggerRelease(noteOf(e.midi), at);
+      else v.sampler.triggerAttackRelease(noteOf(e.midi), e.duration, at, e.velocity);
     }
   }
 
-  /** onTick(tick, time) -> { events, zones }: called on every eighth note while playing. */
+  /** onTick(tick, time) -> { events, filters }: called on every pulse while playing. */
   function start(onTick) {
     if (!n) return;
     const transport = Tone.getTransport();
@@ -90,8 +138,8 @@ export function createEngine(base) {
     if (!loop) {
       loop = new Tone.Loop((time) => {
         const r = onTick(tick++, time);
-        if (r) apply(r.events, r.zones, time);
-      }, '8n').start(0);
+        if (r) apply(r.events, r.filters, time);
+      }, PULSE).start(0);
       crackleLoop = new Tone.Loop((time) => {
         if (Math.random() < 0.22) n.crackleEnv.triggerAttackRelease(0.004, time + Math.random() * 0.1, 0.25 + Math.random() * 0.75);
       }, '16n').start(0);
@@ -103,10 +151,14 @@ export function createEngine(base) {
     transport.start('+0.05');
   }
 
+  function releaseAll() {
+    for (const v of Object.values(voices)) v.sampler.releaseAll();
+  }
+
   function pause() {
     if (!n) return;
     Tone.getTransport().pause();
-    n.samplers.strings.releaseAll();
+    releaseAll();
     n.bed.gain.rampTo(0, 0.4);
   }
 
@@ -119,13 +171,22 @@ export function createEngine(base) {
     if (n) n.music.gain.rampTo(on ? Tone.dbToGain(DUCK_DB) : 1, 0.4);
   }
 
-  /** Plays the given notes in order on a piano; resolves when done. */
-  function playLegend(midis) {
-    if (!n) return Promise.resolve();
+  /**
+   * Plays a legend: [{ instrument, midi, velocity, at (s from now), duration }] on its own samplers,
+   * so muting a voice does not silence it. Resolves when the last note has rung.
+   */
+  function playLegend(notes) {
+    if (!n || !notes.length) return Promise.resolve();
     const t0 = Tone.now() + 0.05;
-    const gap = 0.22;
-    midis.forEach((m, i) => n.legend.triggerAttackRelease(noteOf(m), '8n', t0 + i * gap, 0.7));
-    return new Promise((resolve) => setTimeout(resolve, (midis.length * gap + 0.6) * 1000));
+    for (const e of notes) {
+      if (!legendSamplers[e.instrument]) {
+        const spec = INSTRUMENTS[e.instrument];
+        legendSamplers[e.instrument] = new Tone.Sampler({ urls: bufferMap(e.instrument), release: spec.release, volume: spec.db }).connect(n.reverb);
+      }
+      legendSamplers[e.instrument].triggerAttackRelease(noteOf(e.midi), e.duration, t0 + e.at, e.velocity);
+    }
+    const end = Math.max(...notes.map((e) => e.at)) + 0.8;
+    return new Promise((resolve) => setTimeout(resolve, end * 1000));
   }
 
   function burst(time, count) {
@@ -150,5 +211,20 @@ export function createEngine(base) {
     n.bed.gain.rampTo(0, 0.3, now + 0.12);
   }
 
-  return { load, start, pause, setMix, duck, playLegend, needleDrop, needleLift, get loaded() { return Boolean(n); } };
+  return {
+    load,
+    setVoices,
+    start,
+    pause,
+    releaseAll,
+    setMix,
+    duck,
+    playLegend,
+    needleDrop,
+    needleLift,
+    pulseSeconds,
+    get loaded() {
+      return Boolean(n);
+    },
+  };
 }

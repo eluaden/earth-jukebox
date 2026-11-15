@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment, Lightformer, Stars } from '@react-three/drei';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import gsap from 'gsap';
-import { advance, introDone } from '../state/controller.js';
+import { advance, introDone, togglePlay } from '../state/controller.js';
 import { useStore } from '../state/store.js';
 import { Atmosphere, Globe } from './Globe.jsx';
 import { MeridianLine, Tonearm } from './Needle.jsx';
@@ -65,6 +65,27 @@ function Driver() {
   return null;
 }
 
+/** Invisible hit target on the planet: click toggles play/pause (needle lifts on pause). */
+function PlanetHit() {
+  return (
+    <mesh
+      onClick={(e) => {
+        e.stopPropagation();
+        togglePlay();
+      }}
+      onPointerOver={() => {
+        document.body.style.cursor = 'pointer';
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = '';
+      }}
+    >
+      <sphereGeometry args={[1.05, 48, 24]} />
+      <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+    </mesh>
+  );
+}
+
 export default function Stage() {
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   return (
@@ -92,6 +113,7 @@ export default function Stage() {
         <Globe />
         <Atmosphere />
         <MeridianLine />
+        <PlanetHit />
       </group>
       <Platter />
       <Tonearm />

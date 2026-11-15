@@ -10,10 +10,17 @@ under it: every note is a value read from the NASA frame with NASA's own colour 
 made up, and the music is not AI-generated: it is synthesized live in the browser from the data,
 with fixed, documented rules.
 
-Current state: the first slice of the direction ([`docs/direcionamento.md`](docs/direcionamento.md)),
-with one track, **sea surface temperature** (NASA SVS 3912, ECCO2 model, March 2007 – March 2008).
-The data, music mapping and texts of **lightning** (SVS 5011) and **night lights** (SVS 5313) are ready
-(`public/tracks/`, `src/music/tracks/`, `src/i18n/tracks/`); plugging them into the app is next.
+Current state ([`docs/direcionamento.md`](docs/direcionamento.md)): three records on the shelf, changed
+from **Records**:
+
+| Record | NASA source | Period | Globe skin |
+|---|---|---|---|
+| Sea surface temperature | SVS 3912, ECCO2 model | March 2007 – March 2008 | Video |
+| Lightning | SVS 5011, LIS on the ISS | March 2017 – August 2023 | Video |
+| Night lights | SVS 5313, Black Marble (VIIRS) | 2012 – 2023 | 12 yearly images, faded at each new year |
+
+Changing record: the needle lifts, the globe dims while the new record loads, its map crossfades in
+(1.2 s), the needle drops and the new record starts from its first step with its own narration.
 
 ## Run
 
@@ -56,6 +63,8 @@ npm run pipeline:samples     # instrument samples into public/samples/
 
 ## How the data becomes music
 
+Each record has its own rules (`src/music/tracks/`), shown in its liner notes. Sea surface temperature:
+
 | Data | Sound |
 |---|---|
 | Temperature, 0–32 °C | Pitch on one 16-note C major pentatonic (warmer = higher, same scale for every voice); warmer is also brighter and louder |
@@ -64,6 +73,24 @@ npm run pipeline:samples     # instrument samples into public/samples/
 | Southern waters, 23.5–80° S (two bands) | Glockenspiel, on quarter notes |
 | Land, sea ice, no data | Silence for that band |
 | Time | The NASA video plays at normal speed (66.7 s per year); the globe turns once every 10 s |
+
+Lightning:
+
+| Data | Sound |
+|---|---|
+| Lightning under the needle in NASA's 10-day window, ten latitude bands from 55° N to 55° S | Marimba: one hit per band with lightning; north is higher; more lightning, stronger hit |
+| North of 23.5° N · tropics · south of 23.5° S | Three marimba voices, each playing its bands as an arpeggio |
+| No lightning; beyond 55° (the sensor does not see there) | Silence |
+
+Night lights:
+
+| Data | Sound |
+|---|---|
+| Light under the needle, six latitude bands from 70° N to 45° S | Piano: more light, more notes; north is higher |
+| A band with at least 10% less light than the year before | Low strings: a falling minor third |
+| A band with at least 10% more light than the year before | Glockenspiel: a rising major third |
+| Sea | Silence |
+| Time | One year per turn of the globe (10 s) |
 
 At most 3 voices, 2 notes per voice and 6 in total (tested). A very quiet vinyl crackle that is not
 data plays underneath and is declared in the liner notes. Music ducks while the narrator speaks.
@@ -75,7 +102,8 @@ data plays underneath and is declared in the liner notes. Music ducks while the 
 | `scripts/pipeline/` | NASA frames → grid, web videos, samples (Python) |
 | `src/data/` | Grid lookup, longitude under the needle, latitude zones (pure, tested) |
 | `src/music/` | Temperature → notes and caps (pure, tested); Tone.js engine |
-| `src/state/` | UI state (zustand), per-frame values, data clock, controller |
+| `src/state/` | UI state (zustand), per-frame values, data clock, controller, how each record is shown (`tracks.js`) |
+| `src/media/` | The globe's skin per record: NASA video, or yearly images with their own clock |
 | `src/scene/` | React Three Fiber: globe, atmosphere, needle, platter, opening |
 | `src/flat/` | 2D version |
 | `src/ui/` | Interface (closed list of the direction §5.2.1), panels, keyboard |
@@ -86,13 +114,17 @@ Recorded narration (ElevenLabs, see [`docs/prompts-assets.md`](docs/prompts-asse
 `public/narration/<en|pt|es>/<key>.mp3`, listed in `public/narration/manifest.json` under `lines`. The key
 is `lineKey(lang, text)` ([`src/narration/key.js`](src/narration/key.js)), a hash of the exact text: a line
 whose text changes falls back to the browser's speech synthesis until it is recorded again. Captions
-show one short line at a time, in step with the voice. The recordings already in the folder are for the
-old tracks; the SST lines still need recording.
+show one short line at a time, in step with the voice. Every line of the three records and the opening
+("Put on headphones." and "Welcome…", first visit only) is recorded in EN / PT / ES; a test checks that
+each one has its file.
 
 ## Accessibility
 
 - Keyboard: Space play/pause, ←/→ move through time, V reads the date and current values aloud,
-  R records, L liner notes, Esc closes. Visible focus everywhere.
+  R records (change the record), L liner notes, Esc closes. Visible focus everywhere.
+- Records without a NASA colour bar (lightning, night lights) have a "Legend in sound" in the liner notes,
+  played from the record's own mapping. A value the map does not have shows "—", with the reason in the
+  accessible text.
 - Screen readers: the scene is described in text; narration and requested values go to a polite
   live region; a hidden time slider gives the date as its value.
 - Audio starts only after a click or key press. `prefers-reduced-motion` skips the camera descent
@@ -100,7 +132,8 @@ old tracks; the SST lines still need recording.
 
 ## Credits
 
-- Data and visualization: NASA Scientific Visualization Studio, [SVS 3912](https://svs.gsfc.nasa.gov/3912/) (ECCO2, MIT/JPL).
+- Data and visualization: NASA Scientific Visualization Studio, [SVS 3912](https://svs.gsfc.nasa.gov/3912/) (ECCO2, MIT/JPL),
+  [SVS 5011](https://svs.gsfc.nasa.gov/5011/) (LIS on the ISS) and [SVS 5313](https://svs.gsfc.nasa.gov/5313/) (Black Marble, NASA/NOAA).
 - Instrument samples: [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE), Versilian Studios (CC0).
 - Fonts: Instrument Serif, Geist Mono, Atkinson Hyperlegible (SIL Open Font License).
 - Libraries: React, three.js, React Three Fiber, drei, postprocessing, GSAP, Tone.js, zustand, Vite, Vitest.

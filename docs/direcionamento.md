@@ -44,7 +44,7 @@ flowchart LR
 
 ### 2.2 Fluxo do usuário
 
-1. Abre o link → tela preta *"Put on headphones."* → clique.
+1. Abre o link → tela preta *"Put on headphones."* + *"Selecione um idioma"* (EN / PT / ES, navegador pré-selecionado) → clica no idioma.
 2. Abertura (§5.2): a câmera chega à Terra e a agulha pousa.
 3. A música começa: o globo gira vestido com o vídeo da NASA e a agulha toca o que passa embaixo dela.
 4. Data avançando à esquerda, instrumentos com valores ao vivo à direita, narrador explicando.
@@ -89,17 +89,22 @@ flowchart LR
 | Elemento | Decisão |
 |---|---|
 | Fundo | Espaço preto profundo, estrelas sutis |
-| Cor | As únicas cores fortes vêm do dado da NASA. UI em preto, branco e vidro, com acento âmbar mínimo. **O coral atual sai.** O acabamento do globo não conta como cor forte: o halo azul fino de atmosfera, a borda escurecida e a terra cinza mais escura. Onde a agulha lê, a cor é a da legenda |
+| Cor | As únicas cores fortes vêm do dado da NASA. UI em preto, branco e vidro, com acento âmbar mínimo. **O coral atual sai.** O acabamento do globo não conta como cor forte: o halo azul fino de atmosfera, a borda escurecida e a terra cinza mais escura (só onde o cinza é terra sem dado, como na temperatura do mar; nas luzes noturnas o branco é o próprio dado e não é escurecido). Onde a agulha lê, a cor é a da legenda |
 | Controles | Liquid glass (vidro fosco translúcido, borda clara fina). Com redução de transparência ativa, vira sólido com o mesmo contraste |
 | Tipografia | Serifa editorial fina e grande para datas e títulos (ex.: Instrument Serif); mono para valores de dado (ex.: Geist Mono); Atkinson Hyperlegible onde a leitura importar mais |
 | Proibido | Cards em grid, seções empilhadas de landing, jukebox de desenho animado, ícones genéricos de template |
 
 ### 5.2 Abertura (cold open)
 
-1. Tela preta, uma frase pequena no centro: *"Put on headphones."*
-2. Clique em qualquer lugar → **P0:** a câmera 3D desce do espaço até o próprio globo e a agulha pousa. **P2:** substituir por vídeo Veo de ~8 s: a câmera desce do espaço até a Terra, a superfície revela sulcos finos de vinil, uma agulha de cromo desce; som de agulha e estalo de vinil (ElevenLabs).
-3. O último frame do vídeo tem **o mesmo enquadramento** do globo 3D ao vivo; a troca é invisível (match cut) e o app começa a tocar.
-4. Retornos à página pulam a abertura (com opção de rever no overlay About).
+1. Tela preta: *"Put on headphones."* no centro; abaixo, o pedido *"Select a language to start."* e **"EN · PT · ES"**. Sem botão de iniciar — só texto e o seletor.
+2. O idioma destacado por padrão é o do navegador (`navigator.language`), com preferência salva em `localStorage` se a pessoa já escolheu. A frase e o pedido já aparecem nesse idioma.
+3. Clicar em **EN / PT / ES** (ou Enter no idioma focado) grava a escolha e inicia → **P0:** a câmera 3D desce do espaço até o próprio globo e a agulha pousa. **P2:** substituir por vídeo Veo de ~8 s (agulha + estalo de vinil).
+4. O último frame do vídeo tem **o mesmo enquadramento** do globo 3D ao vivo; a troca é invisível (match cut) e o app começa a tocar.
+5. Retornos à página pulam a abertura (com opção de rever no overlay About).
+
+> **Decisão de 15/11/2026 (N1 na abertura):** o navegador só toca som depois de um clique, então a voz entra no clique. Na primeira visita: clique no idioma → a voz diz *"Put on headphones."* enquanto a tela preta some e a câmera já desce → em seguida *"Welcome to the Earth Jukebox…"* durante a descida (a música entra por baixo, abaixada) → ~2,5 s de música sozinha → narração de abertura da faixa. A descida não espera a voz. Retornos (abertura já vista) e "Replay opening" não repetem o N1.
+
+> **Decisão de 15/11/2026 (idioma na abertura):** o seletor **EN · PT · ES** sai do rodapé e fica só na cold open; escolher o idioma **é** o gesto de iniciar (libera espaço na tela principal; idioma do navegador pré-selecionado).
 
 ### 5.2.1 Lista fechada de componentes
 
@@ -109,13 +114,14 @@ flowchart LR
 |---|---|
 | Marca | "EARTH JUKEBOX", texto pequeno, canto superior esquerdo |
 | About | A palavra "About", canto superior direito, sem ícone |
-| Data | Mês abreviado + ano ("MAR 2007"); faixas de um dia: dia + mês + ano ("19 AUG 2025") |
+| Data | Mês abreviado + ano ("MAR 2007"); faixas de um dia: dia + mês + ano ("19 AUG 2025"); faixas de um passo por ano (luzes noturnas, `time.unit = 'year'`): só o ano ("2012") |
 | Legenda da narração | Uma linha abaixo da data; vazia quando não há fala |
-| Chip de instrumento | "Instrumento · variável" + valor com unidade em mono + botões "M" e "S". **Sem ícone** |
-| Rodapé | Uma pílula: play/pause · nome da faixa · "Records" · "Liner notes" · "Listen \| Explore \| Compare" · "EN · PT · ES". Cada segmento de modo só aparece quando o modo existe (Explore é P1, Compare é P2; §16) |
+| Chip de instrumento | "Instrumento · variável" + valor com unidade em mono + botões "M" e "S". **Sem ícone**. Por faixa: temperatura do mar = Cordas / Piano / Glockenspiel · águas do norte / trópicos / águas do sul, em °C; raios = Marimba · raios do norte / dos trópicos / do sul, em % da área coberta por pontos; luzes noturnas = Piano · luz (brilho 0–255, "/255"), Cordas · luzes apagadas e Glockenspiel · luzes novas (% de mudança sobre o ano anterior, com sinal). Sem valor: "—" na tela e o motivo no texto acessível (terra, sem dado, mar, sem ano anterior) |
+| Rodapé | Uma pílula: play/pause · nome da faixa · "Records" · "Liner notes" · "Listen \| Explore \| Compare". **Sem seletor de idioma** (idioma só na cold open, §5.2). Cada segmento de modo só aparece quando o modo existe (Explore é P1, Compare é P2; §16) |
 | Agulha | Braço fino de cromo, simples, sem marca; vem sempre do canto superior direito |
 | Capas (Records) | Capa + nome da faixa + período. Nada além |
-| Liner notes | Título · "What you hear" · tabela "Data → Sound" · legenda da NASA + "Hear the legend" · "Limits" · fonte · "Download album" (só quando o P2 existir) · "×" para fechar |
+| Cold open | "Put on headphones." · "Select a language to start." · "EN · PT · ES" (navegador pré-selecionado; clicar no idioma inicia) |
+| Liner notes | Drawer à direita: título · "What you hear" · tabela "Data → Sound" · legenda da NASA + "Hear the legend" · "Limits" · fonte · "Download album" (só quando o P2 existir) · aba branca com seta na borda esquerda · "×" · fecha ao clicar fora |
 | Valores ainda desconhecidos | Mostrados como `[a definir]`, nunca inventados |
 
 ### 5.3 Tela principal
@@ -127,7 +133,7 @@ flowchart LR
 | Esquerda | Data enorme em serifa editorial (ex.: "AUG 2007"); abaixo, a legenda da narração em uma linha |
 | Direita | Coluna de chips de vidro, um por instrumento: ícone, nome da variável, valor ao vivo com unidade, botões de mudo e solo |
 | Anel do prato | Arco de progresso do tempo, arrastável (substitui o slider) |
-| Rodapé | Pílula de vidro: play/pause, nome da faixa, "Records", "Liner notes", modo (Ouvir / Explorar / Comparar), idioma |
+| Rodapé | Pílula de vidro: play/pause, nome da faixa, "Records", "Liner notes", modo (Ouvir / Explorar / Comparar) — sem idioma |
 | Canto superior esquerdo | Marca "EARTH JUKEBOX" pequena; acesso ao overlay About |
 
 ### 5.4 Troca de faixa ("Records")
@@ -135,15 +141,21 @@ flowchart LR
 - Uma fileira de capas quadradas de vidro sobe de baixo.
 - **Cada capa é um "vinil de dados":** a série inteira do dataset desenhada como sulcos circulares (cada anel = um passo de tempo, cor = valor). Gerada a partir do próprio dado, não de imagem decorativa. Faixa de um instante só (aerossóis): cada anel = uma faixa de latitude (norte por fora, sul por dentro).
 - Ao escolher: a agulha levanta (com som), a textura do globo faz crossfade para o novo vídeo, a agulha desce.
+- **Decisão de 15/11/2026 (como a troca acontece):** abrir Records já levanta a agulha (o disco silencia e a data para). Escolher a capa do disco que já toca só fecha o painel. Escolher outra capa: o painel desce, o globo segue escurecido enquanto a faixa nova carrega (o nome dela aparece no rodapé, pulsando), a pele do globo faz crossfade de 1,2 s, o globo clareia e a agulha desce; a faixa nova começa do primeiro passo com a narração de abertura dela. Mudo e solo voltam ao normal. Se estava pausado, a agulha desce e a faixa espera o play. Durante a troca, Records e Liner notes ficam bloqueados. As outras faixas (grade e capa) são baixadas em segundo plano alguns segundos depois de a música começar, para a troca ser imediata; o vídeo só é baixado ao escolher.
+- **Pontos de luz na agulha (por faixa):** temperatura do mar = cor da legenda da NASA na temperatura da nota; raios = amarelo dos pontos de raio da NASA; luzes noturnas = âmbar-claro (luz), laranja (luzes apagadas) e roxo (luzes novas), as cores do mapa de mudança da própria NASA (SVS 5313).
+- **Luzes noturnas (faixa de imagens):** a textura troca de ano com fade de 1,2 s no começo de cada ano; o relógio do dado é do próprio app (10 s por ano, `time.secondsPerStep`), parado quando a agulha está levantada, como o vídeo nas outras faixas.
 - **Faixa bônus 2D (nível do mar):** o globo recua e esmaece; o vídeo da NASA aparece numa escotilha circular de vidro no centro; o resto da UI continua igual.
 
 ### 5.5 Liner notes (encarte)
 
-Painel de vidro que desliza da direita, com:
+Drawer de vidro que desliza da direita (música continua tocando), com:
+- Aba branca na borda esquerda, com seta (chevron) para fora, no estilo de um puxador de painel; clicar na aba fecha.
+- Fecha também ao clicar fora do drawer (backdrop) ou em "×" / Esc.
 - O que você está ouvindo, em linguagem simples.
 - Tabela "dado → som" da faixa.
 - **Texto descritivo rico**: o que acontece na imagem em cada trecho (também lido pelo leitor de tela).
 - Barra de cores da NASA com o botão **"Hear the legend"**: toca do mínimo ao máximo para calibrar o ouvido.
+  - **Faixas sem barra de cores numérica (raios, luzes noturnas; decisão de 15/11/2026):** a seção vira "Legend in sound", com uma frase dizendo o que a imagem mostra, e "Hear the legend" toca as notas que a própria faixa usa, geradas pelo mapeamento da faixa: raios = as 10 faixas de latitude de 55° S (mais grave) a 55° N (mais agudo), na força máxima; luzes noturnas = as 6 faixas de latitude do piano de sul a norte, depois a figura de luzes apagadas (cordas descendo) e a de luzes novas (sinos subindo).
 - Fonte NASA com link e limites da leitura, ditos com franqueza.
 - Botão de exportar a faixa como álbum (§7.4).
 
@@ -176,10 +188,10 @@ Painel de vidro que desliza da direita, com:
 
 | Tela | O que faz | Desvios do mock (no produto segue o §5) |
 |---|---|---|
-| 1. Abertura | Tela preta com "Put on headphones."; um clique leva à descida até o globo | Falta o ponto final da frase |
-| 2. Ouvir | Tela principal: globo com o mapa da NASA, agulha lendo o meridiano, pontos = notas tocando, data e legenda à esquerda, chips com valor ao vivo à direita, arco âmbar = tempo | A linha branca passa um pouco para fora do globo; no produto fica só na superfície. A ponta da agulha não encosta exatamente na linha |
+| 1. Abertura | Tela preta com "Put on headphones." + EN/PT/ES; clique na frase leva à descida até o globo | Falta o ponto final da frase; mock sem seletor de idioma |
+| 2. Ouvir | Tela principal: globo com o mapa da NASA, agulha lendo o meridiano, pontos = notas tocando, data e legenda à esquerda, chips com valor ao vivo à direita, arco âmbar = tempo; rodapé sem idioma | A linha branca passa um pouco para fora do globo; no produto fica só na superfície. A ponta da agulha não encosta exatamente na linha |
 | 3. Records | Agulha levanta, globo escurece, 5 capas "vinil de dados" com nome e período; clicar troca a pele do globo e a agulha desce | Globo pouco escurecido; "Listen" aparece em negrito junto com "Records" |
-| 4. Liner notes | Painel sobre o lado direito, música continua: o que você ouve, tabela dado → som, legenda da NASA + "Hear the legend", limites, fonte, "Download album", "×" | Sumiu o "About"; a agulha virou uma linha diagonal solta, sem meridiano; "Liner notes" não aparece destacado no rodapé |
+| 4. Liner notes | Drawer à direita com aba/seta, música continua: o que você ouve, tabela dado → som, legenda da NASA + "Hear the legend", limites, fonte, "Download album", "×"; fecha ao clicar fora | Sumiu o "About"; a agulha virou uma linha diagonal solta, sem meridiano; "Liner notes" não aparece destacado no rodapé; mock sem aba |
 | 5. Explorar | Sem agulha; ponto branco segue o cursor; o chip da zona sob o cursor acende com o valor, os outros mostram "—" | Nenhum relevante |
 | 6. Comparar (P2) | Dois globos de luzes noturnas, 2012 no ouvido esquerdo e 2023 no direito; sob cada um só o ano e o lado | A agulha ficou reta e por cima do globo, sem tocar um meridiano; no produto é igual à do Ouvir |
 

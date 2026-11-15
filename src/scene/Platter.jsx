@@ -1,8 +1,7 @@
 import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { progress } from '../state/controller.js';
-import { useStore } from '../state/store.js';
+import { progress, seekToFraction } from '../state/controller.js';
 import { GLOBE_Y, RINGS } from './layout.js';
 
 const ringVertex = /* glsl */ `
@@ -13,7 +12,7 @@ const ringVertex = /* glsl */ `
   }
 `;
 // Angle 0 at the top, growing clockwise. Faint ring with a soft highlight that turns slowly; the
-// time ring paints amber up to the current progress of the year, brightest at its leading edge.
+// time ring paints amber up to the current progress of the record, brightest at its leading edge.
 const ringFragment = /* glsl */ `
   uniform float uTime;
   uniform float uSpeed;
@@ -60,17 +59,14 @@ function Ring({ radius, width, speed, base, timeRing }) {
 
 /** Concentric "platter" rings around the globe; the inner one is the draggable time arc. */
 export function Platter() {
-  const requestSeek = useStore((s) => s.requestSeek);
   const dragging = useRef(false);
 
   const seekAt = (e) => {
-    const { meta, phase } = useStore.getState();
-    if (!meta || phase !== 'playing') return;
     const x = e.point.x;
     const y = e.point.y - GLOBE_Y;
     let a = Math.atan2(x, y);
     if (a < 0) a += Math.PI * 2;
-    requestSeek((a / (Math.PI * 2)) * meta.video.duration);
+    seekToFraction(a / (Math.PI * 2));
   };
 
   return (
