@@ -1,93 +1,258 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Earth Jukebox: listen to NASA Earth data as sound." />
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <title>Earth Jukebox</title>
-    <link rel="stylesheet" href="/src/ui/style.css" />
-  </head>
-  <body>
-    <a class="skip-link" href="#intro">Skip to content</a>
-    <header>
-      <h1>Earth Jukebox</h1>
-      <p class="tagline">Listen to NASA Earth data. Every sound comes from a data value.</p>
-    </header>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earth Jukebox — Hear the planet change</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body data-current="home">
+<a class="skip" href="#content">Skip to content</a>
 
-    <main>
-      <section id="intro" class="intro" aria-labelledby="intro-heading">
-        <h2 id="intro-heading">Hear our changing planet</h2>
-        <p>
-          NASA's Earth Information Center shows our planet through images. Earth Jukebox turns those
-          same images into sound, so the data can be heard, not only seen. It is built to work
-          without sight: with a keyboard, a screen reader, and spoken narration in English,
-          Portuguese and Spanish.
-        </p>
-        <h3>How it works</h3>
-        <ol>
-          <li><strong>Pick a track.</strong> Each track is a NASA visualization, shown frame by frame.</li>
-          <li><strong>Learn the sounds.</strong> Before the track, you hear the lowest and the highest value of each sound, so you know the scale.</li>
-          <li><strong>Listen.</strong> Every sound is made live from the data value read from the frame: a tone, a wind, a tick, and a bell on records.</li>
-        </ol>
-        <p>Nothing plays until you press a button. Headphones are recommended.</p>
-        <button id="start-btn" type="button">Start listening</button>
-      </section>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="vinyl" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="99" fill="#0c0a08"/>
+      <circle cx="100" cy="100" r="96" fill="none" stroke="#2a241e" stroke-width="1"/>
+      <circle cx="100" cy="100" r="88" fill="none" stroke="#211c17" stroke-width="1"/>
+      <circle cx="100" cy="100" r="80" fill="none" stroke="#2a241e" stroke-width="1"/>
+      <circle cx="100" cy="100" r="72" fill="none" stroke="#211c17" stroke-width="1"/>
+      <circle cx="100" cy="100" r="64" fill="none" stroke="#2a241e" stroke-width="1"/>
+      <circle cx="100" cy="100" r="56" fill="none" stroke="#211c17" stroke-width="1"/>
+      <circle cx="100" cy="100" r="48" fill="none" stroke="#2a241e" stroke-width="1"/>
+      <path d="M40 40 A85 85 0 0 1 160 40" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="10"/>
+      <path d="M100 100L25.7 37.6A97 97 0 0 1 59 12.1Z" fill="#fff" opacity=".10"/><path d="M100 100L174.3 162.4A97 97 0 0 1 141 187.9Z" fill="#fff" opacity=".10"/><path d="M100 100L12 78A97 97 0 0 1 18 60Z" fill="#fff" opacity=".05"/><path d="M100 100L188 122A97 97 0 0 1 182 140Z" fill="#fff" opacity=".05"/><circle cx="100" cy="100" r="40" fill="#050403"/><circle cx="100" cy="100" r="36" fill="#FF6B4A"/>
+      <ellipse cx="100" cy="100" rx="36" ry="27" fill="none" stroke="#0A0D14" stroke-width="2"/>
+      <ellipse cx="100" cy="100" rx="36" ry="18" fill="none" stroke="#0A0D14" stroke-width="2"/>
+      <ellipse cx="100" cy="100" rx="36" ry="8" fill="none" stroke="#0A0D14" stroke-width="2"/>
+      <circle cx="100" cy="100" r="4" fill="#0A0D14"/>
+    </symbol>
+  </defs>
+</svg>
 
-      <div id="app" hidden>
-      <p><button id="about-btn" type="button" class="secondary">About this project</button></p>
-      <section class="settings" aria-label="Narration settings">
-        <label for="lang-select">Narration language</label>
-        <select id="lang-select">
-          <option value="en" lang="en">English</option>
-          <option value="pt" lang="pt-BR">Português</option>
-          <option value="es" lang="es">Español</option>
-        </select>
-        <label class="check"><input id="narration-toggle" type="checkbox" checked /> Spoken narration</label>
-      </section>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home" aria-label="Earth Jukebox, home">
+      <svg aria-hidden="true" width="40" height="40" viewBox="0 0 112 112"><circle cx="56" cy="56" r="52" fill="#FF6B4A"/><ellipse cx="56" cy="56" rx="52" ry="40" fill="none" stroke="#0A0D14" stroke-width="4"/><ellipse cx="56" cy="56" rx="52" ry="26" fill="none" stroke="#0A0D14" stroke-width="4"/><ellipse cx="56" cy="56" rx="52" ry="12" fill="none" stroke="#0A0D14" stroke-width="4"/><circle cx="56" cy="56" r="8" fill="#0A0D14"/></svg>
+      <b>EARTH JUKEBOX</b>
+    </a>
+    <nav class="main" aria-label="Main">
+      <a href="#layers" data-i18n="navLayers">How to listen</a>
+      <a href="#records" data-i18n="navTracks">Tracks</a>
+      <a href="#how" data-i18n="navHow">How it works</a>
+      <a href="#team" data-i18n="navTeam">Team</a>
+      <a href="#listen" class="cta" data-go-listen data-i18n="navListen">Listen</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="pt" aria-pressed="false">PT</button>
+      <button type="button" data-lang="es" aria-pressed="false">ES</button>
+    </div>
+  </div>
+</header>
 
-      <section aria-labelledby="tracks-heading">
-        <h2 id="tracks-heading">Tracks</h2>
-        <ul id="track-list" class="track-list"></ul>
-      </section>
-
-      <section id="player" aria-labelledby="player-heading" tabindex="-1">
-        <h2 id="player-heading">Player</h2>
-        <p id="track-title" class="track-title">Choose a track.</p>
-        <p id="placeholder-warning" class="warning" hidden>
-          Placeholder: this track uses synthetic numbers, not real NASA data.
-        </p>
-
-        <div id="frame-view" class="frame-view" aria-hidden="true">
-          <img id="frame-img" alt="" hidden />
-          <video id="frame-video" muted playsinline preload="auto" hidden></video>
-          <span id="frame-label" class="frame-label">—</span>
-        </div>
-
-        <p id="values-text" class="values-text"></p>
-
-        <div class="controls">
-          <button id="play-btn" type="button" disabled>Play</button>
-          <button id="intro-btn" type="button" class="secondary" disabled>Introduction and sound legend</button>
-          <label for="progress" class="visually-hidden">Position</label>
-          <input id="progress" type="range" min="0" max="0" step="1" value="0" disabled />
-          <span id="position-text" class="position-text" aria-hidden="true"></span>
-        </div>
-        <p class="hint">Keyboard: Space or K plays and pauses. Escape stops. Arrow keys on the slider move one frame.</p>
-
-        <p id="caption" class="caption"></p>
-
-        <div id="status" class="status" role="status" aria-live="polite"></div>
-
-        <section aria-labelledby="mapping-heading">
-          <h3 id="mapping-heading">What you hear</h3>
-          <ul id="mapping-list" class="mapping-list"></ul>
-          <p id="source-text" class="source"></p>
-        </section>
-      </section>
+<!-- ======================= HOME ======================= -->
+<main data-view="home" id="content">
+<section class="hero" aria-labelledby="h1">
+  <div class="grooves" aria-hidden="true"></div>
+  <div class="wrap grid">
+    <div>
+      <span class="label" data-i18n="kicker">NASA Earth data, as sound</span>
+      <h1 id="h1" data-i18n-html="heroTitle">Hear the <em>planet</em> change.</h1>
+      <p class="sub" data-i18n="heroSub">A jukebox that plays NASA Earth Information Center data as live music and narration, so anyone can follow how our planet is changing, with or without seeing it.</p>
+      <div class="actions">
+        <a class="btn primary" href="#listen" data-go-listen>
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg>
+          <span data-i18n="ctaListen">Start listening</span>
+        </a>
+        <a class="btn" href="#layers" data-i18n="ctaHow">How to listen</a>
       </div>
-    </main>
+      <div class="facts">
+        <div><b>3</b><span data-i18n="f1">layers of sound</span></div>
+        <div><b>EN · PT · ES</b><span data-i18n="f2">narration</span></div>
+        <div><b>0</b><span data-i18n="f3">pre-recorded music</span></div>
+      </div>
+    </div>
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+    <div class="planet" aria-labelledby="sel-title">
+      <h2 id="sel-title" class="vh">Choose a page</h2>
+      <div class="orbit" aria-hidden="true">
+        <canvas id="heroEarth" width="760" height="760"></canvas>
+        <svg class="arm" viewBox="0 0 120 150"><defs><linearGradient id="chr" x1="0" x2="1"><stop offset="0" stop-color="#4a4e55"/><stop offset=".35" stop-color="#f4f6f8"/><stop offset=".6" stop-color="#8d939b"/><stop offset="1" stop-color="#3c4046"/></linearGradient></defs><circle cx="92" cy="22" r="18" fill="url(#chr)" stroke="#1b1c20" stroke-width="2"/><circle cx="92" cy="22" r="7" fill="#1b1c20"/><path d="M92 22L34 118" stroke="url(#chr)" stroke-width="7" stroke-linecap="round"/><path d="M92 22L34 118" stroke="#1b1c20" stroke-width="9" stroke-linecap="round" opacity=".25"/><rect x="14" y="108" width="34" height="20" rx="4" transform="rotate(-31 31 118)" fill="#FF6B4A" stroke="#1b1c20" stroke-width="2"/></svg>
+      </div>
+      <div class="keys">
+            <a class="key main" href="#listen" data-go-listen data-rec="listen"><span class="code">A1</span><span><b data-i18n="kListen">Listen to the planet</b><small data-i18n="kListenS">The jukebox page, with video</small></span></a>
+            <a class="key" href="#layers" data-rec="layers"><span class="code">B1</span><span><b data-i18n="kLayers">How to listen</b><small data-i18n="kLayersS">The 3 layers</small></span></a>
+            <a class="key" href="#how" data-rec="how"><span class="code">C1</span><span><b data-i18n="kHow">How it works</b><small data-i18n="kHowS">Pixels to sound</small></span></a>
+            <a class="key" href="#team" data-rec="team" style="grid-column:1/-1"><span class="code">D1</span><span><b data-i18n="kTeam">Who made it</b><small data-i18n="kTeamS">The team and the test</small></span></a>
+          </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="layers" aria-labelledby="layers-t">
+  <div class="wrap">
+    <div class="head">
+      <span class="label" data-i18n="layersK">Before you press play</span>
+      <h2 id="layers-t" data-i18n="layersT">Three layers, one planet</h2>
+      <p data-i18n="layersP">Every track has up to three layers. Each one has its own sound, colour and shape, so nothing depends on colour alone.</p>
+    </div>
+    <div class="layers">
+      <article class="layer"><div class="sw solid" aria-hidden="true"></div><h3 data-i18n="l1t">The steady tone</h3><p data-i18n="l1p">The main measurement. In A1 it is the ice: lower and quieter means less ice. It is the solid ice-blue tube.</p><button type="button" class="mini" data-demo="tone" data-i18n="hear">Hear it</button></article>
+      <article class="layer"><div class="sw stripe" aria-hidden="true"></div><h3 data-i18n="l2t">The rushing wind</h3><p data-i18n="l2p">The change. It grows as the ice disappears. It is the striped coral tube.</p><button type="button" class="mini" data-demo="wind" data-i18n="hear">Hear it</button></article>
+      <article class="layer"><div class="sw dots" aria-hidden="true"></div><h3 data-i18n="l3t">Ticks and bells</h3><p data-i18n="l3p">Time. One tick per year, a stronger one each decade, a bell at every record low. They are the lamps.</p><button type="button" class="mini" data-demo="bell" data-i18n="hear">Hear it</button></article>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="records" aria-labelledby="rec-t">
+  <div class="wrap">
+    <div class="head">
+      <span class="label" data-i18n="recK">The record collection</span>
+      <h2 id="rec-t" data-i18n="recT">Tracks</h2>
+      <p data-i18n="recP">Each record comes from an Earth Information Center visualization, with its mapping written on the sleeve.</p>
+    </div>
+    <div class="sleeves">
+      <a class="sleeve" href="#listen" data-go-listen>
+        <div class="art" aria-hidden="true"><svg class="vin" viewBox="0 0 200 200"><use href="#vinyl"/></svg><div class="cover a1"><span class="cc">A1</span><span class="ct">ARCTIC SEA ICE</span></div></div>
+        <h3 data-i18n="t1">Arctic sea ice</h3>
+        <span class="meta" data-i18n="t1s">September minimum, 1979–2024</span>
+        <span class="map" data-i18n="t1m">Ice → pitch and volume · loss → wind · year → tick</span>
+      </a>
+      <div class="sleeve">
+        <div class="art" aria-hidden="true"><svg class="vin" viewBox="0 0 200 200"><use href="#vinyl"/></svg><div class="cover a2"><span class="cc">A2</span><span class="ct">COMING SOON</span></div></div>
+        <h3>[TRACK 2]</h3><span class="meta">[DATASET, YEARS]</span><span class="map">[VARIABLE → SOUND]</span>
+      </div>
+      <div class="sleeve">
+        <div class="art" aria-hidden="true"><svg class="vin" viewBox="0 0 200 200"><use href="#vinyl"/></svg><div class="cover a2"><span class="cc">B1</span><span class="ct">COMING SOON</span></div></div>
+        <h3>[TRACK 3]</h3><span class="meta">[DATASET, YEARS]</span><span class="map">[VARIABLE → SOUND]</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="how" aria-labelledby="how-t">
+  <div class="wrap">
+    <div class="head">
+      <span class="label" data-i18n="howK">Under the hood</span>
+      <h2 id="how-t" data-i18n="howT">From pixels to sound</h2>
+      <p data-i18n="howP">Nothing is pre-recorded. The jukebox reads the data and plays it live in your browser.</p>
+    </div>
+    <ol class="pipeline">
+      <li><h3 data-i18n="s1t">Frames</h3><p data-i18n="s1p">We load the frames of an Earth Information Center visualization.</p></li>
+      <li><h3 data-i18n="s2t">Colour legend</h3><p data-i18n="s2p">Each pixel's colour turns back into the value it stands for, using the visualization's own scale.</p></li>
+      <li><h3 data-i18n="s3t">Values</h3><p data-i18n="s3p">The values become one series per variable, frame by frame.</p></li>
+      <li><h3 data-i18n="s4t">Sound and voice</h3><p data-i18n="s4p">The series drive the sound, and a voice gives the context: what, where, when and how much.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="block" id="team" aria-labelledby="team-t">
+  <div class="wrap">
+    <div class="head">
+      <span class="label" data-i18n="proofK">Tested by ear</span>
+      <h2 id="team-t" data-i18n="proofT">Tested with eyes closed</h2>
+      <p data-i18n="proofP">We asked people to listen without looking and tell us what happened to the data.</p>
+    </div>
+    <div class="proof">
+      <div class="stat"><span class="num">[X/5]</span><p data-i18n="proofS">listeners got the trend right with their eyes closed.</p></div>
+      <div class="quote"><blockquote>“[QUOTE FROM A BLIND OR LOW-VISION TESTER]”</blockquote><cite>[NAME, WITH PERMISSION]</cite></div>
+    </div>
+    <div class="head" style="margin-top:88px">
+      <span class="label">NASA Space Apps Challenge 2026</span>
+      <h2 data-i18n="teamT">The team</h2>
+      <p data-i18n="teamP">Computer Science students from Unicamp, Campinas, Brazil.</p>
+    </div>
+    <div class="team">
+      <div class="member"><span class="role" data-i18n="r1">Sound and narration</span><h3>Lucas Souza</h3></div>
+      <div class="member"><span class="role" data-i18n="r2">Data and interface</span><h3>[MEMBER 2]</h3></div>
+      <div class="member"><span class="role" data-i18n="r3">Science and delivery</span><h3>[MEMBER 3]</h3></div>
+    </div>
+  </div>
+</section>
+
+<section class="closing" aria-labelledby="close-t">
+  <div class="wrap">
+    <h2 id="close-t" data-i18n="closeT">Put a record on.</h2>
+    <a class="btn primary" href="#listen" data-go-listen><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg><span data-i18n="ctaListen">Start listening</span></a>
+  </div>
+</section>
+</main>
+
+<!-- ======================= LISTEN ======================= -->
+<main data-view="listen" aria-labelledby="now-t">
+<div class="stage">
+  <div class="wrap"><a class="back" href="#home"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span data-i18n="back">Back to the selector</span></a></div>
+  <div class="bust">
+    <div class="bust-face" id="face">
+      <div class="plate" aria-hidden="true">EARTH JUKEBOX</div>
+      <div class="lamps" id="bigLamps" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="bust-body">
+        <div class="tube" aria-hidden="true"><div class="fill" id="tubeIce" style="height:80%"></div><span class="tlabel">ICE</span><span class="bub" style="left:12px"></span><span class="bub" style="left:24px;animation-delay:1.1s"></span><span class="bub" style="left:16px;animation-delay:2.2s"></span></div>
+        <div class="screen-slot"><div class="screen" id="screen">
+          <canvas id="frame" width="1280" height="720" aria-hidden="true"></canvas>
+          <video id="eicVideo" muted playsinline hidden aria-hidden="true"></video>
+          <div class="ov-top"><span class="chip">A1 · ARCTIC SEA ICE</span><span class="chip" data-i18n="illus">ILLUSTRATIVE DATA</span></div>
+          <span class="yr" id="yr" aria-hidden="true">1979</span>
+          <p class="caption" id="caption" aria-hidden="true"></p>
+          <div class="fs-meter l" aria-hidden="true"><i id="fsIce"></i><span>ICE</span></div>
+          <div class="fs-meter r" aria-hidden="true"><i id="fsWind"></i><span>WIND</span></div>
+          <button type="button" class="bigplay" id="bigplay" aria-label="Play"><svg aria-hidden="true" width="38" height="38" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg></button>
+          <button type="button" class="fs-play" id="fsPlay" aria-label="Pause"><svg id="fsPIcon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></button>
+          <button type="button" class="fs-btn" id="fsToggle" aria-label="Full screen"><svg id="fsIcon" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        </div></div>
+        <div class="tube teal" aria-hidden="true"><div class="fill" id="tubeWind" style="height:4%"></div><span class="tlabel">WIND</span><span class="bub" style="left:12px;animation-delay:.6s"></span><span class="bub" style="left:22px;animation-delay:1.9s"></span></div>
+      </div>
+      <div class="bust-deck" id="deck" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+</div>
+
+<section class="console" aria-label="Player controls">
+  <div class="wrap">
+    <div class="transport">
+      <div class="now"><h1 id="now-t"><span data-i18n="t1">Arctic sea ice</span>, 1979–2024</h1><span class="label" data-i18n="nowA1">Now playing · A1</span></div>
+      <div class="ctrl">
+        <button type="button" class="play" id="play"><svg id="pIcon" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"/></svg><span id="pText">Play</span></button>
+        <button type="button" class="round" id="restart" aria-label="Restart"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+      </div>
+      <label class="vh" for="scrub">Year</label>
+      <input type="range" class="scrub" id="scrub" min="0" max="45" step="1" value="0" aria-valuetext="1979">
+      <div class="toggles">
+        <label><input type="checkbox" id="narrate" checked> <span data-i18n="narrate">Spoken narration</span></label>
+        <label><input type="checkbox" id="captions" checked> <span data-i18n="captions">Captions</span></label>
+      </div>
+      <p class="status" id="status" aria-live="polite"></p>
+    </div>
+    <div class="crate">
+      <h2 data-i18n="crate">Records</h2>
+      <div class="list" role="group" aria-label="Tracks">
+        <button type="button" class="disc" aria-pressed="true"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#vinyl"/></svg><span><b data-i18n="t1">Arctic sea ice</b><small>A1 · 1979–2024</small></span></button>
+        <button type="button" class="disc" disabled><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#vinyl"/></svg><span><b>[TRACK 2]</b><small data-i18n="soon">Coming soon</small></span></button>
+        <button type="button" class="disc" disabled><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#vinyl"/></svg><span><b>[TRACK 3]</b><small data-i18n="soon">Coming soon</small></span></button>
+      </div>
+      <div class="legend">
+        <div><span class="sw solid" aria-hidden="true"></span><span data-i18n="lg1">Steady tone: the ice. Lower means less.</span></div>
+        <div><span class="sw stripe" aria-hidden="true"></span><span data-i18n="lg2">Wind: grows as the ice disappears.</span></div>
+        <div><span class="sw dots" aria-hidden="true"></span><span data-i18n="lg3">Ticks: years. Bell: record low.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="foot1">Made for the NASA Space Apps Challenge 2026 · The Earth Information Jukebox.</p>
+    <p class="note" data-i18n="foot2">Prototype: the A1 values are illustrative until the real series is extracted.</p>
+  </div>
+</footer>
+
+<div id="warp" aria-hidden="true"><div class="shade"></div><svg class="disc-fly" viewBox="0 0 200 200"><use href="#vinyl"/></svg></div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
 </html>

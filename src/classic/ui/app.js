@@ -1,4 +1,4 @@
-import { loadTrackIndex, loadTrack, trackUrl } from '../data/loadTrack.js';
+import { loadTrackIndex, loadTrack, trackUrl } from '../../data/loadTrack.js';
 import { SonificationEngine } from '../audio/engine.js';
 import { Narrator, LOCALES } from '../narration/narrator.js';
 import { runIntro, sayEvent, runOutro } from '../narration/guide.js';
