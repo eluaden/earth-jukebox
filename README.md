@@ -203,6 +203,10 @@ The player shows the video in step with the sound; the still frames are what the
 
 ## Planning docs
 
+Development is 100% AI-driven: existing code and decisions are not the source of truth. Read
+[`AGENTS.md`](AGENTS.md) first. [`docs/direcionamento.md`](docs/direcionamento.md) holds the current
+direction of the project and must be updated before any change.
+
 - [`docs/recursos-do-desafio.md`](docs/recursos-do-desafio.md): every resource on the challenge's Resources tab, its files, and how it compares with what the project has (Portuguese).
 - [`docs/analise-estrategica.md`](docs/analise-estrategica.md): judging criteria, past winners and award strategy (Portuguese).
 - [`docs/earth-jukebox-projetos-anteriores.md`](docs/earth-jukebox-projetos-anteriores.md): past Space Apps winners and finalists that used sound, their interfaces and what set them apart (Portuguese).
