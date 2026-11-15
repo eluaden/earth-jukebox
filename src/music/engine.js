@@ -57,12 +57,9 @@ export function createEngine(base) {
     await Promise.all(
       Object.entries(SFX).map(async ([id, spec]) => {
         try {
-          const player = new Tone.Player({
-            url: `${base}sfx/${spec.file}`,
-            fadeIn: 0.01,
-            fadeOut: 0.04,
-          });
-          await player.load();
+          // The URL goes to load(), not the constructor: load() with no argument fetches "undefined".
+          const player = new Tone.Player({ fadeIn: 0.01, fadeOut: 0.04 });
+          await player.load(`${base}sfx/${spec.file}`);
           const gain = new Tone.Gain(spec.gain);
           player.connect(gain);
           if (id === 'vinyl-crackle-loop') {
