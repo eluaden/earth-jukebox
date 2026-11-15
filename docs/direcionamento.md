@@ -98,7 +98,22 @@ flowchart LR
 3. O último frame do vídeo tem **o mesmo enquadramento** do globo 3D ao vivo; a troca é invisível (match cut) e o app começa a tocar.
 4. Retornos à página pulam a abertura (com opção de rever no overlay About).
 
-### 5.3 Tela principal
+### 5.2.1 Lista fechada de componentes
+
+**Nada fora desta lista aparece na tela** (sem busca, perfil, menu, ícones decorativos, contadores ou textos extras).
+
+| Componente | Forma exata |
+|---|---|
+| Marca | "EARTH JUKEBOX", texto pequeno, canto superior esquerdo |
+| About | A palavra "About", canto superior direito, sem ícone |
+| Data | Mês abreviado + ano ("MAR 2007"); faixas de um dia: dia + mês + ano ("19 AUG 2025") |
+| Legenda da narração | Uma linha abaixo da data; vazia quando não há fala |
+| Chip de instrumento | "Instrumento · variável" + valor com unidade em mono + botões "M" e "S". **Sem ícone** |
+| Rodapé | Uma pílula: play/pause · nome da faixa · "Records" · "Liner notes" · "Listen \| Explore \| Compare" · "EN · PT · ES" |
+| Agulha | Braço fino de cromo, simples, sem marca; vem sempre do canto superior direito |
+| Capas (Records) | Capa + nome da faixa + período. Nada além |
+| Liner notes | Título · "What you hear" · tabela "Data → Sound" · legenda da NASA + "Hear the legend" · "Limits" · fonte · "Download album" · "×" para fechar |
+| Valores ainda desconhecidos | Mostrados como `[a definir]`, nunca inventados |
 
 | Região | O que aparece |
 |---|---|
@@ -113,7 +128,7 @@ flowchart LR
 ### 5.4 Troca de faixa ("Records")
 
 - Uma fileira de capas quadradas de vidro sobe de baixo.
-- **Cada capa é um "vinil de dados":** a série inteira do dataset desenhada como sulcos circulares (cada anel = um passo de tempo, cor = valor). Gerada a partir do próprio dado, não de imagem decorativa.
+- **Cada capa é um "vinil de dados":** a série inteira do dataset desenhada como sulcos circulares (cada anel = um passo de tempo, cor = valor). Gerada a partir do próprio dado, não de imagem decorativa. Faixa de um instante só (aerossóis): cada anel = uma faixa de latitude (norte por fora, sul por dentro).
 - Ao escolher: a agulha levanta (com som), a textura do globo faz crossfade para o novo vídeo, a agulha desce.
 - **Faixa bônus 2D (nível do mar):** o globo recua e esmaece; o vídeo da NASA aparece numa escotilha circular de vidro no centro; o resto da UI continua igual.
 
@@ -129,7 +144,7 @@ Painel de vidro que desliza da direita, com:
 
 ### 5.6 Modo Explorar
 
-- A agulha sai; o cursor vira um ponto brilhante.
+- A agulha sai; o cursor vira um ponto brilhante. **Nenhum texto junto ao cursor:** o chip do instrumento daquele ponto acende e mostra o valor.
 - Arrastar sobre o globo toca o valor daquele lugar, com **áudio espacial**: com fone, o som vem da direção do ponto em relação à câmera.
 - No celular, vibração proporcional ao valor (onde o navegador suportar).
 
@@ -137,12 +152,35 @@ Painel de vidro que desliza da direita, com:
 
 - Dois globos lado a lado, mesmo lugar em dois tempos (faixa padrão: luzes noturnas 2012 × 2023).
 - Globo da esquerda no ouvido esquerdo, da direita no direito.
+- Cada globo com a sua agulha (igual à do Ouvir). Sob cada globo, só o ano e "L" ou "R". Data e chips da tela principal ficam ocultos.
 
 ### 5.8 Acessibilidade
 
 - Mantém tudo que o projeto já tem: teclado completo, leitor de tela, `aria-live`, valores reais no texto acessível, legendas, áudio só após interação, movimento reduzido.
 - **Modo Audio-first** (tecla A): esconde o visual e anuncia tudo por voz.
 - Nada depende só de cor; o vidro respeita contraste mínimo.
+
+### 5.9 Mocks (visualização)
+
+- Imagens geradas por IA a partir deste §5, com frames reais da NASA como referência para a pele do globo. Arquivos em [`mockups/`](mockups/).
+- **O texto deste §5 vence o mock.** Os mocks têm desvios do gerador (listados abaixo); no produto real esses pontos seguem o texto e ficam melhores.
+- Valores de temperatura nos mocks são ilustrativos; no produto vêm da leitura do frame.
+
+| Tela | O que faz | Desvios do mock (no produto segue o §5) |
+|---|---|---|
+| 1. Abertura | Tela preta com "Put on headphones."; um clique leva à descida até o globo | Falta o ponto final da frase |
+| 2. Ouvir | Tela principal: globo com o mapa da NASA, agulha lendo o meridiano, pontos = notas tocando, data e legenda à esquerda, chips com valor ao vivo à direita, arco âmbar = tempo | A linha branca passa um pouco para fora do globo; no produto fica só na superfície. A ponta da agulha não encosta exatamente na linha |
+| 3. Records | Agulha levanta, globo escurece, 5 capas "vinil de dados" com nome e período; clicar troca a pele do globo e a agulha desce | Globo pouco escurecido; "Listen" aparece em negrito junto com "Records" |
+| 4. Liner notes | Painel sobre o lado direito, música continua: o que você ouve, tabela dado → som, legenda da NASA + "Hear the legend", limites, fonte, "Download album", "×" | Sumiu o "About"; a agulha virou uma linha diagonal solta, sem meridiano; "Liner notes" não aparece destacado no rodapé |
+| 5. Explorar | Sem agulha; ponto branco segue o cursor; o chip da zona sob o cursor acende com o valor, os outros mostram "—" | Nenhum relevante |
+| 6. Comparar | Dois globos de luzes noturnas, 2012 no ouvido esquerdo e 2023 no direito; sob cada um só o ano e o lado | A agulha ficou reta e por cima do globo, sem tocar um meridiano; no produto é igual à do Ouvir |
+
+![Abertura](mockups/1-abertura.jpg)
+![Ouvir](mockups/2-ouvir.jpg)
+![Records](mockups/3-records.jpg)
+![Liner notes](mockups/4-liner-notes.jpg)
+![Explorar](mockups/5-explorar.jpg)
+![Comparar](mockups/6-comparar.jpg)
 
 ## 6. Som
 
@@ -160,7 +198,7 @@ Painel de vidro que desliza da direita, com:
 | Faixa | Vozes |
 |---|---|
 | Aerossóis | Fumaça → violoncelo grave · Poeira → marimba · Sal marinho → celesta (sulfato só se couber no limite de 3 vozes, ver Q2) |
-| Temperatura do mar | Temperatura → altura na escala; água mais quente → timbre mais brilhante |
+| Temperatura do mar | 3 zonas da coluna sob a agulha: águas do norte (acima de 23,5° N) → cordas · trópicos → piano · águas do sul (abaixo de 23,5° S) → celesta. Temperatura → altura na escala; água mais quente → timbre mais brilhante |
 | Raios | Cada raio → batida de percussão afinada; latitude → altura (migração norte/sul audível) |
 | Luzes noturnas | Quantidade de luz → densidade de notas de piano; luz apagada → notas descendo em menor; luz nova → sinos subindo |
 | Nível do mar (bônus) | Nível → tom sustentado subindo; marcos por década |
