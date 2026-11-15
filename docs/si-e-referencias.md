@@ -1,0 +1,89 @@
+# Earth Jukebox — Use of Super Intelligence (SI), NASA data and references
+
+> Base for the submission form and for the **References** on the project page (see [`direcionamento.md`](direcionamento.md) §7.3 and §10).
+> Written in English so it can be pasted as is. Update it whenever a new tool, dataset, sample or library enters the project.
+
+---
+
+## 1. Use of Super Intelligence (SI) — form answer
+
+> **Yes.** We used SI tools as assistants to speed up development, never to decide what the project is or what the data says.
+>
+> **The idea is ours.** Earth Jukebox came from a team discussion about a real problem: NASA's Earth Information Center is a wall of screens, and the people who most need another way into that information (blind and low-vision people) are the ones it leaves out. The concept (the Earth as a record and a needle reading the planet), the choice of NASA visualizations, the rules that turn each value into sound, and every design and accessibility decision were made and argued by the team.
+>
+> **Where SI helped:**
+> - **Code:** AI coding assistants (Anthropic Claude, through Claude Code and Cursor) helped write and refactor parts of the web app under our direction. We specified each change, reviewed the result, and checked it against NASA's own frames before keeping it.
+> - **Research support:** summarizing public pages we had already selected (the challenge's Resources tab, past Space Apps projects) so we could read them faster.
+> - **Writing support:** drafting and translating documentation and interface text (English, Portuguese, Spanish), reviewed by the team.
+> - **Planned presentation assets:** a short Google Veo opening clip and ElevenLabs narration and sound effects. These are decorative or spoken and are labelled as SI-generated (see below).
+>
+> **What SI did not do:**
+> - **No SI-generated data, values or scientific claims.** Every value you hear is read in the browser from frames of NASA Scientific Visualization Studio videos, using each frame's own color legend, ruler or chart.
+> - **No SI-generated music.** The sound is synthesized live from the data with fixed, documented rules. Music composed by AI would be a black box, which is the opposite of what we want.
+> - **No SI-generated image that looks like data**, no people, and no NASA logos or mission identifiers in any generated content.
+> - **The scientific reading is checked by us:** we compared extracted values against the legends and higher-resolution frames and state the limits of each reading on the page.
+>
+> **How SI content is marked:** generated images and video carry a visible "AI-generated" watermark; generated audio is acknowledged in the credits text and in the file metadata; AI-assisted code is acknowledged in the repository README and in this document.
+
+## 2. Rules for SI in production (what we commit to from now on)
+
+| Item | Allowed | Not allowed | Required marking |
+|---|---|---|---|
+| Code | AI assistants writing or refactoring code we specify and review | Merging code nobody on the team checked | Acknowledged in the README and here |
+| Data and values | — | Any value, series, label or date produced by SI | — |
+| Scientific text (limits, methods, what the data shows) | SI to fix wording or translate text we wrote | SI writing the scientific claim itself | — |
+| Music and data sound | — | AI-generated or AI-composed music | — |
+| Video and images (Veo or similar) | Opening clip, abstract shots in the pitch video | Anything that looks like data; people, mainly "testers"; NASA logos, flags, mission identifiers | **Visible watermark "AI-generated (Google Veo)"** on every frame |
+| Voice and sound effects (ElevenLabs or similar) | Pre-generated narration EN / PT / ES, needle and vinyl effects | Saying values that are not in the track's data | Credit text on the page **and** file metadata (e.g. comment/artist tag "AI-generated voice: ElevenLabs") |
+| User test results and quotes | — | Inventing or simulating any result or testimonial | — |
+
+**Checklist before submitting**
+
+- [ ] Every Veo clip has the visible watermark.
+- [ ] Every ElevenLabs file has the metadata tag and is listed in §4.
+- [ ] README credits state AI-assisted code.
+- [ ] No NASA logo, flag or mission identifier in any generated content.
+- [ ] The "Use of SI" form answer matches §1.
+
+## 3. NASA data — form answer
+
+> All data comes from the **NASA Scientific Visualization Studio (SVS)**, mainly the **Earth Information Center gallery** that the challenge points to. We download NASA's videos and read real values from their frames (color legends, rulers, charts and map coverage). No values are made up.
+
+| NASA resource | What we use | Status |
+|---|---|---|
+| [SVS 5235](https://svs.gsfc.nasa.gov/5235/) — Sea Level Through a Porthole, 1993–2023 | Global sea level read from the ruler on the frame | In the site |
+| [SVS 5011](https://svs.gsfc.nasa.gov/5011/) — Lightning Events Detected from the ISS, 2017–2023 | Map coverage of lightning, north vs south | In the site |
+| [SVS 4993](https://svs.gsfc.nasa.gov/4993/) — Spread of the Dixie Fire, 2021 | Burned area read from the chart on the frame | In the site (leaving, see direcionamento §8) |
+| [SVS 5113](https://svs.gsfc.nasa.gov/5113/) — Active Fires as Observed by VIIRS | Map coverage of fire detections by region | In the site (leaving) |
+| [SVS 5175](https://svs.gsfc.nasa.gov/5175/) — TEMPO nitrogen dioxide, Chicago/Toronto | NO₂ read from the color legend | In the site (leaving) |
+| [SVS 5669](https://svs.gsfc.nasa.gov/5669/) — GEOS Aerosols 2025 | Aerosol types, one instrument per type | Planned |
+| [SVS 3912](https://svs.gsfc.nasa.gov/3912/) — ECCO2 Sea Surface Temperature | Temperature from the 0–32 °C legend | Planned |
+| [SVS 5313](https://svs.gsfc.nasa.gov/5313/) — Night Lights 2012–2023 | Amount of light, Compare mode | Planned |
+| [SVS 5533](https://svs.gsfc.nasa.gov/5533/) — EIC Air Quality | Studied as a candidate track | Research |
+| [SVS 13786](https://svs.gsfc.nasa.gov/13786/) — Data Sonification: Caldwell 73 | Reference for "latitude → pitch" scanning | Method reference |
+| NASA Blue Marble Next Generation (Dec 2004) | Globe texture | In the site |
+| [Earth Information Center gallery](https://svs.gsfc.nasa.gov/gallery/earth-information-center/) and the [challenge page](https://www.spaceappschallenge.org/2026/challenges/the-earth-information-jukebox/) | Source list and challenge brief | Reference |
+
+Keep this table in sync with `public/tracks/` and the README track table.
+
+## 4. Space Agency Partner data and other references — form answer
+
+**Space Agency Partner data:** none used so far. *(If we add any, list it here: agency, dataset, link, how it is used.)*
+
+| Type | Resource | License / terms | Use |
+|---|---|---|---|
+| Data | NASA SVS videos and images (§3) | NASA media guidelines, public domain unless noted | Data source, video in the player |
+| Font | [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) (Google Fonts) | SIL Open Font License | Interface text |
+| Font | [Atkinson Hyperlegible](https://fonts.google.com/specimen/Atkinson+Hyperlegible) (Google Fonts) | SIL Open Font License | Readable interface text |
+| Tool | [Vite](https://vitejs.dev/) | MIT | Build and dev server |
+| Browser API | Web Audio API, Web Speech API | Browser standard | Sound synthesis, fallback narration |
+| Hosting | GitHub Pages | GitHub terms | Live site |
+| SI tool | Anthropic Claude (Claude Code, Cursor) | Anthropic / Cursor terms | AI-assisted coding, documentation and translation (§1) |
+| SI tool (planned) | Google Veo | Google terms | Opening clip and abstract pitch shots, watermarked |
+| SI tool (planned) | ElevenLabs | ElevenLabs terms (check commercial/attribution clause) | Narration and sound effects, tagged |
+| Planned | three.js, React Three Fiber, drei, postprocessing, GSAP, Tone.js | MIT / GSAP standard license | 3D globe, animation, audio |
+| Planned | Instrument samples (e.g. Salamander Piano, VSCO 2 CE) | To be confirmed (direcionamento E2) | Instruments |
+| Planned | Fonts Instrument Serif, Geist Mono | SIL Open Font License | Titles and data values |
+| Research | Past Space Apps projects ([`earth-jukebox-projetos-anteriores.md`](earth-jukebox-projetos-anteriores.md)) | Public project pages | Inspiration and differentiation only; no code or assets reused |
+
+No copyrighted material is used without permission.

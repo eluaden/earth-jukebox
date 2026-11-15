@@ -200,6 +200,9 @@ The player shows the video in step with the sound; the still frames are what the
 - NASA Scientific Visualization Studio: [SVS 5235](https://svs.gsfc.nasa.gov/5235/), [SVS 4993](https://svs.gsfc.nasa.gov/4993/), [SVS 5113](https://svs.gsfc.nasa.gov/5113/), [SVS 5175](https://svs.gsfc.nasa.gov/5175/), [SVS 5011](https://svs.gsfc.nasa.gov/5011/), all from the [Earth Information Center gallery](https://svs.gsfc.nasa.gov/gallery/earth-information-center/).
 - NASA Blue Marble Next Generation (globe texture).
 - Fonts: Space Grotesk and Atkinson Hyperlegible (Google Fonts).
+- Code written with AI coding assistants (Anthropic Claude) under the team's direction and review. No data,
+  values or scientific claims are AI-generated. Full SI disclosure, NASA data and references:
+  [`docs/si-e-referencias.md`](docs/si-e-referencias.md).
 
 ## Planning docs
 
