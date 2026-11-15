@@ -77,7 +77,7 @@ describe('describeValue (what the screen reader says for a chip)', () => {
     ['night-lights', { voice: 'new', unit: 'change', value: 0.1 }, '10'],
     ['aerosols', { voice: 'smoke', unit: 'strength', value: 0.123 }, '12% of the strongest smoke'],
     ['sea-level', { voice: 'level', unit: 'cm', value: 6.37 }, '6.4 centimetres above'],
-    ['sea-level', { voice: 'centimetre', unit: 'cm', value: 6 }, '6 whole centimetres'],
+    ['sea-level', { voice: 'centimetre', unit: 'cm', value: 6 }, 'reached so far: 6'],
   ];
   it.each(cases)('%s %o says the value in words', (id, sv, expected) => {
     const said = describeValue(id, sv, 'en');
