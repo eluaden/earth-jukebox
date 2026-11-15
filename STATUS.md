@@ -1,7 +1,7 @@
 # Earth Jukebox — Status
 
 > O que já foi feito e quem faz o quê, item a item do [`direcionamento.md`](docs/direcionamento.md) (a fonte de verdade: em caso de dúvida, ele vence este arquivo).
-> Atualizado em 15/11/2026, com a `main` em `205c533` (fatia SST publicada em https://eluaden.github.io/earth-jukebox/).
+> Atualizado em 15/11/2026, depois do E1 de raios e luzes noturnas (fatia SST publicada em https://eluaden.github.io/earth-jukebox/).
 > **Atualize este arquivo no mesmo commit do trabalho.**
 
 **Legenda:** **Feito** · **Parcial** (existe, mas falta algo dito na coluna ao lado) · **A fazer** · **Bloqueado** (depende de outro item)
@@ -37,15 +37,15 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Item | Ref. | Status | Frente | O que falta / observação |
 |---|---|---|---|---|
 | E1 — temperatura do mar | §14 | **Feito** | A | 2:1, legenda oficial, datas exatas (§14.1) |
-| E1 — raios | §14 | **A fazer** | A | Mapa plano `iss_lightning_sos_yearly` (4096×2048, sem data no frame: anos inferidos, ver `recursos-do-desafio.md` §3.8) |
-| E1 — luzes noturnas | §14 | **A fazer** | A | Versão EIC 32:9 em H.265: medir a faixa de latitudes que cobre e vestir só ela (regra do §14) |
+| E1 — raios | §14 | **Feito** | A | 2:1 de polo a polo; datas exatas por frame no `labels.txt` da NASA ("2003" = 2023); tempo não uniforme; leitura = cobertura de pontos amarelos, só até ~55° (§14.1) |
+| E1 — luzes noturnas | §14 | **Feito** | A | Quadro 32:9 = duas cópias do mapa; usar a da esquerda (equirretangular 16:9, começa em 168,5° W); série anual nos frames 0–269, mapa sem luzes no 290; textura = 12 imagens (§14.1) |
 | E3 — vídeo como textura | §14 | **Parcial** | B | Tamanhos escolhidos (1536 / 1024). Falta medir fluidez (FPS) em notebook comum e celular real |
 | Globo com agulha | §5.3 | **Feito** | B | Polido em 15/11 (volume do globo, braço em J, vidro) |
 | Motor musical com samples e regras de clareza | §6.1, §6.3 | **Parcial** | B | Feito para a SST, tetos testados. Falta **aprovação de ouvido** e as vozes de raios (percussão afinada) e luzes (piano + regra emocional) |
 | Faixa: temperatura do mar | §8 | **Feito** | A | Pipeline, grade, mapeamento, encarte, narração gravada. Textos do encarte: revisar (time) |
-| Faixa: raios | §8, §6.2 | **Bloqueado** | A | Depende de E1 (raios) |
-| Faixa: luzes noturnas | §8, §6.2 | **Bloqueado** | A | Depende de E1 (luzes) |
-| Records (troca de faixa) | §5.4 | **Parcial** | B | Painel com 1 capa (frame) e agulha levantando. Falta trocar de faixa: crossfade da pele do globo, agulha desce, som novo |
+| Faixa: raios | §8, §6.2 | **A fazer** | A | Pipeline: um passo a cada 10 dias pelas datas do `labels.txt` (frame de cada passo no `track.json`), vídeos 1536/1024, mapeamento (percussão afinada, 1 batida por faixa de latitude por passo) |
+| Faixa: luzes noturnas | §8, §6.2 | **A fazer** | A | Pipeline: 12 imagens 2:1 (uma por ano) + grade de brilho relativo (ano − frame 290); mapeamento (densidade de piano; luz apagada/nova pela diferença ano a ano) |
+| Records (troca de faixa) | §5.4 | **Parcial** | B | Painel com 1 capa (frame) e agulha levantando. Falta trocar de faixa: crossfade da pele do globo, agulha desce, som novo. Para raios e luzes, o app precisa aceitar passos por lista de frames e textura feita de imagens (§14.1) |
 | Liner notes | §5.5 | **Feito** | A (texto), B (painel) | Inclui "Hear the legend" e limites. Repetir para cada faixa nova |
 | Acessibilidade de base | §5.8 | **Parcial** | B | Teclado, leitor de tela, `aria-live`, V para valores, movimento e transparência reduzidos feitos. Falta checar com VoiceOver/NVDA real e medir contraste (R10) |
 | Narração N1 (falas da UI) | §7.2 | **A fazer** | C (gravar), B (tocar) | `put-on-headphones` e `welcome` em EN/PT/ES; o app ainda não toca o `welcome` |
@@ -85,7 +85,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 | # | Status | Frente | Situação |
 |---|---|---|---|
-| E1 | **Parcial** | A | SST feito; raios, luzes noturnas e aerossóis a fazer |
+| E1 | **Parcial** | A | SST, raios e luzes noturnas feitos; aerossóis a fazer (P1) |
 | E2 | **Feito** | — | VSCO 2 CE (CC0) em uso |
 | E3 | **Parcial** | B | Falta FPS em aparelho real |
 | E4 | **A fazer** | A | CO₂ DYAMOND (câmera móvel) |
@@ -114,6 +114,6 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 ## 8. Próximos passos sugeridos (em paralelo, um por frente)
 
-1. **A:** E1 de raios e de luzes noturnas → pipeline da faixa de raios.
-2. **B:** Records com troca de faixa e suporte a várias faixas; medir FPS em aparelho real.
+1. **A:** pipeline da faixa de raios, depois o de luzes noturnas (E1 feito).
+2. **B:** Records com troca de faixa e suporte a várias faixas (incluindo passos por lista de frames e textura de imagens); medir FPS em aparelho real.
 3. **C:** contato com os testadores (prazo longo: começar já); N1; S1–S7.

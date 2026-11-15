@@ -302,6 +302,7 @@ Medido nos vídeos:
 | SOS yearly (mapa plano) | 100 s, 60 fps | 6002 | Mapa plano fixo, **sem data em nenhum ponto do vídeo** |
 
 - A data existe, mas só na versão com câmera móvel. A versão de câmera fixa, que é a que nossa faixa usa, não tem data. Os anos da nossa faixa continuam inferidos.
+- **Correção (15/11/2026, E1):** a página tem o arquivo `labels.txt` (feito para o Science On a Sphere) com a data de cada frame do mapa plano, de 01/03/2017 a 31/08/2023 (com "2003" escrito no lugar de 2023 nas últimas linhas). As datas não precisam mais ser inferidas; ver `direcionamento.md` §14.1.
 - O mostrador da versão globo daria o ano e a estação de cada frame dessa versão. Usá-lo para datar o mapa plano exigiria alinhar os dois vídeos, que têm durações e taxas de quadro diferentes; esse alinhamento não foi testado.
 - O vídeo começa em 1º de março de 2017, o que confirma o "março de 2017" da página (não janeiro).
 - A cobertura do LIS vai só até as latitudes médias (órbita da ISS); o mapa fica escuro perto dos polos.
@@ -373,6 +374,7 @@ Os cinco vídeos abaixo são baixados para `sources/` (ignorada pelo git) com `n
 | Air Quality (EIC) | `EIC_AirQuality_Preview_3840x1080.mp4` | 178.8 MB |
 | Lightning, globo | `iss_lightning_sphere_07312023.mp4` | 127.0 MB |
 | Lightning, mapa plano | `iss_lightning_sos_yearly_07312023_2048p60.mp4` | 334.0 MB |
+| Lightning, datas por frame | `labels.txt` | 105 KB |
 
 **Night Lights:** série anual, depois a legenda de mudança, depois os zooms.
 

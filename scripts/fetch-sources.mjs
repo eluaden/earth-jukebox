@@ -19,6 +19,8 @@ const VIDEOS = [
   // Small companion files of the SST track (legend and per-frame dates); bytes: null = any size.
   { name: 'sst-legend', svs: 3912, path: 'a003900/a003912/sst_ecco2_cbar.png', bytes: null },
   { name: 'sst-dates', svs: 3912, path: 'a003900/a003912/flat_ecco2_dates.txt', bytes: null },
+  // Date of each frame of the flat lightning video (Science On a Sphere labels).
+  { name: 'lightning-labels', svs: 5011, path: 'a005000/a005011/labels.txt', bytes: null },
 ];
 
 const mb = (n) => (n == null ? 'small' : `${(n / 2 ** 20).toFixed(1)} MB`);
