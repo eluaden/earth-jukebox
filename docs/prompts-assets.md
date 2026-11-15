@@ -210,3 +210,12 @@ Put on headphones. This is the Atlantic Ocean, in the summer of 2007. Every note
 | `aerosols-smoke` | Now smoke, from the fires burning in Africa. | Agora fumaça, das queimadas na África. | Ahora humo, de las quemas en África. |
 | `aerosols-sea-salt` | Sea salt, lifted by the winds over the southern seas. | Sal marinho, levantado pelos ventos sobre os mares do sul. | Sal marina, levantada por los vientos sobre los mares del sur. |
 | `aerosols-outro` | The same moment comes round again: every turn plays the same air, place by place. | O mesmo momento volta: cada volta toca o mesmo ar, lugar por lugar. | El mismo momento vuelve: cada vuelta toca el mismo aire, lugar por lugar. |
+
+**Nível do mar (bônus)** (textos de `src/i18n/tracks/seaLevel.js`; a gravar; marcos calculados da série: 2003 no passo 291, 2013 no 581). A 1× o disco dura 30 s: o intro tem ~9,7 s até o marco de 2003 e cada marco ~9,7 s até o seguinte; o encerramento toca na volta ao começo.
+
+| ID | EN | PT | ES |
+|---|---|---|---|
+| `sea-level-intro` | The sea, through a porthole, from 1993 to 2023. The strings follow the water: one step up for every centimetre. | O mar, por uma escotilha, de 1993 a 2023. As cordas acompanham a água: um degrau acima a cada centímetro. | El mar, por un ojo de buey, de 1993 a 2023. Las cuerdas siguen al agua: un escalón más por cada centímetro. |
+| `sea-level-year-2003` | January 2003: ten years on, the sea is about three centimetres higher. | Janeiro de 2003: dez anos depois, o mar está cerca de três centímetros mais alto. | Enero de 2003: diez años después, el mar está unos tres centímetros más alto. |
+| `sea-level-year-2013` | January 2013: twenty years on, about six centimetres. | Janeiro de 2013: vinte anos depois, cerca de seis centímetros. | Enero de 2013: veinte años después, unos seis centímetros. |
+| `sea-level-outro` | By the end of 2023 the sea stood about eleven centimetres above 1993. The record starts again. | No fim de 2023 o mar estava cerca de onze centímetros acima de 1993. O disco recomeça. | A finales de 2023 el mar estaba unos once centímetros por encima de 1993. El disco vuelve a empezar. |

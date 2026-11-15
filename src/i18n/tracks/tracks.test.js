@@ -4,8 +4,15 @@ import { SST_TEXT } from './sst.js';
 import { LIGHTNING_TEXT } from './lightning.js';
 import { NIGHT_LIGHTS_TEXT } from './nightLights.js';
 import { AEROSOLS_TEXT } from './aerosols.js';
+import { SEA_LEVEL_TEXT } from './seaLevel.js';
 
-const TEXTS = { sst: SST_TEXT, lightning: LIGHTNING_TEXT, 'night-lights': NIGHT_LIGHTS_TEXT, aerosols: AEROSOLS_TEXT };
+const TEXTS = {
+  sst: SST_TEXT,
+  lightning: LIGHTNING_TEXT,
+  'night-lights': NIGHT_LIGHTS_TEXT,
+  aerosols: AEROSOLS_TEXT,
+  'sea-level': SEA_LEVEL_TEXT,
+};
 
 function shape(v) {
   if (Array.isArray(v)) return v.map(shape);

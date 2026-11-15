@@ -24,6 +24,8 @@ const VIDEOS = [
   // Aerosols: a single image (19 Aug 2025 20:00 UTC) and its categorical legend.
   { name: 'aerosols', svs: 5669, path: 'a005600/a005669/Aerosols_2025-08-19T20_00_00_3840x2160.png', bytes: null },
   { name: 'aerosols-legend', svs: 5669, path: 'a005600/a005669/Aerosols_cbar.png', bytes: null },
+  // Sea level through a porthole (bonus record): the version with the circular window.
+  { name: 'sea-level', svs: 5235, path: 'a005200/a005235/seaLevelWaveTankComp_noWW_3-5-5-2024a_2160p30.mp4', bytes: null },
 ];
 
 const mb = (n) => (n == null ? 'small' : `${(n / 2 ** 20).toFixed(1)} MB`);

@@ -1,7 +1,7 @@
 # Earth Jukebox — Status
 
 > O que já foi feito e quem faz o quê, item a item do [`direcionamento.md`](docs/direcionamento.md) (a fonte de verdade: em caso de dúvida, ele vence este arquivo).
-> Atualizado em 15/11/2026, P1 da frente A: capas "vinil de dados" e aerossóis (dados, música e textos). Site: https://eluaden.github.io/earth-jukebox/ (atualiza a cada `npm run deploy`).
+> Atualizado em 15/11/2026, P1 da frente A: capas "vinil de dados", aerossóis e nível do mar (dados, música e textos; falta a frente B ligar no app). Site: https://eluaden.github.io/earth-jukebox/ (atualiza a cada `npm run deploy`).
 > **Atualize este arquivo no mesmo commit do trabalho.**
 
 **Legenda:** **Feito** · **Parcial** (existe, mas falta algo dito na coluna ao lado) · **A fazer** · **Bloqueado** (depende de outro item)
@@ -52,7 +52,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Narração N1 (falas da UI) | §7.2 | **Feito** | C (gravar), B (tocar) | Na primeira visita: clique → "Put on headphones." → "Welcome…" durante a descida → 2,5 s só de música → fala de abertura da faixa. Volta à página e "Replay opening" não repetem o N1. Teste confere que toda fala (N1 e N2 das três faixas, com datas) tem MP3 no manifesto |
 | Narração N2 — temperatura do mar | §7.2 | **Feito** | C | 12 falas regravadas com os ajustes de narrador (stability 50, similarity 75, style 10), `public/narration/` |
 | Narração N2 — raios e luzes | §7.2 | **Feito** | C | 12 falas por faixa gravadas e conferidas por transcrição. A introdução dos raios foi gravada a 1,1–1,2× porque o primeiro marco chega aos 8,8 s (ver `prompts-assets.md` §2.5). Se um texto mudar, regravar |
-| Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, `pipeline:aerosols`, `pipeline:covers`, com testes (`npm run test:pipeline`). Nenhum pipeline escreve `public/tracks/index.json` (ordem do Records, editada à mão) |
+| Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, `pipeline:aerosols`, `pipeline:sealevel`, `pipeline:covers`, com testes (`npm run test:pipeline`). Nenhum pipeline escreve `public/tracks/index.json` (ordem do Records, editada à mão) |
 | Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | "Put on headphones." + pedido de idioma; clicar EN/PT/ES inicia; volta à página pula a descida; "Replay opening" no About |
 | Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
 | Site publicado + versão 2D | §10 | **Feito** | B | GitHub Pages; 2D automática sem WebGL (`?flat=1` força) |
@@ -70,7 +70,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Capas "vinil de dados" | §5.4 | **Feito** | A (gerar), B (mostrar) | `scripts/pipeline/cover.py` (`npm run pipeline:covers`; cada pipeline também roda): disco visto de cima, ângulo = longitude, 3 bandas (norte / trópicos / sul), uma volta do sulco por passo, cor na paleta da faixa. Entra no Records sem mudar código (mesmo `cover.jpg`). **B:** o disco decorativo em CSS que sai da capa pode virar o próprio disco de dados, se quiser |
 | Modo Audio-first (tecla A) | §5.8 | **A fazer** | B | |
 | Efeitos S1–S7 | §7.2 | **Parcial** | C (gravar), B (tocar) | No site: `public/sfx/` (glass-tap e record-swap normalizados). Ligados: S7 abertura, S4 prato, S1/S3 agulha, S2 cama de vinil, S5 troca de disco, S6 tap nos botões. Micro-animações de UI no mesmo passe. Falta **aprovação de ouvido** do time |
-| Faixa bônus nível do mar | §8, §5.4 | **A fazer** | A, B | Frames antigos ainda em `public/tracks/sea-level-porthole/` |
+| Faixa bônus nível do mar | §8, §5.4 | **Parcial** | A feito, B falta | Dados em `public/tracks/sea-level/` (`npm run pipeline:sealevel`): nível lido da barra azul na régua do vídeo da NASA (900 passos, jan/1993–dez/2023, +11,5 cm no máximo), vídeo da escotilha 1080/720 (30 s, frames 300–1199), capa. Música (`src/music/tracks/seaLevel.js`: cordas sobem um grau por centímetro, sino a cada centímetro novo) e textos (`src/i18n/tracks/seaLevel.js`) prontos e testados. Pasta antiga `sea-level-porthole` removida. **Falta a B:** `texture.kind = 'porthole'` (globo recua e esmaece, vídeo numa escotilha de vidro, §5.4; relógio = vídeo, como na SST), `TRACK_VIEW`/`TRACK_TEXT` (`sea-level`), unidade `cm` nos chips ("+6,4 cm"), e depois incluir `sea-level` em `public/tracks/index.json`. A 1× o disco dura 30 s e o intro tem ~9 s até o marco de 2003 (Q1: tocar a 0,5×?). **C:** gravar as 4 falas (`prompts-assets.md` §2.5) |
 
 ## 4. P2 — Diferencial (pode ficar de fora)
 
@@ -86,7 +86,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 | # | Status | Frente | Situação |
 |---|---|---|---|
-| E1 | **Feito** | A | SST, raios, luzes noturnas e aerossóis (16:9 esticado de 180° W, polo a polo; §14.1). Nível do mar é a escotilha 2D, fora do globo |
+| E1 | **Feito** | A | SST, raios, luzes noturnas, aerossóis (16:9 esticado de 180° W, polo a polo) e nível do mar (régua do vídeo, escotilha 2D fora do globo); §14.1 |
 | E2 | **Feito** | — | VSCO 2 CE (CC0) em uso |
 | E3 | **Parcial** | B | Falta FPS em aparelho real |
 | E4 | **A fazer** | A | CO₂ DYAMOND (câmera móvel) |
@@ -115,6 +115,6 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 ## 8. Próximos passos sugeridos (em paralelo, um por frente)
 
-1. **A:** revisar os textos das quatro faixas com o time; nível do mar (P1); E4 (CO₂).
-2. **B:** medir FPS e testar com leitor de tela em aparelho real; depois do P0 verificado, efeitos S1–S7 no lugar dos sons sintetizados (P1).
-3. **C:** contato com os testadores (prazo longo: começar já); ouvir e aprovar S1–S7; atualizar `si-e-referencias.md` com raios e luzes no app.
+1. **A:** revisar os textos das cinco faixas com o time; E4 (CO₂); script aberto para qualquer vídeo do SVS (P2).
+2. **B:** medir FPS e testar com leitor de tela em aparelho real; P1: ligar aerossóis e nível do mar (a lista do que falta está em cada linha acima), Explorar, Audio-first.
+3. **C:** contato com os testadores (prazo longo: começar já); ouvir e aprovar S1–S7; gravar as falas de aerossóis e nível do mar (`prompts-assets.md` §2.5); atualizar `si-e-referencias.md` com raios e luzes no app.

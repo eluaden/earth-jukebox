@@ -3,6 +3,7 @@ import { stepAtFrame, stepAtTime } from '../../data/steps.js';
 import { readFileSync } from 'node:fs';
 import { AEROSOL_BANDS, AEROSOL_LAYERS, AEROSOL_VOICES } from './aerosols.js';
 import { TRACK_MUSIC } from './index.js';
+import { bellNote, levelNote } from './seaLevel.js';
 import { LIGHTNING_BANDS } from './lightning.js';
 import { NIGHT_BANDS } from './nightLights.js';
 
@@ -252,5 +253,54 @@ describe('aerosols', () => {
     expect(s.dust.value).toBeCloseTo(0.2, 5);
     expect(s.dust.unit).toBe('strength');
     expect(s.smoke.value).toBe(0);
+  });
+});
+
+describe('sea level', () => {
+  const m = TRACK_MUSIC['sea-level'];
+  const at = (cm) => Float32Array.of(cm);
+
+  it('the held note climbs one step for every centimetre', () => {
+    expect(levelNote(0.4)).toBe(48);
+    expect(levelNote(1.2)).toBeGreaterThan(levelNote(0.9));
+    expect(levelNote(11.5)).toBeGreaterThan(levelNote(10.9));
+    expect(levelNote(-0.3)).toBe(48);
+  });
+
+  it('strikes the held note every bar and when the level crosses a centimetre', () => {
+    let state = m.initialState();
+    const hits = [];
+    for (let tick = 0; tick < 16; tick++) {
+      const r = m.plan(m.read(at(tick < 10 ? 2.5 : 3.1)), tick, state);
+      state = r.state;
+      if (r.events.some((e) => e.voice === 'level')) hits.push(tick);
+    }
+    expect(hits).toEqual([0, 8, 10]);
+  });
+
+  it('rings a bell the first time the sea reaches a new centimetre, higher each time', () => {
+    let state = m.initialState();
+    const bells = [];
+    for (const [tick, cm] of [2.5, 2.9, 3.05, 2.95, 3.2, 4.01, 3.9, 4.2].entries()) {
+      const r = m.plan(m.read(at(cm)), tick, state);
+      state = r.state;
+      bells.push(...r.events.filter((e) => e.voice === 'centimetre').map((e) => e.midi));
+    }
+    expect(bells).toEqual([bellNote(3), bellNote(4)]);
+    expect(bellNote(4)).toBeGreaterThan(bellNote(3));
+  });
+
+  it('starts the milestones again when the record loops back to 1993', () => {
+    let state = m.plan(m.read(at(11.2)), 0, m.initialState()).state;
+    state = m.plan(m.read(at(0.2)), 1, state).state;
+    const r = m.plan(m.read(at(1.1)), 2, state);
+    expect(r.events.filter((e) => e.voice === 'centimetre').map((e) => e.midi)).toEqual([bellNote(1)]);
+  });
+
+  it('summary gives the level in centimetres', () => {
+    const s = Object.fromEntries(m.summary(m.read(at(6.37))).map((x) => [x.voice, x]));
+    expect(s.level.value).toBeCloseTo(6.37, 5);
+    expect(s.level.unit).toBe('cm');
+    expect(s.centimetre.value).toBe(6);
   });
 });

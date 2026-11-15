@@ -11,7 +11,8 @@ public/tracks/<id>/cover.jpg (512 x 512):
   latitude instead, 90 N at the rim;
 - colour = the zone's mean at that step and longitude (cells with data, weighted by area) in the
   track's own palette. A grid of several layers (aerosols) mixes the legend colour of each layer,
-  each layer's strength relative to its own 99th percentile.
+  each layer's strength relative to its own 99th percentile. A grid of one global value per step (sea
+  level) is one band whose grooves are the same colour all the way round.
 
 Usage: python scripts/pipeline/cover.py [track_id ...]   (all tracks in public/tracks/index.json by default)
 """
@@ -44,6 +45,8 @@ PALETTES = {
     'night-lights': {'norm': 'p99', 'gamma': 0.6,
                      'stops': [(0, VINYL), (0.4, (125, 100, 62)), (0.75, (242, 208, 150)), (1, (255, 250, 240))]},
     'aerosols': {'norm': 'layers', 'gamma': 0.7},
+    'sea-level': {'norm': 'range', 'min': 0, 'max': 12,
+                  'stops': [(0, (14, 38, 84)), (0.5, (38, 128, 214)), (1, (196, 240, 255))]},
 }
 
 
@@ -63,7 +66,8 @@ def read_grid(track_dir, meta):
     """grid.bin -> float steps x 90 x 180 (steps x layers x 90 x 180 for a layered grid) in the track's
     unit, NaN where there is no data."""
     g = meta['grid']
-    shape = (g['steps'], g['layers'], LATS, LONS) if g.get('layers', 1) > 1 else (g['steps'], LATS, LONS)
+    lats, lons = g.get('lats', LATS), g.get('lons', LONS)
+    shape = (g['steps'], g['layers'], lats, lons) if g.get('layers', 1) > 1 else (g['steps'], lats, lons)
     raw = np.fromfile(os.path.join(track_dir, g['file']), dtype=np.uint8).reshape(shape)
     out = raw.astype(np.float64) * g['scale']
     out[raw == g['noData']] = np.nan
@@ -87,6 +91,8 @@ def normalise(values, palette, meta):
     if palette['norm'] == 'legend':
         leg = meta['legend']
         return np.clip((values - leg['min']) / (leg['max'] - leg['min']), 0, 1)
+    if palette['norm'] == 'range':
+        return np.clip((values - palette['min']) / (palette['max'] - palette['min']), 0, 1)
     top = np.nanpercentile(values, 99)
     v = np.clip(values / top, 0, 1) if top > 0 else np.zeros_like(values)
     return v ** palette.get('gamma', 1)
@@ -171,7 +177,10 @@ def cover_values(track_id, meta, grid):
     if palette['norm'] == 'layers':
         colors = [hex_rgb(c['color']) for c in meta['legend']['categories']]
         return [mix_layers(grid[0], colors, palette.get('gamma', 1))], None, not instant
-    bands = [grid[0]] if instant else [zone_means(grid, n, s) for n, s in ZONES]
+    if grid.shape[1:] == (1, 1):
+        bands = [np.repeat(grid[:, 0, :], LONS, axis=1)]  # one global value per step
+    else:
+        bands = [grid[0]] if instant else [zone_means(grid, n, s) for n, s in ZONES]
     # One normalisation for the whole record, so the bands can be compared.
     flat = normalise(np.concatenate(bands), palette, meta)
     sizes = np.cumsum([len(b) for b in bands])[:-1]

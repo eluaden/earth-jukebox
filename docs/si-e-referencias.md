@@ -51,7 +51,7 @@
 
 | NASA resource | What we use | Status |
 |---|---|---|
-| [SVS 5235](https://svs.gsfc.nasa.gov/5235/) — Sea Level Through a Porthole, 1993–2023 | Global sea level read from the ruler on the frame | Planned (bonus 2D track; old frames kept in `public/tracks/`, not in the new app yet) |
+| [SVS 5235](https://svs.gsfc.nasa.gov/5235/) — Sea Level Through a Porthole, 1993–2023 | `seaLevelWaveTankComp_noWW_3-5-5-2024a_2160p30.mp4` in a porthole; global mean sea level read from the blue bar on the ruler printed on the frame (data: GSFC GMSL v5.1, TOPEX/Poseidon, Jason-1/2/3, Sentinel-6 MF; visualizer AJ Christensen) | Data ready (`public/tracks/sea-level/`), not in the app yet |
 | [SVS 5011](https://svs.gsfc.nasa.gov/5011/) — Lightning Events Detected from the ISS, 2017–2023 | Flat Science On a Sphere video `iss_lightning_sos_yearly_07312023_2048p60.mp4` as the globe skin; share of each 2° box covered by lightning dots; date of every frame from NASA's `labels.txt` | Data ready (`public/tracks/lightning/`), not in the app yet |
 | [SVS 4993](https://svs.gsfc.nasa.gov/4993/) — Spread of the Dixie Fire, 2021 | Burned area read from the chart on the frame | Removed (direcionamento §8) |
 | [SVS 5113](https://svs.gsfc.nasa.gov/5113/) — Active Fires as Observed by VIIRS | Map coverage of fire detections by region | Removed |

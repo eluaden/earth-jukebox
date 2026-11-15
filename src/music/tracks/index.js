@@ -2,7 +2,7 @@
 //   voices        [{ id, instrument }]   at most 3 (direction 6.1)
 //   read(col, prevCol)                    column under the needle (and the previous step's) -> bands
 //   summary(read) [{ voice, value, unit }] values for the chips ('°C', 'share' 0..1, 'brightness', 'change',
-//                                          'strength' 0..1 relative to the type's strongest colour)
+//                                          'strength' 0..1 relative to the type's strongest colour, 'cm')
 //   initialState() / plan(read, tick, state) -> { events, state }
 // Events: { voice, kind: 'hit'|'attack'|'release', midi, velocity, lat, offset?, duration? }; offset is a
 // fraction of the pulse (arpeggios). Caps (6.3): at most 2 notes per voice and 6 in total at once.
@@ -12,6 +12,7 @@ import { emptyHeld, planTick } from '../mapping.js';
 import { AEROSOLS_MUSIC } from './aerosols.js';
 import { LIGHTNING_MUSIC } from './lightning.js';
 import { NIGHT_LIGHTS_MUSIC } from './nightLights.js';
+import { SEA_LEVEL_MUSIC } from './seaLevel.js';
 
 export const SST_MUSIC = {
   voices: [
@@ -33,4 +34,5 @@ export const TRACK_MUSIC = {
   lightning: LIGHTNING_MUSIC,
   'night-lights': NIGHT_LIGHTS_MUSIC,
   aerosols: AEROSOLS_MUSIC,
+  'sea-level': SEA_LEVEL_MUSIC,
 };
