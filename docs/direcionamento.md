@@ -63,7 +63,7 @@ flowchart LR
 
 | Dentro do escopo | Fora do escopo |
 |---|---|
-| Site estático, tela única, globo 3D, modos Ouvir / Explorar / Comparar | Back end, login, contas |
+| Site estático, tela única, globo 3D, modos Ouvir / Explorar / Comparar (prioridades em §16) | Back end, login, contas |
 | 4 faixas de mapa + 1 faixa bônus 2D (ver §8) | Faixas de câmera móvel sem exploração aprovada (ver E4) |
 | Motor musical com instrumentos sampleados | Música composta por IA a partir do dado |
 | Narração pré-gravada EN / PT / ES | Outros idiomas |
@@ -94,7 +94,7 @@ flowchart LR
 ### 5.2 Abertura (cold open)
 
 1. Tela preta, uma frase pequena no centro: *"Put on headphones."*
-2. Clique em qualquer lugar → vídeo Veo de ~8 s: a câmera desce do espaço até a Terra, a superfície revela sulcos finos de vinil, uma agulha de cromo desce; som de agulha e estalo de vinil (ElevenLabs).
+2. Clique em qualquer lugar → **P0:** a câmera 3D desce do espaço até o próprio globo e a agulha pousa. **P2:** substituir por vídeo Veo de ~8 s: a câmera desce do espaço até a Terra, a superfície revela sulcos finos de vinil, uma agulha de cromo desce; som de agulha e estalo de vinil (ElevenLabs).
 3. O último frame do vídeo tem **o mesmo enquadramento** do globo 3D ao vivo; a troca é invisível (match cut) e o app começa a tocar.
 4. Retornos à página pulam a abertura (com opção de rever no overlay About).
 
@@ -109,11 +109,13 @@ flowchart LR
 | Data | Mês abreviado + ano ("MAR 2007"); faixas de um dia: dia + mês + ano ("19 AUG 2025") |
 | Legenda da narração | Uma linha abaixo da data; vazia quando não há fala |
 | Chip de instrumento | "Instrumento · variável" + valor com unidade em mono + botões "M" e "S". **Sem ícone** |
-| Rodapé | Uma pílula: play/pause · nome da faixa · "Records" · "Liner notes" · "Listen \| Explore \| Compare" · "EN · PT · ES" |
+| Rodapé | Uma pílula: play/pause · nome da faixa · "Records" · "Liner notes" · "Listen \| Explore \| Compare" · "EN · PT · ES". Cada segmento de modo só aparece quando o modo existe (Explore é P1, Compare é P2; §16) |
 | Agulha | Braço fino de cromo, simples, sem marca; vem sempre do canto superior direito |
 | Capas (Records) | Capa + nome da faixa + período. Nada além |
-| Liner notes | Título · "What you hear" · tabela "Data → Sound" · legenda da NASA + "Hear the legend" · "Limits" · fonte · "Download album" · "×" para fechar |
+| Liner notes | Título · "What you hear" · tabela "Data → Sound" · legenda da NASA + "Hear the legend" · "Limits" · fonte · "Download album" (só quando o P2 existir) · "×" para fechar |
 | Valores ainda desconhecidos | Mostrados como `[a definir]`, nunca inventados |
+
+### 5.3 Tela principal
 
 | Região | O que aparece |
 |---|---|
@@ -148,7 +150,10 @@ Painel de vidro que desliza da direita, com:
 - Arrastar sobre o globo toca o valor daquele lugar, com **áudio espacial**: com fone, o som vem da direção do ponto em relação à câmera.
 - No celular, vibração proporcional ao valor (onde o navegador suportar).
 
-### 5.7 Modo Comparar (dueto)
+### 5.7 Modo Comparar (dueto) — P2, diferencial
+
+- Só entra depois do P0 e do P1 prontos (§16). Riscos: exige fone, exclui quem ouve de um lado só e dobra as vozes (R6).
+- Se for feito: **1 voz por ano** e um modo alternado sem fone (um trecho de cada ano, em sequência). Enquanto não existir, o segmento "Compare" não aparece no rodapé.
 
 - Dois globos lado a lado, mesmo lugar em dois tempos (faixa padrão: luzes noturnas 2012 × 2023).
 - Globo da esquerda no ouvido esquerdo, da direita no direito.
@@ -173,7 +178,7 @@ Painel de vidro que desliza da direita, com:
 | 3. Records | Agulha levanta, globo escurece, 5 capas "vinil de dados" com nome e período; clicar troca a pele do globo e a agulha desce | Globo pouco escurecido; "Listen" aparece em negrito junto com "Records" |
 | 4. Liner notes | Painel sobre o lado direito, música continua: o que você ouve, tabela dado → som, legenda da NASA + "Hear the legend", limites, fonte, "Download album", "×" | Sumiu o "About"; a agulha virou uma linha diagonal solta, sem meridiano; "Liner notes" não aparece destacado no rodapé |
 | 5. Explorar | Sem agulha; ponto branco segue o cursor; o chip da zona sob o cursor acende com o valor, os outros mostram "—" | Nenhum relevante |
-| 6. Comparar | Dois globos de luzes noturnas, 2012 no ouvido esquerdo e 2023 no direito; sob cada um só o ano e o lado | A agulha ficou reta e por cima do globo, sem tocar um meridiano; no produto é igual à do Ouvir |
+| 6. Comparar (P2) | Dois globos de luzes noturnas, 2012 no ouvido esquerdo e 2023 no direito; sob cada um só o ano e o lado | A agulha ficou reta e por cima do globo, sem tocar um meridiano; no produto é igual à do Ouvir |
 
 ![Abertura](mockups/1-abertura.jpg)
 ![Ouvir](mockups/2-ouvir.jpg)
@@ -203,6 +208,16 @@ Painel de vidro que desliza da direita, com:
 | Luzes noturnas | Quantidade de luz → densidade de notas de piano; luz apagada → notas descendo em menor; luz nova → sinos subindo |
 | Nível do mar (bônus) | Nível → tom sustentado subindo; marcos por década |
 
+### 6.3 Regras de clareza do som
+
+| Regra | Decisão |
+|---|---|
+| Notas simultâneas | Teto de **2 notas por voz** e **6 no total**. Acima disso, as notas daquela voz viram arpejo em vez de acorde |
+| Eventos discretos (raios) | Cada faixa de latitude toca **no máximo 1 batida por passo**; a força da batida segue a quantidade de pontos |
+| Narração | A música abaixa enquanto o narrador fala (ducking) e volta ao fim da fala |
+| Fone | Nada do P0 depende de fone. Áudio espacial é bônus |
+| Terra firme em faixa de oceano | Ver Q5 |
+
 ## 7. Conteúdo gerado por IA e entregáveis extras
 
 Prompts de cada item: [`prompts-assets.md`](prompts-assets.md). Créditos disponíveis no Flow: ~1.600 somando as contas do time; o modo Quality está liberado para as versões finais.
@@ -219,7 +234,7 @@ Prompts de cada item: [`prompts-assets.md`](prompts-assets.md). Créditos dispon
 
 | ID | Item | Usado em | Quando fazer | Arquivo |
 |---|---|---|---|---|
-| V1 | Abertura: descida do espaço até a Terra, agulha pousando. **Último frame = screenshot do globo 3D** | Site (§5.2) | **Depois do globo pronto** (a implementação gera o screenshot) | `media-src/veo/v1-abertura.mp4` |
+| V1 | Abertura: descida do espaço até a Terra, agulha pousando. **Último frame = screenshot do globo 3D** | Site (§5.2), **P2** | **Depois do P0 e do P1 prontos** (a implementação gera o screenshot) | `media-src/veo/v1-abertura.mp4` |
 | V2 | A Terra como o centro de um disco de vinil | Pitch | Agora | `media-src/veo/v2-terra-disco.mp4` |
 | V3 | A mesma cena com a agulha de cromo pousada | Pitch | Agora | `media-src/veo/v3-terra-agulha.mp4` |
 | V4 | Só a borda da Terra surgindo no escuro | Pitch (abertura e fechamento) | Agora | `media-src/veo/v4-borda-terra.mp4` |
@@ -313,7 +328,7 @@ earth-jukebox/media-src/
 | Entregável | Decisão |
 |---|---|
 | Site | Publicado e funcionando em notebook comum e celular, com versão 2D se o 3D não rodar |
-| Vídeo (~30 s) | 5 s de tela preta só com som e legenda (*"This is the Atlantic Ocean, 2007."*) → revela o globo → Explorar → Comparar → resultado do teste com pessoas reais → frase. Voz ElevenLabs, planos abstratos Veo, legendas em inglês |
+| Vídeo (~30 s) | 5 s de tela preta só com som e legenda (*"This is the Atlantic Ocean, 2007."*) → revela o globo → Explorar (e Comparar, se existir) → resultado do teste com pessoas reais → frase. Voz ElevenLabs, planos abstratos Veo, legendas em inglês |
 | Página do projeto | Em inglês, escrita na linguagem dos prêmios ("combines technical and creative skills", "makes NASA data accessible to blind and low-vision people") |
 | References | Todas as fontes NASA, samples, conteúdo de IA e bibliotecas |
 | README | Reescrito para refletir este direcionamento |
@@ -369,28 +384,46 @@ Fazer antes de implementar os itens bloqueados. Resultado entra neste documento.
 | Q2 | Aerossóis têm 4 categorias e o limite é 3 vozes: corta sulfato ou abre exceção? | §6.2 | Testar com 4; cortar se embolar |
 | Q3 | Quantos testadores cegos ou com baixa visão conseguimos, e quando? | §9, §10 | Pelo menos 3 reais + 5 de olhos fechados |
 | Q4 | Qual voz do ElevenLabs será o narrador? | §7.2 (N1–N3) | Voz calma, quente, de documentário; testar 3–4 com a frase de teste de `prompts-assets.md` |
+| Q5 | O que soa quando a agulha passa sobre terra numa faixa de oceano? | §6.3, R5 | Testar de ouvido: um som de fundo muito baixo e contínuo, que não vem do dado e é declarado no encarte, contra o globo girando mais rápido sobre a terra |
 
-## 16. Ordem de prioridade
+## 16. Prioridade
 
-**Em paralelo desde já, fora do código:** V2–V6, S1–S7, M1, escolha da voz (Q4) e N1 (§7.1, §7.2); contato com testadores (§9).
+**Regra:** só começar um nível quando o anterior estiver pronto e verificado (§17). Um projeto ótimo precisa só do **P0**; P1 fortalece; P2 é diferencial e pode ficar de fora sem prejuízo.
 
-1. Explorações E1 e E3.
-2. Globo com a agulha numa faixa (raios ou temperatura do mar).
-3. Motor musical com samples, aprovado de ouvido.
-4. Narração das faixas (N2), depois da E1.
-5. Abertura com Veo (V1), a partir do screenshot do globo.
-6. Demais faixas, Liner notes e capas "vinil de dados".
-7. Teste com usuários (em paralelo, começar o contato já).
-8. Explorar, Comparar, exportação de álbum, script aberto.
-9. Vídeo, página do projeto e README.
+| Nível | Itens | Por quê |
+|---|---|---|
+| **P0 — Essencial** | Explorações E1 e E3 · globo com agulha (§5.3) · motor musical com samples e regras de clareza (§6.1, §6.3) · 3 faixas de mapa: temperatura do mar, raios, luzes noturnas · Records (§5.4) · Liner notes com legenda, limites e fonte (§5.5) · acessibilidade de base (§5.8, sem Audio-first) · narração ElevenLabs (N1, N2) · pipeline reproduzível de frames (§7.5, para as faixas do projeto) · abertura simples: tela preta + descida 3D do próprio globo · teste com usuários (§9) · vídeo, página e README (§10) | Responde ao desafio inteiro e cobre os 5 critérios |
+| **P1 — Fortalece** | Explorar (§5.6), funcionando sem fone (áudio espacial é bônus com fone) · aerossóis (4ª faixa, depende de E1) · capas "vinil de dados" (no P0 a capa pode ser um frame da faixa) · modo Audio-first · efeitos S1–S7 · faixa bônus nível do mar | Exploração interativa e feedback tátil, sugeridos pelo enunciado |
+| **P2 — Diferencial** | Comparar (§5.7) · abertura com Veo (V1) · vinheta M1 · exportar álbum (§7.4) · script aberto para qualquer vídeo do SVS (§7.5) | Impressiona, mas tem custo ou risco próprio (ver R6) |
 
-## 17. Verificação
+**Em paralelo desde já, fora do código:** contato com testadores (§9), escolha da voz (Q4) e N1; depois S1–S7 e V2–V6 para o pitch.
+
+## 17. Riscos e verificação
+
+### 17.1 Mapa de riscos
+
+| # | Risco | Impacto | Mitigação | Como verificar |
+|---|---|---|---|---|
+| R1 | Vídeos não estão em mapa plano 2:1 e não vestem o globo | Faixa sai do P0 | E1 antes de tudo; trocar por outra faixa de mapa da lista de recursos | Textura no globo alinha com a costa do Blue Marble |
+| R2 | Vídeo como textura trava em notebook comum ou celular | Juiz vê site lento | E3; vídeos leves; versão 2D quando o 3D não roda | Abre e toca em notebook comum e celular |
+| R3 | Notas demais ao mesmo tempo (a agulha lê várias latitudes por voz) | Som embolado; perde Creativity e Validity | Teto de notas (§6.3) | Escuta: cada voz identificável; contagem de notas simultâneas nunca passa do teto |
+| R4 | Raios viram metralhadora (centenas de pontos por instante) | Ruído | Agrupar por faixa de latitude (§6.3) | Escuta da faixa de raios |
+| R5 | Silêncio longo quando a agulha passa sobre terra (temperatura do mar) | Parece que o som quebrou | Ver Q5 | Escuta de uma volta completa |
+| R6 | Comparar exige fone, exclui quem ouve de um lado só e dobra o número de vozes | Experiência confusa ou inacessível | Fica no P2; se feito, 1 voz por ano e modo alternado sem fone (§5.7) | Teste com fone, sem fone e com um ouvido só |
+| R7 | Áudio espacial do Explorar sem fone | Perde a direção do som | O Explorar funciona sem fone; a direção é bônus | Explorar com caixas do notebook continua útil |
+| R8 | Narração some sob a música | Contexto perdido | Ducking: a música abaixa enquanto o narrador fala (§6.3) | Toda fala inteligível na escuta |
+| R9 | Sem testadores cegos reais | Perde Influence e Validity; vira "mais um Arcobaleno" | Contato desde já (§9); teste remoto por áudio vale | Resultado real publicado, nunca simulado |
+| R10 | Vidro com pouco contraste | Leitura ruim e acessibilidade falha | Contraste mínimo; vidro vira sólido com redução de transparência | Checagem de contraste e VoiceOver |
+| R11 | Licença dos samples não permite redistribuição | Remover instrumentos no fim | E2 antes de escolher samples | Licença registrada em `si-e-referencias.md` |
+| R12 | Conteúdo de IA parecer dado ou sem marcação | Validity e regras do Space Apps | Regras do §7 e de `si-e-referencias.md` | Checklist de `si-e-referencias.md` §2 |
+
+### 17.2 Verificação por componente
 
 | Componente | Como verificar |
 |---|---|
 | Extração de valores | Comparar leitura com a legenda em frames de referência; erro declarado no encarte |
 | Agulha e mapeamento | Teste unitário: latitude e valor conhecidos geram a nota esperada |
-| Motor musical | Aprovação de ouvido do designer de som; nenhuma faixa com mais de 3 vozes |
+| Motor musical | Aprovação de ouvido do designer de som; nenhuma faixa com mais de 3 vozes; tetos de notas do §6.3 respeitados |
 | Acessibilidade | Navegação completa só por teclado e com leitor de tela (VoiceOver); modo Audio-first |
 | Desempenho | Site abre e toca em notebook comum e celular; versão 2D aparece quando o 3D não roda |
 | Teste com usuários | Protocolo simples ("a tendência subiu ou desceu?", "onde está o máximo?") e resultado real publicado |
