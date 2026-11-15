@@ -39,10 +39,11 @@ button {
   border: 0;
   padding: 0;
   cursor: pointer;
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-button:active:not(:disabled):not([aria-disabled='true']) {
+/* Press feedback only on buttons that do not use transform for layout (e.g. .liner-tab). */
+button:active:not(:disabled):not([aria-disabled='true']):not(.liner-tab) {
   transform: scale(0.96);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 :focus-visible {
@@ -661,6 +662,13 @@ a {
 /* Closed: chevron points left (pull open). Open: points right (push closed). */
 .liner-shell.is-open .liner-tab svg {
   transform: scaleX(-1);
+}
+/* Press the icon only — never rewrite the tab's translate (layout). */
+.liner-tab:active svg {
+  transform: scale(0.88);
+}
+.liner-shell.is-open .liner-tab:active svg {
+  transform: scaleX(-1) scale(0.88);
 }
 .liner-tab:hover {
   color: var(--fg);
