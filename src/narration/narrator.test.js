@@ -1,13 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { captionLines } from './narrator.js';
+import { captionLines, MAX_CAPTION, MAX_CAPTION_STRONG } from './narrator.js';
 import { lineKey } from './key.js';
 import { SST_TEXT } from '../i18n/tracks/sst.js';
 
 describe('captionLines', () => {
   const lines = Object.values(SST_TEXT).flatMap((t) => Object.values(t.narration));
 
-  it('splits every narration line into captions of at most 46 characters', () => {
-    for (const text of lines) for (const l of captionLines(text)) expect(l.text.length).toBeLessThanOrEqual(46);
+  it('keeps captions within 46 characters, or 60 when the caption ends on a sentence break', () => {
+    for (const text of lines)
+      for (const l of captionLines(text)) {
+        const limit = /[.:;?!]$/.test(l.text) ? MAX_CAPTION_STRONG : MAX_CAPTION;
+        expect(l.text.length).toBeLessThanOrEqual(limit);
+      }
+  });
+
+  it('does not cut a phrase just before the word that ends it', () => {
+    const parts = captionLines(SST_TEXT.en.narration.intro).map((p) => p.text);
+    expect(parts).toContain('Every note is a temperature read from a NASA map:');
   });
 
   it('keeps every word, in order', () => {

@@ -4,7 +4,8 @@ import { T_MAX } from './mapping.js';
 
 // Plays what src/music/mapping.js decides. Three sampled voices (VSCO 2 CE, CC0), each through a
 // low-pass filter whose brightness follows the zone temperature, then ducking, reverb and a limiter.
-// A very quiet vinyl crackle (not data, declared in the liner notes) runs underneath.
+// A very quiet vinyl crackle (not data, declared in the liner notes) runs underneath while the
+// needle is on the record; with the needle up the record is silent, like a real turntable.
 
 const VOICES = ['strings', 'piano', 'glock'];
 const VOICE_DB = { strings: -7, piano: -3, glock: -13 };
@@ -25,6 +26,7 @@ export function createEngine(base) {
   let loop = null;
   let crackleLoop = null;
   let tick = 0;
+  let lifted = false;
   let mix = { mute: {}, solo: {} };
 
   async function load() {
@@ -97,7 +99,7 @@ export function createEngine(base) {
       n.crackle.start();
     }
     applyMix();
-    n.bed.gain.rampTo(1, 0.8);
+    if (!lifted) n.bed.gain.rampTo(1, 0.8);
     transport.start('+0.05');
   }
 
@@ -132,17 +134,20 @@ export function createEngine(base) {
 
   function needleDrop() {
     if (!n) return;
+    lifted = false;
     const now = Tone.now() + 0.02;
     n.thump.triggerAttackRelease('C1', 0.2, now);
-    n.bed.gain.rampTo(1, 0.05, now);
+    if (Tone.getTransport().state === 'started') n.bed.gain.rampTo(1, 0.05, now);
     burst(now + 0.04, 6);
   }
 
   function needleLift() {
     if (!n) return;
+    lifted = true;
     const now = Tone.now() + 0.02;
     n.thump.triggerAttackRelease('G1', 0.08, now, 0.35);
     burst(now, 3);
+    n.bed.gain.rampTo(0, 0.3, now + 0.12);
   }
 
   return { load, start, pause, setMix, duck, playLegend, needleDrop, needleLift, get loaded() { return Boolean(n); } };

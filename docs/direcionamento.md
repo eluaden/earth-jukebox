@@ -88,7 +88,7 @@ flowchart LR
 | Elemento | Decisão |
 |---|---|
 | Fundo | Espaço preto profundo, estrelas sutis |
-| Cor | As únicas cores fortes vêm do dado da NASA. UI em preto, branco e vidro, com acento âmbar mínimo. **O coral atual sai** |
+| Cor | As únicas cores fortes vêm do dado da NASA. UI em preto, branco e vidro, com acento âmbar mínimo. **O coral atual sai.** O acabamento do globo não conta como cor forte: o halo azul fino de atmosfera, a borda escurecida e a terra cinza mais escura. Onde a agulha lê, a cor é a da legenda |
 | Controles | Liquid glass (vidro fosco translúcido, borda clara fina). Com redução de transparência ativa, vira sólido com o mesmo contraste |
 | Tipografia | Serifa editorial fina e grande para datas e títulos (ex.: Instrument Serif); mono para valores de dado (ex.: Geist Mono); Atkinson Hyperlegible onde a leitura importar mais |
 | Proibido | Cards em grid, seções empilhadas de landing, jukebox de desenho animado, ícones genéricos de template |
@@ -395,7 +395,7 @@ Fazer antes de implementar os itens bloqueados. Resultado entra neste documento.
 - Cada voz toca a média de duas faixas largas de latitude, então a música quase nunca para: em qualquer longitude pelo menos 4 das 6 notas encontram oceano. **R5 (silêncio longo sobre a terra) praticamente não acontece** com esse desenho; o estalo de vinil do Q5 fica só como textura.
 - O exemplo do §2.3 ("as Américas quase em silêncio") **não vale** com faixas largas; o encarte diz o que o dado mostra.
 - Média do planeta inteiro, calculada da grade: águas do norte de 9,0 °C (mar/2008) a 15,4 °C (set/2007); sul de 7,5 °C (set/2007) a 11,6 °C (fev/2008); trópicos entre 26,6 e 27,7 °C o ano todo. Marcos da narração: norte mais quente em 2/9/2007, sul em 10/2/2008.
-- Com a agulha levantada (Records aberto) a música para, como num toca-discos de verdade.
+- Com a agulha levantada (Records aberto) o disco fica em silêncio, como num toca-discos de verdade: param as notas e o estalo de vinil, e a data para junto (o vídeo, que é o relógio do dado, pausa). O globo continua girando, como o prato. Uma narração já em andamento termina; marcos novos não disparam, porque a data está parada.
 
 ## 15. Perguntas em aberto
 

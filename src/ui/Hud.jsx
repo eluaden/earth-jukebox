@@ -47,6 +47,7 @@ export function Chips() {
   const solo = useStore((s) => s.solo);
   const toggleMute = useStore((s) => s.toggleMute);
   const toggleSolo = useStore((s) => s.toggleSolo);
+  const reading = useStore((s) => s.arm === 'down');
   const anySolo = VOICES.some((v) => solo[v]);
   return (
     <ul className="chips">
@@ -56,10 +57,14 @@ export function Chips() {
         return (
           <li key={z.id} className={`chip glass ${off ? 'off' : ''}`}>
             <span className="chip-name">
-              {name} · {t(lang, `zone.${z.id}`)}
+              <span className="chip-voice">{name}</span>
+              <span className="chip-sep" aria-hidden="true">
+                {' · '}
+              </span>
+              <span className="chip-zone">{t(lang, `zone.${z.id}`)}</span>
             </span>
             <span className="chip-row">
-              <span className="chip-value">{formatTemp(z.mean, lang)}</span>
+              <span className="chip-value">{reading ? formatTemp(z.mean, lang) : '—'}</span>
               <span className="chip-buttons">
                 <button type="button" aria-pressed={mute[z.voice]} aria-label={t(lang, 'mute', { voice: name })} onClick={() => toggleMute(z.voice)}>
                   M

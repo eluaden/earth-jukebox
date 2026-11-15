@@ -13,7 +13,7 @@ const ringVertex = /* glsl */ `
   }
 `;
 // Angle 0 at the top, growing clockwise. Faint ring with a soft highlight that turns slowly; the
-// time ring paints amber up to the current progress of the year.
+// time ring paints amber up to the current progress of the year, brightest at its leading edge.
 const ringFragment = /* glsl */ `
   uniform float uTime;
   uniform float uSpeed;
@@ -24,12 +24,14 @@ const ringFragment = /* glsl */ `
   void main() {
     float a = atan(vPos.x, vPos.y);
     if (a < 0.0) a += TAU;
+    float f = a / TAU;
     float glint = pow(0.5 + 0.5 * cos(a - uTime * uSpeed), 10.0);
     vec3 col = vec3(1.0);
-    float alpha = uBase + 0.22 * glint;
-    if (uProgress >= 0.0 && a / TAU <= uProgress) {
-      col = vec3(0.91, 0.64, 0.23);
-      alpha = 0.95;
+    float alpha = uBase + 0.18 * glint;
+    if (uProgress >= 0.0 && f <= uProgress) {
+      float lead = smoothstep(uProgress - 0.06, uProgress, f);
+      col = mix(vec3(0.62, 0.42, 0.16), vec3(1.0, 0.78, 0.42), lead);
+      alpha = 0.55 + 0.45 * lead;
     }
     gl_FragColor = vec4(col, alpha);
   }
@@ -56,7 +58,7 @@ function Ring({ radius, width, speed, base, timeRing }) {
   );
 }
 
-/** Concentric "platter" rings around the globe; the middle one is the draggable time arc. */
+/** Concentric "platter" rings around the globe; the inner one is the draggable time arc. */
 export function Platter() {
   const requestSeek = useStore((s) => s.requestSeek);
   const dragging = useRef(false);
@@ -73,9 +75,8 @@ export function Platter() {
 
   return (
     <group position={[0, GLOBE_Y, -0.05]}>
-      <Ring radius={RINGS[0]} width={0.004} speed={0.12} base={0.1} />
-      <Ring radius={RINGS[1]} width={0.007} speed={0.08} base={0.16} timeRing />
-      <Ring radius={RINGS[2]} width={0.004} speed={0.05} base={0.07} />
+      <Ring radius={RINGS[0]} width={0.008} speed={0.08} base={0.12} timeRing />
+      <Ring radius={RINGS[1]} width={0.003} speed={0.05} base={0.08} />
       <mesh
         onPointerDown={(e) => {
           e.stopPropagation();
@@ -91,7 +92,7 @@ export function Platter() {
         onPointerOver={() => (document.body.style.cursor = 'grab')}
         onPointerOut={() => (document.body.style.cursor = '')}
       >
-        <ringGeometry args={[RINGS[1] - 0.07, RINGS[1] + 0.07, 128, 1]} />
+        <ringGeometry args={[RINGS[0] - 0.06, RINGS[0] + 0.06, 128, 1]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
     </group>

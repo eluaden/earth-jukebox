@@ -127,7 +127,7 @@ export function togglePlay() {
     c.engine.pause();
     c.narrator.stop();
   } else {
-    c.video.play().catch(() => {});
+    if (s.arm === 'down') c.video.play().catch(() => {});
     c.engine.start(onTick);
   }
   useStore.setState({ playing: !s.playing });
@@ -140,13 +140,16 @@ export function replayOpening() {
 export function setPanel(panel) {
   const s = useStore.getState();
   const next = s.panel === panel ? null : panel;
+  // Needle up: nothing is read, so the data clock (the video) waits with the music.
   if (s.phase === 'playing') {
     if (next === 'records' && s.arm === 'down') {
       useStore.setState({ arm: 'up' });
       c.engine.needleLift();
+      c.video.pause();
     } else if (next !== 'records' && s.arm === 'up') {
       useStore.setState({ arm: 'down' });
       setTimeout(() => c.engine.needleDrop(), 650);
+      if (s.playing) c.video.play().catch(() => {});
     }
   }
   useStore.setState({ panel: next });

@@ -33,8 +33,10 @@ export function Records() {
       <CloseButton lang={lang} autoFocus />
       <ul className="covers">
         <li>
-          <button type="button" className="cover glass" aria-current="true" onClick={close}>
-            <img src={controller.dir + meta.cover} alt="" />
+          <button type="button" className="cover" aria-current="true" onClick={close}>
+            <span className="cover-art">
+              <img src={controller.dir + meta.cover} alt="" />
+            </span>
             <span className="cover-name">{SST_TEXT[lang].title}</span>
             <span className="cover-period">{meta.period}</span>
           </button>

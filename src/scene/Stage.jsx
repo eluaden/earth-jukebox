@@ -8,7 +8,7 @@ import { useStore } from '../state/store.js';
 import { Atmosphere, Globe } from './Globe.jsx';
 import { MeridianLine, Tonearm } from './Needle.jsx';
 import { Platter } from './Platter.jsx';
-import { FOV, GLOBE_Y, TILT, cameraDistance } from './layout.js';
+import { FOV, GLOBE_Y, TILT, cameraDistance, cameraY } from './layout.js';
 
 const START_Z = 60;
 
@@ -27,6 +27,7 @@ function CameraRig() {
 
   // Follow the window's shape once the globe is in view.
   useEffect(() => {
+    camera.position.y = cameraY(aspect);
     if (!tween.current && useStore.getState().phase !== 'cold') camera.position.z = cameraDistance(aspect);
   }, [camera, aspect]);
 
