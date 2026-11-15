@@ -138,6 +138,8 @@ Put on headphones. This is the Atlantic Ocean, in the summer of 2007. Every note
 
 ### 2.2 Efeitos (Sound Effects) — gerar 3–4 variações e escolher de ouvido
 
+> **15/11/2026:** por falta de tempo foi gerada **uma tomada** de cada (S1–S7) pela API, com os prompts abaixo, `prompt_influence` 0,5 e a duração da tabela, sem escolha de ouvido. Estão em `media-src/elevenlabs/sfx/`. Quem ouvir e não gostar de algum gera de novo só aquele.
+
 | ID | Arquivo | Duração | Prompt |
 |---|---|---|---|
 | S1 | `needle-drop` | 2 s | `Turntable stylus gently dropping onto a spinning vinyl record, soft thump followed by a brief warm crackle, close-mic, high fidelity, quiet room` |
@@ -149,6 +151,8 @@ Put on headphones. This is the Atlantic Ocean, in the summer of 2007. Every note
 | S7 | `space-whoosh` | 3 s | `Slow deep cinematic whoosh through space, airy and soft, low rumble, elegant, not aggressive` |
 
 ### 2.3 Vinheta (Music) — M1, opcional
+
+> **15/11/2026:** uma tomada de 6 s gerada pela API (instrumental forçado), em `media-src/elevenlabs/music/opening-sting.mp3`. Ainda não ouvida pelo time.
 
 ```
 6-second ambient opening sting. Warm felt piano and soft strings, a single rising chord that resolves gently, cinematic, spacious, calm, awe. No drums, no vocals.

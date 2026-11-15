@@ -68,7 +68,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Aerossóis (4ª faixa) | §8, Q2 | **A fazer** | A | Depende de E1 (1920×1080) e de Q2 |
 | Capas "vinil de dados" | §5.4 | **A fazer** | A (gerar), B (mostrar) | Hoje a capa é um frame da faixa |
 | Modo Audio-first (tecla A) | §5.8 | **A fazer** | B | |
-| Efeitos S1–S7 | §7.2 | **A fazer** | C (gravar), B (tocar) | Hoje agulha e vinil são sintetizados no navegador; trocar pelos arquivos |
+| Efeitos S1–S7 | §7.2 | **Parcial** | C (gravar), B (tocar) | Gerados em 15/11 (uma tomada de cada, sem escolha de ouvido) em `media-src/elevenlabs/sfx/`. Falta ouvir e aprovar, e a frente B trocar os sons sintetizados pelos arquivos. `glass-tap` e `record-swap` saíram baixos (pico de −26 e −30 dB): normalizar ao copiar para `public/` |
 | Faixa bônus nível do mar | §8, §5.4 | **A fazer** | A, B | Frames antigos ainda em `public/tracks/sea-level-porthole/` |
 
 ## 4. P2 — Diferencial (pode ficar de fora)
@@ -77,7 +77,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 |---|---|---|---|
 | Comparar | §5.7 | **A fazer** | B |
 | Abertura com Veo (V1) | §5.2, §7.1 | **Bloqueado** (depois de P0 e P1) | C |
-| Vinheta M1 | §7.2 | **A fazer** (opcional) | C |
+| Vinheta M1 | §7.2 | **Parcial** (opcional) | C | Gerada em 15/11 (uma tomada, 6 s) em `media-src/elevenlabs/music/opening-sting.mp3`. Falta ouvir e decidir se entra |
 | Exportar álbum | §7.4 | **A fazer** | A, B |
 | Script aberto para qualquer vídeo do SVS | §7.5 | **A fazer** | A |
 
@@ -100,7 +100,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | ID | Status | Frente |
 |---|---|---|
 | V2–V6 (Veo, pitch) | **A fazer** | C |
-| S1–S7 (efeitos) | **A fazer** | C |
+| S1–S7 (efeitos) | **Parcial** (gerados; falta aprovar de ouvido) | C |
 | N1 (falas da UI) | **Feito** (gravadas; falta o app tocar) | C |
 | N3 (narração do pitch) | **Bloqueado** (roteiro do vídeo) | C |
 
