@@ -1,0 +1,119 @@
+# Earth Jukebox — Status
+
+> O que já foi feito e quem faz o quê, item a item do [`direcionamento.md`](docs/direcionamento.md) (a fonte de verdade: em caso de dúvida, ele vence este arquivo).
+> Atualizado em 15/11/2026, com a `main` em `205c533` (fatia SST publicada em https://eluaden.github.io/earth-jukebox/).
+> **Atualize este arquivo no mesmo PR do trabalho.**
+
+**Legenda:** **Feito** · **Parcial** (existe, mas falta algo dito na coluna ao lado) · **A fazer** · **Bloqueado** (depende de outro item)
+
+---
+
+## 1. Divisão do time (proposta, a confirmar)
+
+Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar o mesmo arquivo ao mesmo tempo (em 15/11 duas pessoas mexeram no narrador em paralelo e deu conflito).
+
+| Frente | Dono (proposta) | Cuida de | Arquivos da frente |
+|---|---|---|---|
+| **A. Dados e faixas** | Lucas Valadares (fez o pipeline da SST) | Explorações E1/E4, scripts que leem os vídeos da NASA, grade de cada faixa, mapeamento dado → nota de cada faixa, textos do encarte de cada faixa | `scripts/pipeline/`, `public/tracks/`, `src/data/`, `src/music/mapping.js`, `src/i18n/tracks/` |
+| **B. Experiência no navegador** | Lucas Senno (fez o direcionamento e o polimento visual) | Globo, agulha, interface, troca de faixa, motor de som, desempenho, acessibilidade, Explorar, Audio-first | `src/scene/`, `src/ui/`, `src/state/`, `src/flat/`, `src/music/engine.js`, `src/styles.css` |
+| **C. Conteúdo, voz e apresentação** | Lucas Souza (gravou a narração) | Narração e efeitos (ElevenLabs), vídeos do pitch (Veo), teste com usuários, vídeo, página do projeto, referências e regras de IA | `media-src/`, `public/narration/`, `docs/prompts-assets.md`, `docs/si-e-referencias.md`, textos do About em `src/i18n/strings.js` |
+
+**Contrato entre A e B:** a frente A entrega, por faixa, `public/tracks/<id>/` (`track.json`, `grid.bin`, vídeos) + um módulo de mapeamento testado + os textos em `src/i18n/tracks/<id>.js`; a frente B só consome. Mudar esse formato = combinar antes.
+
+**Sem dono fixo:** aprovação de ouvido do som (§6.1) por quem do time tiver formação musical: **[a definir]**.
+
+### Como trabalhamos
+
+1. `git pull` na `main` antes de começar; uma branch por tarefa; PR para a `main`.
+2. Mudou uma decisão? Atualize o `direcionamento.md` primeiro ([`AGENTS.md`](AGENTS.md)). Terminou um item? Atualize este arquivo no mesmo PR.
+3. Precisa mexer em arquivo de outra frente? Avise o dono antes.
+4. `npm run deploy` só a partir da `main` atualizada: o deploy sobrescreve o site inteiro.
+5. Antes do PR: `npm test`, `npm run test:pipeline` e `npm run build` passando.
+
+---
+
+## 2. P0 — Essencial (§16)
+
+| Item | Ref. | Status | Frente | O que falta / observação |
+|---|---|---|---|---|
+| E1 — temperatura do mar | §14 | **Feito** | A | 2:1, legenda oficial, datas exatas (§14.1) |
+| E1 — raios | §14 | **A fazer** | A | Mapa plano `iss_lightning_sos_yearly` (4096×2048, sem data no frame: anos inferidos, ver `recursos-do-desafio.md` §3.8) |
+| E1 — luzes noturnas | §14 | **A fazer** | A | Versão EIC 32:9 em H.265: medir a faixa de latitudes que cobre e vestir só ela (regra do §14) |
+| E3 — vídeo como textura | §14 | **Parcial** | B | Tamanhos escolhidos (1536 / 1024). Falta medir fluidez (FPS) em notebook comum e celular real |
+| Globo com agulha | §5.3 | **Feito** | B | Polido em 15/11 (volume do globo, braço em J, vidro) |
+| Motor musical com samples e regras de clareza | §6.1, §6.3 | **Parcial** | B | Feito para a SST, tetos testados. Falta **aprovação de ouvido** e as vozes de raios (percussão afinada) e luzes (piano + regra emocional) |
+| Faixa: temperatura do mar | §8 | **Feito** | A | Pipeline, grade, mapeamento, encarte, narração gravada. Textos do encarte: revisar (time) |
+| Faixa: raios | §8, §6.2 | **Bloqueado** | A | Depende de E1 (raios) |
+| Faixa: luzes noturnas | §8, §6.2 | **Bloqueado** | A | Depende de E1 (luzes) |
+| Records (troca de faixa) | §5.4 | **Parcial** | B | Painel com 1 capa (frame) e agulha levantando. Falta trocar de faixa: crossfade da pele do globo, agulha desce, som novo |
+| Liner notes | §5.5 | **Feito** | A (texto), B (painel) | Inclui "Hear the legend" e limites. Repetir para cada faixa nova |
+| Acessibilidade de base | §5.8 | **Parcial** | B | Teclado, leitor de tela, `aria-live`, V para valores, movimento e transparência reduzidos feitos. Falta checar com VoiceOver/NVDA real e medir contraste (R10) |
+| Narração N1 (falas da UI) | §7.2 | **A fazer** | C (gravar), B (tocar) | `put-on-headphones` e `welcome` em EN/PT/ES; o app ainda não toca o `welcome` |
+| Narração N2 — temperatura do mar | §7.2 | **Feito** | C | 12 falas gravadas (voz clonada de um integrante), `public/narration/` |
+| Narração N2 — raios e luzes | §7.2 | **Bloqueado** | C | Depende dos roteiros, que saem das faixas (A) |
+| Pipeline reproduzível | §7.5 | **Parcial** | A | Feito para a SST (`npm run pipeline:sst`). Falta raios e luzes |
+| Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | Volta à página pula a descida; "Replay opening" no About |
+| Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
+| Site publicado + versão 2D | §10 | **Feito** | B | GitHub Pages; 2D automática sem WebGL (`?flat=1` força) |
+| Vídeo (~30 s) | §10 | **A fazer** | C | Depende de V2–V6, N3 e do resultado do teste |
+| Página do projeto | §10 | **A fazer** | C | Em inglês, na linguagem dos prêmios |
+| References | §10, §7.3 | **Parcial** | C | `si-e-referencias.md` atualizado até a fatia SST. Falta checklist do §2 dele antes de submeter |
+| README | §10 | **Parcial** | todos | Reescrito para a fatia SST; atualizar a cada faixa |
+
+## 3. P1 — Fortalece (só depois do P0 pronto)
+
+| Item | Ref. | Status | Frente | Observação |
+|---|---|---|---|---|
+| Explorar | §5.6 | **A fazer** | B | Funcionar sem fone; áudio espacial é bônus |
+| Aerossóis (4ª faixa) | §8, Q2 | **A fazer** | A | Depende de E1 (1920×1080) e de Q2 |
+| Capas "vinil de dados" | §5.4 | **A fazer** | A (gerar), B (mostrar) | Hoje a capa é um frame da faixa |
+| Modo Audio-first (tecla A) | §5.8 | **A fazer** | B | |
+| Efeitos S1–S7 | §7.2 | **A fazer** | C (gravar), B (tocar) | Hoje agulha e vinil são sintetizados no navegador; trocar pelos arquivos |
+| Faixa bônus nível do mar | §8, §5.4 | **A fazer** | A, B | Frames antigos ainda em `public/tracks/sea-level-porthole/` |
+
+## 4. P2 — Diferencial (pode ficar de fora)
+
+| Item | Ref. | Status | Frente |
+|---|---|---|---|
+| Comparar | §5.7 | **A fazer** | B |
+| Abertura com Veo (V1) | §5.2, §7.1 | **Bloqueado** (depois de P0 e P1) | C |
+| Vinheta M1 | §7.2 | **A fazer** (opcional) | C |
+| Exportar álbum | §7.4 | **A fazer** | A, B |
+| Script aberto para qualquer vídeo do SVS | §7.5 | **A fazer** | A |
+
+## 5. Explorações e perguntas em aberto
+
+| # | Status | Frente | Situação |
+|---|---|---|---|
+| E1 | **Parcial** | A | SST feito; raios, luzes noturnas e aerossóis a fazer |
+| E2 | **Feito** | — | VSCO 2 CE (CC0) em uso |
+| E3 | **Parcial** | B | Falta FPS em aparelho real |
+| E4 | **A fazer** | A | CO₂ DYAMOND (câmera móvel) |
+| Q1 | **Parcial** | B | Ponto de partida: 10 s por volta, vídeo a 1×. Validar de ouvido |
+| Q2 | **A fazer** | A | Aerossóis: 3 ou 4 vozes |
+| Q3 | **A fazer** | C | Quantos testadores e quando |
+| Q4 | **Parcial** | C | Gravações feitas com voz clonada de um integrante; registrar no §7.2 se é a voz final |
+| Q5 | **Parcial** | B | Estalo de vinil baixo. Achado: com faixas largas pelo menos 4 de 6 notas sempre soam (R5 quase não ocorre) |
+
+## 6. Assets de IA para o pitch (podem andar em paralelo, §16)
+
+| ID | Status | Frente |
+|---|---|---|
+| V2–V6 (Veo, pitch) | **A fazer** | C |
+| S1–S7 (efeitos) | **A fazer** | C |
+| N1 (falas da UI) | **A fazer** | C |
+| N3 (narração do pitch) | **Bloqueado** (roteiro do vídeo) | C |
+
+## 7. Verificações pendentes da fatia SST
+
+- [ ] Aprovação de ouvido do som por alguém com formação musical (§6.1).
+- [ ] Fluidez em notebook comum e em celular real (E3, R2).
+- [ ] Revisão dos textos do encarte e da narração pelo time (`src/i18n/tracks/sst.js`).
+- [ ] Leitor de tela real (VoiceOver ou NVDA) do começo ao fim (§17.2).
+- [ ] Contraste do vidro medido (R10).
+
+## 8. Próximos passos sugeridos (em paralelo, um por frente)
+
+1. **A:** E1 de raios e de luzes noturnas → pipeline da faixa de raios.
+2. **B:** Records com troca de faixa e suporte a várias faixas; medir FPS em aparelho real.
+3. **C:** contato com os testadores (prazo longo: começar já); N1; S1–S7.

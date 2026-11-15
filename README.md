@@ -109,7 +109,8 @@ old tracks; the SST lines still need recording.
 
 Development is 100% AI-driven: existing code and decisions are not the source of truth. Read
 [`AGENTS.md`](AGENTS.md) first. [`docs/direcionamento.md`](docs/direcionamento.md) holds the current
-direction and must be updated before any change. Design of this slice:
+direction and must be updated before any change. [`STATUS.md`](STATUS.md) tracks what is done, item by
+item, and who owns what. Design of this slice:
 [`docs/superpowers/specs/2026-11-15-fatia-sst-design.md`](docs/superpowers/specs/2026-11-15-fatia-sst-design.md).
 
 ## Still open

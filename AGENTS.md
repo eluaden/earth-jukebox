@@ -11,3 +11,9 @@
 - [`docs/direcionamento.md`](docs/direcionamento.md) é o direcionamento atual do projeto. Ele, e não o código existente, define para onde o projeto vai.
 - **Antes de fazer qualquer mudança, atualize `docs/direcionamento.md`** para refletir a decisão. Só depois mude código, faixas ou outros docs.
 - Os demais documentos em `docs/` (recursos do desafio, análise estratégica, projetos anteriores) são contexto e pesquisa, não decisões.
+
+## Estado e divisão do trabalho
+
+- [`STATUS.md`](STATUS.md) diz o que já foi feito, item a item do direcionamento, e qual frente (A, B ou C) cuida de cada coisa e de quais arquivos.
+- Leia antes de começar; não mexa em arquivos de outra frente sem avisar o dono.
+- **Ao terminar um item, atualize o `STATUS.md` no mesmo PR.**

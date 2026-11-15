@@ -3,6 +3,7 @@
 > Fonte de verdade do projeto (ver [`AGENTS.md`](../AGENTS.md)). Definido em 15/11/2026; resultados de E1 (SST), E2 e E3 em §14.1.
 > Substitui todas as decisões anteriores: o código, as faixas e o README atuais **não** valem como referência.
 > Contexto e pesquisa: [análise estratégica](analise-estrategica.md), [recursos do desafio](recursos-do-desafio.md), [projetos anteriores](earth-jukebox-projetos-anteriores.md).
+> O que já foi feito e quem faz o quê: [`STATUS.md`](../STATUS.md).
 
 ---
 
