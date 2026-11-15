@@ -20,7 +20,7 @@ npm run dev        # http://localhost:5173
 npm run build      # static site in dist/
 ```
 
-Pushing to `main` deploys to GitHub Pages (`.github/workflows/deploy.yml`).
+`npm run deploy` builds the site and publishes `dist/` to the `gh-pages` branch, which GitHub Pages serves.
 
 ## Architecture
 
