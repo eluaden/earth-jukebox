@@ -1,5 +1,5 @@
 import { useStore } from '../state/store.js';
-import { seekBySteps, setPanel, togglePlay } from '../state/controller.js';
+import { replayTrack, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
 import { chipSign, describeValue, TRACK_TEXT } from '../state/tracks.js';
 import { chipValue, formatDate, longDate } from '../lib/format.js';
 import { t } from '../i18n/strings.js';
@@ -115,7 +115,16 @@ function PlayIcon({ playing }) {
   );
 }
 
-/** Glass pill: play/pause · track · Records · Liner notes. Language lives on the cold open. */
+function ReplayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 12a8 8 0 1 0 2.6-5.9" />
+      <path d="M4 4v4.5h4.5" />
+    </svg>
+  );
+}
+
+/** Glass pill: play/pause · replay · track · Records · Liner notes. Language lives on the cold open. */
 export function Footer() {
   const lang = useStore((s) => s.lang);
   const playing = useStore((s) => s.playing);
@@ -130,6 +139,9 @@ export function Footer() {
     <nav className="footer glass" aria-label="Earth Jukebox">
       <button type="button" className="play" aria-label={t(lang, playing ? 'pause' : 'play')} aria-disabled={busy} onClick={togglePlay}>
         <PlayIcon playing={playing} />
+      </button>
+      <button type="button" className="replay" aria-label={t(lang, 'replay')} title={t(lang, 'replay')} aria-disabled={busy} onClick={replayTrack}>
+        <ReplayIcon />
       </button>
       <span className={`track-name ${switching ? 'is-loading' : ''}`} aria-busy={busy}>
         {shownId && TRACK_TEXT[shownId][lang].title}

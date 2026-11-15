@@ -104,6 +104,8 @@ flowchart LR
 
 > **Decisão de 15/11/2026 (N1 na abertura):** o navegador só toca som depois de um clique, então a voz entra no clique. Na primeira visita: clique no idioma → a voz diz *"Put on headphones."* enquanto a tela preta some e a câmera já desce → em seguida *"Welcome to the Earth Jukebox…"* durante a descida (a música entra por baixo, abaixada) → ~2,5 s de música sozinha → narração de abertura da faixa. A descida não espera a voz. Retornos (abertura já vista) e "Replay opening" não repetem o N1.
 
+> **Decisão de 15/11/2026 (repetir com narração, frente C):** o disco gira em loop só com a música; a narração do narrador (introdução, marcos e encerramento) é falada **uma vez** por disco. O botão **repetir** no rodapé (ao lado do play/pause; tecla Home) volta o disco ao primeiro passo e fala a narração de novo, do começo. É o único jeito de ouvir a voz outra vez; pausar e retomar ou o loop não repetem a voz.
+
 > **Decisão de 15/11/2026 (idioma na abertura):** o seletor **EN · PT · ES** sai do rodapé e fica só na cold open; escolher o idioma **é** o gesto de iniciar (libera espaço na tela principal; idioma do navegador pré-selecionado).
 
 ### 5.2.1 Lista fechada de componentes
@@ -117,7 +119,7 @@ flowchart LR
 | Data | Mês abreviado + ano ("MAR 2007"); faixas de um dia: dia + mês + ano ("19 AUG 2025"); faixas de um passo por ano (luzes noturnas, `time.unit = 'year'`): só o ano ("2012") |
 | Legenda da narração | Uma linha abaixo da data; vazia quando não há fala |
 | Chip de instrumento | "Instrumento · variável" + valor com unidade em mono + botões "M" e "S". **Sem ícone**. Por faixa: temperatura do mar = Cordas / Piano / Glockenspiel · águas do norte / trópicos / águas do sul, em °C; raios = Marimba · raios do norte / dos trópicos / do sul, em % da área coberta por pontos; luzes noturnas = Piano · luz (brilho 0–255, "/255"), Cordas · luzes apagadas e Glockenspiel · luzes novas (% de mudança sobre o ano anterior, com sinal). Sem valor: "—" na tela e o motivo no texto acessível (terra, sem dado, mar, sem ano anterior) |
-| Rodapé | Uma pílula: play/pause · nome da faixa · "Records" · "Liner notes" · "Listen \| Explore \| Compare". **Sem seletor de idioma** (idioma só na cold open, §5.2). Cada segmento de modo só aparece quando o modo existe (Explore é P1, Compare é P2; §16) |
+| Rodapé | Uma pílula: play/pause · repetir · nome da faixa · "Records" · "Liner notes" · "Listen \| Explore \| Compare". **Sem seletor de idioma** (idioma só na cold open, §5.2). Cada segmento de modo só aparece quando o modo existe (Explore é P1, Compare é P2; §16) |
 | Agulha | Braço fino de cromo, simples, sem marca; vem sempre do canto superior direito |
 | Capas (Records) | Capa + nome da faixa + período. Nada além |
 | Cold open | "Put on headphones." · "Select a language to start." · "EN · PT · ES" (navegador pré-selecionado; clicar no idioma inicia) |
@@ -133,7 +135,7 @@ flowchart LR
 | Esquerda | Data enorme em serifa editorial (ex.: "AUG 2007"); abaixo, a legenda da narração em uma linha |
 | Direita | Coluna de chips de vidro, um por instrumento: ícone, nome da variável, valor ao vivo com unidade, botões de mudo e solo |
 | Anel do prato | Arco de progresso do tempo, arrastável (substitui o slider) |
-| Rodapé | Pílula de vidro: play/pause, nome da faixa, "Records", "Liner notes", modo (Ouvir / Explorar / Comparar) — sem idioma |
+| Rodapé | Pílula de vidro: play/pause, repetir, nome da faixa, "Records", "Liner notes", modo (Ouvir / Explorar / Comparar) — sem idioma |
 | Canto superior esquerdo | Marca "EARTH JUKEBOX" pequena; acesso ao overlay About |
 
 ### 5.4 Troca de faixa ("Records")

@@ -241,6 +241,24 @@ export function togglePlay() {
   sayIntroWhenFree();
 }
 
+/**
+ * Replay: the record goes back to its first step and the narration is spoken again from the start
+ * (intro, milestones, outro). Without it the record loops with the music only: each line of the
+ * narrator is spoken once per record (direction 5.3, "repetir").
+ */
+export function replayTrack() {
+  const s = useStore.getState();
+  if (!c.track || s.switching || s.phase !== 'playing') return;
+  c.narrator.stop();
+  c.opening = null; // the welcome, if still speaking, gives way to the record's own intro
+  c.fired = new Set();
+  live.step = -1; // the jump back is a restart, not a loop: no outro, no milestone on the way
+  s.requestSeek(0);
+  if (s.panel === 'records') setPanel(null);
+  if (!useStore.getState().playing) togglePlay(); // resuming speaks the intro
+  else sayIntroWhenFree();
+}
+
 export function replayOpening() {
   c.landed = false;
   useStore.setState((s) => ({ panel: null, arm: 'away', introAnimated: true, introKey: s.introKey + 1 }));

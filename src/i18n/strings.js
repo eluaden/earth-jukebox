@@ -83,11 +83,13 @@ export const STRINGS = {
     keyboard: 'Keyboard',
     keyboardList: [
       'Space: play or pause',
+      'Home: replay the record from the start, with the narration',
       'Left / right arrows: move back or forward in time',
       'V: hear the current values',
       'R: records · L: liner notes · Esc: close',
     ],
     replayOpening: 'Replay opening',
+    replay: 'Replay from the start, with narration',
   },
   pt: {
     brand: 'EARTH JUKEBOX',
@@ -170,11 +172,13 @@ export const STRINGS = {
     keyboard: 'Teclado',
     keyboardList: [
       'Espaço: tocar ou pausar',
+      'Home: repetir o disco do começo, com a narração',
       'Setas esquerda / direita: voltar ou avançar no tempo',
       'V: ouvir os valores atuais',
       'R: discos · L: encarte · Esc: fechar',
     ],
     replayOpening: 'Rever a abertura',
+    replay: 'Repetir do começo, com narração',
   },
   es: {
     brand: 'EARTH JUKEBOX',
@@ -257,11 +261,13 @@ export const STRINGS = {
     keyboard: 'Teclado',
     keyboardList: [
       'Espacio: reproducir o pausar',
+      'Inicio: repetir el disco desde el principio, con la narración',
       'Flechas izquierda / derecha: retroceder o avanzar en el tiempo',
       'V: oír los valores actuales',
       'R: discos · L: notas del disco · Esc: cerrar',
     ],
     replayOpening: 'Ver de nuevo la apertura',
+    replay: 'Repetir desde el principio, con narración',
   },
 };
 

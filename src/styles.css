@@ -420,6 +420,21 @@ a {
 .footer .play:active {
   transform: scale(0.94);
 }
+.footer .replay {
+  width: 32px;
+  height: 32px;
+  margin-left: -6px;
+  padding: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.footer .replay:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.footer .replay:active {
+  transform: rotate(-40deg) scale(0.94);
+}
 .track-name {
   color: var(--fg);
   font-weight: 700;

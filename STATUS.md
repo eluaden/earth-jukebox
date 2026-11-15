@@ -52,7 +52,12 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Narração N1 (falas da UI) | §7.2 | **Feito** | C (gravar), B (tocar) | Na primeira visita: clique → "Put on headphones." → "Welcome…" durante a descida → 2,5 s só de música → fala de abertura da faixa. Volta à página e "Replay opening" não repetem o N1. Teste confere que toda fala (N1 e N2 das três faixas, com datas) tem MP3 no manifesto |
 | Narração N2 — temperatura do mar | §7.2 | **Feito** | C | 12 falas regravadas com os ajustes de narrador (stability 50, similarity 75, style 10), `public/narration/` |
 | Narração N2 — raios e luzes | §7.2 | **Feito** | C | 12 falas por faixa gravadas e conferidas por transcrição. A introdução dos raios foi gravada a 1,1–1,2× porque o primeiro marco chega aos 8,8 s (ver `prompts-assets.md` §2.5). Se um texto mudar, regravar |
+<<<<<<< Updated upstream
 | Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, `pipeline:aerosols`, `pipeline:sealevel`, `pipeline:covers`, com testes (`npm run test:pipeline`). Nenhum pipeline escreve `public/tracks/index.json` (ordem do Records, editada à mão) |
+=======
+| Repetir com narração | §5.3 | **Feito** | C (pediu), arquivos da B | Botão ↻ no rodapé e tecla Home: volta o disco ao começo e fala a narração de novo. O loop e o pause/retomar não repetem a voz (decisão no direcionamento §5) |
+| Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, com testes (`npm run test:pipeline`) |
+>>>>>>> Stashed changes
 | Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | "Put on headphones." + pedido de idioma; clicar EN/PT/ES inicia; volta à página pula a descida; "Replay opening" no About |
 | Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
 | Site publicado + versão 2D | §10 | **Feito** | B | GitHub Pages; 2D automática sem WebGL (`?flat=1` força) |

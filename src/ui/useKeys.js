@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useStore } from '../state/store.js';
-import { announceValues, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
+import { announceValues, replayTrack, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
 import { rememberOpener, restoreFocus } from './focus.js';
 
 const isField = (el) => el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable);
 const isControl = (el) => el && (el.tagName === 'BUTTON' || el.tagName === 'A' || isField(el));
 
-/** Space play/pause · arrows step through time · V values · R records · L liner notes · Esc close. */
+/** Space play/pause · Home replay (with narration) · arrows step through time · V values · R records · L liner notes · Esc close. */
 export function useKeys() {
   useEffect(() => {
     const onKey = (e) => {
@@ -25,6 +25,9 @@ export function useKeys() {
       if (e.key === ' ' && !isControl(target)) {
         e.preventDefault();
         togglePlay();
+      } else if (e.key === 'Home' && !isControl(target)) {
+        e.preventDefault();
+        replayTrack();
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         e.preventDefault();
         seekBySteps(e.key === 'ArrowRight' ? 1 : -1);
