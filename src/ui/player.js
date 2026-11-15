@@ -81,7 +81,7 @@ function pulse(cls, ms) { const fc = $('#face'); fc.classList.add(cls); setTimeo
 let speaking = Promise.resolve();
 function speak(s) {
   $('#status').textContent = s; audio.duck(true);
-  return speaking = say(s).then(() => { audio.duck(false); if ($('#caption').textContent === s) $('#caption').textContent = ''; });
+  return speaking = say(s).then(() => { audio.duck(false); });
 }
 
 function step() {
@@ -106,9 +106,11 @@ export async function start() {
   if (!track || token !== loadToken || !playing) { if (!track) pause(); return; }
   if (idx >= count()) idx = 0;
   audio.setTimbre(track.mapping[role.tone]?.params || {});
-  setLive(idx); audio.tone(live.main); audio.wind(role.wind ? live.wind : null); render();
+  setLive(idx); render();
   if (!introDone) {
-    await speak(pick(track.narration.intro)); $('#caption').textContent = '';
+    // The introduction is spoken alone, before the track: the data sound starts with the video.
+    audio.silence(.05);
+    await speak(pick(track.narration.intro));
     if (!playing || token !== loadToken) return;
   }
   introDone = true; step();
@@ -124,7 +126,7 @@ async function finish() {
   playing = false; setPlayUi(); audio.silence(.6); video().pause();
   const token = loadToken;
   await speaking; if (token !== loadToken || playing) return;
-  const s = pick(track.narration.outro); $('#status').textContent = s; await say(s); $('#caption').textContent = ''; $('#bigplay').hidden = false;
+  const s = pick(track.narration.outro); $('#status').textContent = s; await say(s); $('#bigplay').hidden = false;
 }
 
 export function setPlayUi() {

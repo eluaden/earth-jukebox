@@ -349,3 +349,9 @@ body.fs{overflow:hidden}
 .legend .sw{margin-top:5px}
 @media (max-width:1000px){.sleeves{grid-template-columns:minmax(0,1fr)}}
 .screen video{object-fit:contain;background:#000}
+
+/* ===== captions: one line ===== */
+.caption{bottom:12px;max-width:92%;padding:4px 12px;font-size:clamp(13px,1.5vw,18px);line-height:1.35;border-radius:6px;background:rgba(5,7,11,.82);text-wrap:balance}
+.screen.full .caption{bottom:26px;font-size:clamp(16px,1.9vw,26px);padding:6px 16px}
+.screen .yr{bottom:58px}
+.caption{left:4%;right:4%;transform:none;width:fit-content;max-width:none;margin:0 auto}
