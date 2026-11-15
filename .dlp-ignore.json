@@ -1,0 +1,17 @@
+[
+    {
+        "path": "public/tracks/sst/grid.bin",
+        "policy": "ExecutablePolicy",
+        "justification": "NASA SST data grid (uint8 values), not a Unix executable; .bin is the data extension only"
+    },
+    {
+        "path": "public/tracks/lightning/grid.bin",
+        "policy": "ExecutablePolicy",
+        "justification": "NASA lightning data grid (uint8 coverage), not a Unix executable; .bin is the data extension only"
+    },
+    {
+        "path": "public/tracks/night-lights/grid.bin",
+        "policy": "ExecutablePolicy",
+        "justification": "NASA night-lights data grid (uint8 brightness), not a Unix executable; .bin is the data extension only"
+    }
+]

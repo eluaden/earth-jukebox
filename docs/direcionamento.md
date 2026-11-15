@@ -299,6 +299,7 @@ earth-jukebox/media-src/
 
 - `media-src/` **é versionada no git** (é como o time compartilha os originais). Cada arquivo abaixo de 100 MB (limite do GitHub).
 - São os **originais**: a implementação comprime e copia para `public/` só o que o site usa. Ninguém edita `public/` à mão com esses arquivos.
+- **Deploy e Angelito (15/11/2026):** `npm run deploy` cria um git novo em `dist/` e o hook ExecutablePolicy bloqueia `*.bin`. Os `grid.bin` são grades uint8 da NASA, não executáveis: isenção em `.dlp-ignore.json` (caminhos `public/tracks/...`) e a mesma isenção escrita em `dist/.dlp-ignore.json` (caminhos `tracks/...`) pelo script de deploy. Sem `--no-verify`.
 - Marca d'água do Veo e metadados do ElevenLabs: aplicados conforme [`si-e-referencias.md`](si-e-referencias.md) §2.
 
 ### 7.3 Regra comum
