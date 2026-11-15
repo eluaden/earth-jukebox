@@ -48,9 +48,9 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Records (troca de faixa) | §5.4 | **Parcial** | B | Painel com 1 capa (frame) e agulha levantando. Falta trocar de faixa: crossfade da pele do globo, agulha desce, som novo. Para raios e luzes, o app precisa aceitar passos por lista de frames e textura feita de imagens (§14.1) |
 | Liner notes | §5.5 | **Feito** | A (texto), B (painel) | Inclui "Hear the legend" e limites. Repetir para cada faixa nova |
 | Acessibilidade de base | §5.8 | **Parcial** | B | Teclado, leitor de tela, `aria-live`, V para valores, movimento e transparência reduzidos feitos. Falta checar com VoiceOver/NVDA real e medir contraste (R10) |
-| Narração N1 (falas da UI) | §7.2 | **A fazer** | C (gravar), B (tocar) | `put-on-headphones` e `welcome` em EN/PT/ES; o app ainda não toca o `welcome` |
-| Narração N2 — temperatura do mar | §7.2 | **Feito** | C | 12 falas gravadas (voz clonada de um integrante), `public/narration/` |
-| Narração N2 — raios e luzes | §7.2 | **A fazer** | C | Roteiros prontos em `prompts-assets.md` §2.5 (8 falas por faixa nos 3 idiomas) |
+| Narração N1 (falas da UI) | §7.2 | **Parcial** | C (gravar), B (tocar) | Gravadas em EN/PT/ES (`media-src/elevenlabs/voice/<idioma>/put-on-headphones.mp3` e `welcome.mp3`, também no manifesto do site). Falta a frente B tocar: o app ainda não fala o `welcome` nem o `put-on-headphones` |
+| Narração N2 — temperatura do mar | §7.2 | **Feito** | C | 12 falas regravadas com os ajustes de narrador (stability 50, similarity 75, style 10), `public/narration/` |
+| Narração N2 — raios e luzes | §7.2 | **Feito** | C | 12 falas por faixa gravadas e conferidas por transcrição. A introdução dos raios foi gravada a 1,1–1,2× porque o primeiro marco chega aos 8,8 s (ver `prompts-assets.md` §2.5). Se um texto mudar, regravar |
 | Pipeline reproduzível | §7.5 | **Feito** | A | `npm run pipeline:sst`, `pipeline:lightning`, `pipeline:nightlights`, com testes (`npm run test:pipeline`) |
 | Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | Volta à página pula a descida; "Replay opening" no About |
 | Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
@@ -92,7 +92,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Q1 | **Parcial** | B | Ponto de partida: 10 s por volta, vídeo a 1×. Validar de ouvido |
 | Q2 | **A fazer** | A | Aerossóis: 3 ou 4 vozes |
 | Q3 | **A fazer** | C | Quantos testadores e quando |
-| Q4 | **Parcial** | C | Gravações feitas com voz clonada de um integrante; registrar no §7.2 se é a voz final |
+| Q4 | **Feito** | C | Voz clonada (PVC) do Lucas Souza, registrada no direcionamento §7.2 |
 | Q5 | **Parcial** | B | Estalo de vinil baixo. Achado: com faixas largas pelo menos 4 de 6 notas sempre soam (R5 quase não ocorre) |
 
 ## 6. Assets de IA para o pitch (podem andar em paralelo, §16)
@@ -101,7 +101,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 |---|---|---|
 | V2–V6 (Veo, pitch) | **A fazer** | C |
 | S1–S7 (efeitos) | **A fazer** | C |
-| N1 (falas da UI) | **A fazer** | C |
+| N1 (falas da UI) | **Feito** (gravadas; falta o app tocar) | C |
 | N3 (narração do pitch) | **Bloqueado** (roteiro do vídeo) | C |
 
 ## 7. Verificações pendentes da fatia SST

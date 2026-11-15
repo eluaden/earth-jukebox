@@ -84,7 +84,7 @@ Keep this table in sync with `public/tracks/` and the README track table.
 | Hosting | GitHub Pages | GitHub terms | Live site |
 | SI tool | Anthropic Claude (Claude Code, Cursor) | Anthropic / Cursor terms | AI-assisted coding, documentation and translation (§1) |
 | SI tool (planned) | Google Veo | Google terms | Opening clip and abstract pitch shots, watermarked |
-| SI tool (planned) | ElevenLabs | ElevenLabs terms (check commercial/attribution clause) | Narration and sound effects, tagged |
+| SI tool | ElevenLabs (`eleven_multilingual_v2`) | ElevenLabs terms (check commercial/attribution clause) | Narration in EN / PT / ES: AI-generated speech in the cloned voice of a team member (Lucas Souza), made with his consent, 42 files in `public/narration/`, each tagged "AI-generated voice: ElevenLabs" in its metadata. Sound effects still planned |
 | Research | Past Space Apps projects ([`earth-jukebox-projetos-anteriores.md`](earth-jukebox-projetos-anteriores.md)) | Public project pages | Inspiration and differentiation only; no code or assets reused |
 
 No copyrighted material is used without permission.

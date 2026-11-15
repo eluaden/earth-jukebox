@@ -1,5 +1,11 @@
 {
  "lines": {
+  "b8835534eea274e5": "en/b8835534eea274e5.mp3",
+  "341a35f008016e75": "en/341a35f008016e75.mp3",
+  "efc74ddf5f4518e4": "pt/efc74ddf5f4518e4.mp3",
+  "cf4b7c1963484371": "pt/cf4b7c1963484371.mp3",
+  "9b9f43d5dc7068f5": "es/9b9f43d5dc7068f5.mp3",
+  "37d5cabbaedbe417": "es/37d5cabbaedbe417.mp3",
   "c3dbf19d43a1876b": "en/c3dbf19d43a1876b.mp3",
   "1c8b284c1b052788": "en/1c8b284c1b052788.mp3",
   "a5b71cdebacaad61": "en/a5b71cdebacaad61.mp3",
@@ -11,15 +17,87 @@
   "eff2acf0410d513c": "es/eff2acf0410d513c.mp3",
   "cdc467971d70d8b6": "es/cdc467971d70d8b6.mp3",
   "4af01f6d47dc2745": "es/4af01f6d47dc2745.mp3",
-  "56db082b96412a33": "es/56db082b96412a33.mp3"
+  "56db082b96412a33": "es/56db082b96412a33.mp3",
+  "2b5d7892eafabcf2": "en/2b5d7892eafabcf2.mp3",
+  "93e69165f189204f": "en/93e69165f189204f.mp3",
+  "9b28b73abda82237": "en/9b28b73abda82237.mp3",
+  "78353066abceba73": "en/78353066abceba73.mp3",
+  "21d906a4105f9d07": "pt/21d906a4105f9d07.mp3",
+  "937ec9221da33d17": "pt/937ec9221da33d17.mp3",
+  "0d38c955af15117c": "pt/0d38c955af15117c.mp3",
+  "36f17de481d576ed": "pt/36f17de481d576ed.mp3",
+  "16fbba65dcce6d2f": "es/16fbba65dcce6d2f.mp3",
+  "05207500a6709e6a": "es/05207500a6709e6a.mp3",
+  "276ed550bc66cd36": "es/276ed550bc66cd36.mp3",
+  "e94b831d01fd54cf": "es/e94b831d01fd54cf.mp3",
+  "e8c56b0fe478903d": "en/e8c56b0fe478903d.mp3",
+  "86fd240d495c9f95": "en/86fd240d495c9f95.mp3",
+  "376ca2bc9281ec63": "en/376ca2bc9281ec63.mp3",
+  "d89976d71a3194b8": "en/d89976d71a3194b8.mp3",
+  "efe5d7f1eec8de1d": "pt/efe5d7f1eec8de1d.mp3",
+  "c8fde15abc6b228b": "pt/c8fde15abc6b228b.mp3",
+  "8f4b51f9286d6490": "pt/8f4b51f9286d6490.mp3",
+  "e7260651dc5d53a0": "pt/e7260651dc5d53a0.mp3",
+  "c2fc012e76728130": "es/c2fc012e76728130.mp3",
+  "35d10524e9f801cc": "es/35d10524e9f801cc.mp3",
+  "c4650e1255394381": "es/c4650e1255394381.mp3",
+  "c643e671c1576078": "es/c643e671c1576078.mp3"
  },
  "info": {
+  "b8835534eea274e5": {
+   "track": "ui",
+   "id": "put-on-headphones",
+   "lang": "en",
+   "text": "Put on headphones.",
+   "seconds": 1.21,
+   "speed": 1
+  },
+  "341a35f008016e75": {
+   "track": "ui",
+   "id": "welcome",
+   "lang": "en",
+   "text": "Welcome to the Earth Jukebox. The planet is the record. Every note comes from NASA data.",
+   "seconds": 5.2,
+   "speed": 1
+  },
+  "efc74ddf5f4518e4": {
+   "track": "ui",
+   "id": "put-on-headphones",
+   "lang": "pt",
+   "text": "Coloque fones de ouvido.",
+   "seconds": 1.44,
+   "speed": 1
+  },
+  "cf4b7c1963484371": {
+   "track": "ui",
+   "id": "welcome",
+   "lang": "pt",
+   "text": "Bem-vindo ao Earth Jukebox. O planeta é o disco. Cada nota vem de dados da NASA.",
+   "seconds": 4.97,
+   "speed": 1
+  },
+  "9b9f43d5dc7068f5": {
+   "track": "ui",
+   "id": "put-on-headphones",
+   "lang": "es",
+   "text": "Ponte auriculares.",
+   "seconds": 1.25,
+   "speed": 1
+  },
+  "37d5cabbaedbe417": {
+   "track": "ui",
+   "id": "welcome",
+   "lang": "es",
+   "text": "Bienvenido al Earth Jukebox. El planeta es el disco. Cada nota viene de datos de la NASA.",
+   "seconds": 5.06,
+   "speed": 1
+  },
   "c3dbf19d43a1876b": {
    "track": "sst",
    "id": "intro",
    "lang": "en",
    "text": "This is the surface of the ocean, from March 2007 to March 2008. Every note is a temperature read from a NASA map: the warmer the water, the higher the note.",
-   "seconds": 9.38,
+   "seconds": 9.29,
    "speed": 1
   },
   "1c8b284c1b052788": {
@@ -27,7 +105,7 @@
    "id": "north-warmest",
    "lang": "en",
    "text": "September 2007: the northern waters reach their warmest of the year.",
-   "seconds": 3.81,
+   "seconds": 3.72,
    "speed": 1
   },
   "a5b71cdebacaad61": {
@@ -35,15 +113,15 @@
    "id": "south-warmest",
    "lang": "en",
    "text": "February 2008: now it is the turn of the southern waters, at their warmest of the year.",
-   "seconds": 3.62,
-   "speed": 1.2
+   "seconds": 4.23,
+   "speed": 1.18
   },
   "5412483bb90e9a8e": {
    "track": "sst",
    "id": "outro",
    "lang": "en",
    "text": "One year of ocean has passed under the needle. The record starts again.",
-   "seconds": 3.48,
+   "seconds": 3.53,
    "speed": 1
   },
   "d55a3f37d68c1172": {
@@ -51,7 +129,7 @@
    "id": "intro",
    "lang": "pt",
    "text": "Esta é a superfície do oceano, de março de 2007 a março de 2008. Cada nota é uma temperatura lida de um mapa da NASA: quanto mais quente a água, mais aguda a nota.",
-   "seconds": 11.89,
+   "seconds": 10.77,
    "speed": 1
   },
   "8b169dc14c52f3e6": {
@@ -59,7 +137,7 @@
    "id": "north-warmest",
    "lang": "pt",
    "text": "Setembro de 2007: as águas do norte chegam ao ponto mais quente do ano.",
-   "seconds": 4.27,
+   "seconds": 4.55,
    "speed": 1
   },
   "399e7b37d5ad2cc1": {
@@ -67,7 +145,7 @@
    "id": "south-warmest",
    "lang": "pt",
    "text": "Fevereiro de 2008: agora é a vez das águas do sul, no ponto mais quente do ano.",
-   "seconds": 4.04,
+   "seconds": 4.09,
    "speed": 1.2
   },
   "062322f04acdae34": {
@@ -75,7 +153,7 @@
    "id": "outro",
    "lang": "pt",
    "text": "Um ano de oceano passou sob a agulha. O disco recomeça.",
-   "seconds": 3.44,
+   "seconds": 3.48,
    "speed": 1
   },
   "eff2acf0410d513c": {
@@ -83,7 +161,7 @@
    "id": "intro",
    "lang": "es",
    "text": "Esta es la superficie del océano, de marzo de 2007 a marzo de 2008. Cada nota es una temperatura leída de un mapa de la NASA: cuanto más cálida el agua, más aguda la nota.",
-   "seconds": 11.89,
+   "seconds": 11.66,
    "speed": 1
   },
   "cdc467971d70d8b6": {
@@ -91,7 +169,7 @@
    "id": "north-warmest",
    "lang": "es",
    "text": "Septiembre de 2007: las aguas del norte llegan a su punto más cálido del año.",
-   "seconds": 4.74,
+   "seconds": 4.46,
    "speed": 1
   },
   "4af01f6d47dc2745": {
@@ -99,7 +177,7 @@
    "id": "south-warmest",
    "lang": "es",
    "text": "Febrero de 2008: ahora es el turno de las aguas del sur, en su punto más cálido del año.",
-   "seconds": 4.13,
+   "seconds": 4.23,
    "speed": 1.2
   },
   "56db082b96412a33": {
@@ -107,10 +185,207 @@
    "id": "outro",
    "lang": "es",
    "text": "Un año de océano ha pasado bajo la aguja. El disco vuelve a empezar.",
-   "seconds": 3.95,
+   "seconds": 3.99,
+   "speed": 1
+  },
+  "2b5d7892eafabcf2": {
+   "track": "lightning",
+   "id": "intro",
+   "lang": "en",
+   "text": "This is lightning seen from the International Space Station, from 2017 to 2023. Every hit is lightning under the needle: the further north, the higher the note.",
+   "seconds": 8.22,
+   "speed": 1.1
+  },
+  "93e69165f189204f": {
+   "track": "lightning",
+   "id": "north-summer",
+   "lang": "en",
+   "text": "August 2017: summer in the north. The lightning, and the notes, have moved north.",
+   "seconds": 4.6,
+   "speed": 1
+  },
+  "9b28b73abda82237": {
+   "track": "lightning",
+   "id": "south-summer",
+   "lang": "en",
+   "text": "January 2018: now it is summer in the south, and the lightning has followed it.",
+   "seconds": 4.37,
+   "speed": 1
+  },
+  "78353066abceba73": {
+   "track": "lightning",
+   "id": "outro",
+   "lang": "en",
+   "text": "Six years of storms have passed under the needle. The record starts again.",
+   "seconds": 3.58,
+   "speed": 1
+  },
+  "21d906a4105f9d07": {
+   "track": "lightning",
+   "id": "intro",
+   "lang": "pt",
+   "text": "Estes são os raios vistos da Estação Espacial Internacional, de 2017 a 2023. Cada batida é um raio embaixo da agulha: quanto mais ao norte, mais aguda a nota.",
+   "seconds": 8.82,
+   "speed": 1.2
+  },
+  "937ec9221da33d17": {
+   "track": "lightning",
+   "id": "north-summer",
+   "lang": "pt",
+   "text": "Agosto de 2017: verão no norte. Os raios, e as notas, foram para o norte.",
+   "seconds": 5.11,
+   "speed": 1
+  },
+  "0d38c955af15117c": {
+   "track": "lightning",
+   "id": "south-summer",
+   "lang": "pt",
+   "text": "Janeiro de 2018: agora é verão no sul, e os raios foram atrás.",
+   "seconds": 4.6,
+   "speed": 1
+  },
+  "36f17de481d576ed": {
+   "track": "lightning",
+   "id": "outro",
+   "lang": "pt",
+   "text": "Seis anos de tempestades passaram sob a agulha. O disco recomeça.",
+   "seconds": 3.99,
+   "speed": 1
+  },
+  "16fbba65dcce6d2f": {
+   "track": "lightning",
+   "id": "intro",
+   "lang": "es",
+   "text": "Estos son los rayos vistos desde la Estación Espacial Internacional, de 2017 a 2023. Cada golpe es un rayo bajo la aguja: cuanto más al norte, más aguda la nota.",
+   "seconds": 8.78,
+   "speed": 1.2
+  },
+  "05207500a6709e6a": {
+   "track": "lightning",
+   "id": "north-summer",
+   "lang": "es",
+   "text": "Agosto de 2017: verano en el norte. Los rayos, y las notas, se fueron al norte.",
+   "seconds": 5.02,
+   "speed": 1
+  },
+  "276ed550bc66cd36": {
+   "track": "lightning",
+   "id": "south-summer",
+   "lang": "es",
+   "text": "Enero de 2018: ahora es verano en el sur, y los rayos lo siguieron.",
+   "seconds": 4.04,
+   "speed": 1
+  },
+  "e94b831d01fd54cf": {
+   "track": "lightning",
+   "id": "outro",
+   "lang": "es",
+   "text": "Seis años de tormentas han pasado bajo la aguja. El disco vuelve a empezar.",
+   "seconds": 4.27,
+   "speed": 1
+  },
+  "e8c56b0fe478903d": {
+   "track": "night-lights",
+   "id": "intro",
+   "lang": "en",
+   "text": "These are the lights of the planet at night, one year at a time, from 2012 to 2023. The more light under the needle, the more piano notes.",
+   "seconds": 8.03,
+   "speed": 1
+  },
+  "86fd240d495c9f95": {
+   "track": "night-lights",
+   "id": "biggest-jump",
+   "lang": "en",
+   "text": "2022: the biggest jump of the series, about ten percent more light than the year before.",
+   "seconds": 5.34,
+   "speed": 1
+  },
+  "376ca2bc9281ec63": {
+   "track": "night-lights",
+   "id": "brightest",
+   "lang": "en",
+   "text": "2023: the brightest year, about a third more light than in 2012.",
+   "seconds": 4.27,
+   "speed": 1
+  },
+  "d89976d71a3194b8": {
+   "track": "night-lights",
+   "id": "outro",
+   "lang": "en",
+   "text": "Twelve years of night have passed under the needle. The record starts again.",
+   "seconds": 3.99,
+   "speed": 1
+  },
+  "efe5d7f1eec8de1d": {
+   "track": "night-lights",
+   "id": "intro",
+   "lang": "pt",
+   "text": "Estas são as luzes do planeta à noite, um ano de cada vez, de 2012 a 2023. Quanto mais luz embaixo da agulha, mais notas de piano.",
+   "seconds": 8.78,
+   "speed": 1
+  },
+  "c8fde15abc6b228b": {
+   "track": "night-lights",
+   "id": "biggest-jump",
+   "lang": "pt",
+   "text": "2022: o maior salto da série, cerca de dez por cento mais luz que no ano anterior.",
+   "seconds": 4.74,
+   "speed": 1
+  },
+  "8f4b51f9286d6490": {
+   "track": "night-lights",
+   "id": "brightest",
+   "lang": "pt",
+   "text": "2023: o ano mais claro, cerca de um terço mais luz que em 2012.",
+   "seconds": 4.6,
+   "speed": 1
+  },
+  "e7260651dc5d53a0": {
+   "track": "night-lights",
+   "id": "outro",
+   "lang": "pt",
+   "text": "Doze anos de noite passaram sob a agulha. O disco recomeça.",
+   "seconds": 3.44,
+   "speed": 1
+  },
+  "c2fc012e76728130": {
+   "track": "night-lights",
+   "id": "intro",
+   "lang": "es",
+   "text": "Estas son las luces del planeta de noche, un año a la vez, de 2012 a 2023. Cuanta más luz bajo la aguja, más notas de piano.",
+   "seconds": 8.78,
+   "speed": 1
+  },
+  "35d10524e9f801cc": {
+   "track": "night-lights",
+   "id": "biggest-jump",
+   "lang": "es",
+   "text": "2022: el mayor salto de la serie, cerca de un diez por ciento más de luz que el año anterior.",
+   "seconds": 5.94,
+   "speed": 1
+  },
+  "c4650e1255394381": {
+   "track": "night-lights",
+   "id": "brightest",
+   "lang": "es",
+   "text": "2023: el año más claro, cerca de un tercio más de luz que en 2012.",
+   "seconds": 4.41,
+   "speed": 1
+  },
+  "c643e671c1576078": {
+   "track": "night-lights",
+   "id": "outro",
+   "lang": "es",
+   "text": "Doce años de noche han pasado bajo la aguja. El disco vuelve a empezar.",
+   "seconds": 4.18,
    "speed": 1
   }
  },
  "voiceModel": "eleven_multilingual_v2",
- "generated": "2026-11-15T17:07:05.296Z"
+ "voiceSettings": {
+  "stability": 0.5,
+  "similarity_boost": 0.75,
+  "style": 0.1
+ },
+ "generated": "2026-11-15T18:47:38.900Z"
 }
