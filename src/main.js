@@ -1,10 +1,10 @@
 import { $ } from './ui/dom.js';
-import { initI18n, onLangChange, t } from './i18n/index.js';
-import { configureNarrator } from './narration/narrator.js';
+import { initI18n, onLangChange, t, getLang } from './i18n/index.js';
+import { configureNarrator, loadRecordedLines } from './narration/narrator.js';
 import { loadCatalog } from './data/tracks.js';
 import { initRouter, route } from './ui/router.js';
 import { initWarp } from './ui/warp.js';
-import { initPlayer, render, setPlayUi, renderTrackTexts, speechLang } from './ui/player.js';
+import { initPlayer, render, setPlayUi, renderTrackTexts, speechLang, narrationLines } from './ui/player.js';
 import { initLanding, renderSleeves } from './ui/landing.js';
 import { initHeroEarth, initFrameCanvas } from './ui/earth.js';
 import { initFullscreen, fsUi } from './ui/fullscreen.js';
@@ -14,6 +14,7 @@ configureNarrator({
   captionsOn: () => $('#captions').checked,
   narrateOn: () => $('#narrate').checked,
   speechLang,
+  lang: getLang,
   showCaption: (text) => { $('#caption').textContent = text; },
 });
 initRouter();
@@ -25,7 +26,9 @@ route(); setPlayUi(); fsUi();
 
 let catalog = [];
 try { catalog = await loadCatalog(); } catch (e) { console.error(e); $('#status').textContent = t('loadError'); }
+loadRecordedLines();
 initLanding(catalog);
 initPlayer(catalog);
 onLangChange(() => { setPlayUi(); fsUi(); renderSleeves(); renderTrackTexts(); });
 render();
+window.earthJukebox = { narrationLines };

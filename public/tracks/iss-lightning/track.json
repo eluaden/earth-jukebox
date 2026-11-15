@@ -478,9 +478,9 @@
     "of": "max",
     "type": "record",
     "say": {
-     "en": "Around {label}: the most lightning north of the equator, {value} percent of the map.",
-     "pt": "Por volta de {label}: o máximo de raios ao norte do equador, {value} por cento do mapa.",
-     "es": "Hacia {label}: el máximo de rayos al norte del ecuador, {value} por ciento del mapa."
+     "en": "The northern peak: {value} percent of the map.",
+     "pt": "O pico do norte: {value} por cento do mapa.",
+     "es": "El pico del norte: {value} por ciento del mapa."
     }
    }
   ]

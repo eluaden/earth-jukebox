@@ -73,11 +73,15 @@ function syncVideo(i) {
   if (!playing && !v.paused) v.pause();
 }
 
+/** What the voice says at a step: the lines of its events, in one sentence group. */
+const eventLine = (events, lang) => events.map((e) => (e.say && (e.say[lang] ?? e.say.en)) || '').filter(Boolean).join(' ');
+
 function pulse(cls, ms) { const fc = $('#face'); fc.classList.add(cls); setTimeout(() => fc.classList.remove(cls), ms); }
 
+let speaking = Promise.resolve();
 function speak(s) {
   $('#status').textContent = s; audio.duck(true);
-  return say(s).then(() => { audio.duck(false); if ($('#caption').textContent === s) $('#caption').textContent = ''; });
+  return speaking = say(s).then(() => { audio.duck(false); if ($('#caption').textContent === s) $('#caption').textContent = ''; });
 }
 
 function step() {
@@ -89,8 +93,8 @@ function step() {
   const milestone = events.some((e) => e.type === 'milestone');
   if (milestone || i % (track.clockEvery || 1) === 0) { audio.tick(milestone, role.pulse ? val(role.pulse, i) : null); pulse('tick', 120); }
   if (events.some((e) => e.type === 'record')) { audio.bell(); pulse('bell', 700); }
-  const lines = events.map((e) => pick(e.say)).filter(Boolean);
-  if (lines.length) speak(lines.join(' '));
+  const line = eventLine(events, getLang());
+  if (line) speak(line);
   syncVideo(i); render(); idx++; timer = setTimeout(step, track.secondsPerFrame * 1000);
 }
 
@@ -118,6 +122,8 @@ export function pause() {
 
 async function finish() {
   playing = false; setPlayUi(); audio.silence(.6); video().pause();
+  const token = loadToken;
+  await speaking; if (token !== loadToken || playing) return;
   const s = pick(track.narration.outro); $('#status').textContent = s; await say(s); $('#caption').textContent = ''; $('#bigplay').hidden = false;
 }
 
@@ -212,6 +218,32 @@ export function initPlayer(tracks) {
   /* demos */
   $$('[data-demo]').forEach((b) => b.addEventListener('click', () => { if (!playing) audio.demo(b.dataset.demo); }));
   if (catalog.length) selectTrack(catalog[0].id);
+}
+
+/**
+ * Every line the voice can say, for all tracks and languages, with when it is said.
+ * Used by the local script that records the narration (window.earthJukebox.narrationLines()).
+ */
+export async function narrationLines() {
+  const out = [];
+  for (const c of catalog) {
+    const tr = await getTrack(c.id);
+    const byFrame = {};
+    (tr.events || []).forEach((e) => (byFrame[e.frame] ||= []).push(e));
+    const frames = Object.keys(byFrame).map(Number).sort((a, b) => a - b);
+    for (const lang of ['en', 'pt', 'es']) {
+      const add = (kind, text, extra = {}) => text && out.push({ track: c.id, lang, kind, text, ...extra });
+      add('intro', tr.narration.intro[lang] ?? tr.narration.intro.en);
+      frames.forEach((f, k) => add('event', eventLine(byFrame[f], lang), {
+        frame: f, time: +(f * tr.secondsPerFrame).toFixed(3),
+        // seconds until the next spoken line (or the end of the track): the line should fit in it
+        // (null for the last line: the outro waits for it)
+        room: k + 1 < frames.length ? +((frames[k + 1] - f) * tr.secondsPerFrame).toFixed(3) : null,
+      }));
+      add('outro', tr.narration.outro[lang] ?? tr.narration.outro.en);
+    }
+  }
+  return out;
 }
 
 export const speechLang = () => ({ en: 'en-US', pt: 'pt-BR', es: 'es-ES' }[getLang()]);

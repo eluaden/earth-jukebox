@@ -270,7 +270,10 @@ export async function extractTrack(track, urlFor) {
     if (best < 0) continue;
     const say = {};
     for (const [lang, text] of Object.entries(rule.say || {})) {
-      say[lang] = text.replace('{label}', track.labels[best]).replace('{value}', String(vals[best]));
+      // spokenLabels: the label written out for the voice in each language (e.g. "6 de agosto").
+      const label = track.spokenLabels?.[lang]?.[best] ?? track.labels[best];
+      const line = text.replace('{label}', label).replace('{value}', String(vals[best]));
+      say[lang] = line.charAt(0).toUpperCase() + line.slice(1);
     }
     events.push({ frame: best, type: rule.type || 'record', say });
   }
