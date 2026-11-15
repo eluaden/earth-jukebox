@@ -79,9 +79,12 @@ data plays underneath and is declared in the liner notes. Music ducks while the 
 | `src/narration/` | Narration: voice files when present, browser speech as fallback |
 | `src/i18n/` | Interface and track texts, EN / PT / ES |
 
-Narration files (ElevenLabs, see [`docs/prompts-assets.md`](docs/prompts-assets.md) §2.5) go in
-`public/voice/<en|pt|es>/sst-<id>.mp3` and are listed in `public/voice/manifest.json`; until then the
-browser's speech synthesis reads the same lines.
+Recorded narration (ElevenLabs, see [`docs/prompts-assets.md`](docs/prompts-assets.md) §2.5) lives in
+`public/narration/<en|pt|es>/<key>.mp3`, listed in `public/narration/manifest.json` under `lines`. The key
+is `lineKey(lang, text)` ([`src/narration/key.js`](src/narration/key.js)), a hash of the exact text: a line
+whose text changes falls back to the browser's speech synthesis until it is recorded again. Captions
+show one short line at a time, in step with the voice. The recordings already in the folder are for the
+old tracks; the SST lines still need recording.
 
 ## Accessibility
 

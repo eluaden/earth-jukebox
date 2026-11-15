@@ -75,7 +75,8 @@ export function preload() {
     c.narrator = createNarrator({
       base: BASE,
       duck: (on) => c.engine.duck(on),
-      setCaption: (text) => useStore.setState({ caption: text, announcement: text }),
+      setCaption: (line) => useStore.setState({ caption: line }),
+      announce: (text) => useStore.setState({ announcement: text }),
     });
     useStore.subscribe((s, prev) => {
       if (s.mute !== prev.mute || s.solo !== prev.solo) c.engine.setMix(s.mute, s.solo);
@@ -171,7 +172,7 @@ function say(id) {
   const marker = meta.markers.find((m) => m.id === id);
   const date = marker ? longDate(meta.dates[marker.step], lang) : '';
   const text = SST_TEXT[lang].narration[id].replace('{date}', date.charAt(0).toUpperCase() + date.slice(1));
-  c.narrator.say(TRACK, id, text, lang);
+  c.narrator.say(text, lang);
 }
 
 /** "V": speak the date and the three zone values (screen reader live region). */

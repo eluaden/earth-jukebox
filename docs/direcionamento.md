@@ -404,7 +404,7 @@ Fazer antes de implementar os itens bloqueados. Resultado entra neste documento.
 | Q1 | Velocidade de rotação do globo e quanto tempo de dado passa por volta | §2, §6 | Definir de ouvido por faixa; ponto de partida ~10 s por volta. Na SST: vídeo a 1× (66,7 s por ano de dado), ~6,7 voltas por ano |
 | Q2 | Aerossóis têm 4 categorias e o limite é 3 vozes: corta sulfato ou abre exceção? | §6.2 | Testar com 4; cortar se embolar |
 | Q3 | Quantos testadores cegos ou com baixa visão conseguimos, e quando? | §9, §10 | Pelo menos 3 reais + 5 de olhos fechados |
-| Q4 | Qual voz do ElevenLabs será o narrador? | §7.2 (N1–N3) | Voz calma, quente, de documentário; testar 3–4 com a frase de teste de `prompts-assets.md` |
+| Q4 | Qual voz do ElevenLabs será o narrador? | §7.2 (N1–N3) | Voz calma, quente, de documentário; testar 3–4 com a frase de teste de `prompts-assets.md`. **Em 15/11/2026 o time gravou as falas das faixas antigas com a voz clonada de um integrante (`eleven_multilingual_v2`), em `public/narration/`**; falta registrar aqui se essa é a voz escolhida |
 | Q5 | O que soa quando a agulha passa sobre terra numa faixa de oceano? | §6.3, R5 | Testar de ouvido: um som de fundo muito baixo e contínuo, que não vem do dado e é declarado no encarte, contra o globo girando mais rápido sobre a terra. **Primeira versão (fatia SST):** estalo de vinil sintetizado, muito baixo e contínuo, declarado no encarte; trocado pelo S2 quando existir |
 
 ## 16. Prioridade

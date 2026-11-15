@@ -163,9 +163,10 @@ Put on headphones. This is the Atlantic Ocean, in the summer of 2007. Every note
 
 ### 2.5 Narração das faixas (N2) e do pitch (N3)
 
-- Arquivos: `media-src/elevenlabs/voice/<en|pt|es>/<faixa>-<id>.mp3`. Para o site, copiar (comprimido) para `public/voice/<idioma>/` e listar o nome sem extensão em `public/voice/manifest.json`; sem o arquivo, o site usa a voz do navegador com o mesmo texto.
+- Originais em `media-src/elevenlabs/voice/<en|pt|es>/<faixa>-<id>.mp3`. No site, cada fala vive em `public/narration/<idioma>/<chave>.mp3`, listada em `public/narration/manifest.json` (`lines`: chave → arquivo; `info`: faixa, idioma, tipo e texto). A chave é `lineKey(idioma, texto)` de `src/narration/key.js`, um hash do **texto exato**: se o texto mudar, o site volta para a voz do navegador até a fala ser gravada de novo.
+- As gravações já em `public/narration/` (15/11/2026, `eleven_multilingual_v2`, voz clonada de um integrante) são das faixas antigas. As falas da SST abaixo ainda precisam ser gravadas com a mesma voz.
 - Os textos são os mesmos de `src/i18n/tracks/<faixa>.js` (fonte única); se mudar um, mude o outro.
-- `{date}` é preenchido pelo site com o mês e o ano. Para gravar, use as datas abaixo (calculadas da grade da faixa).
+- `{date}` é preenchido pelo site com o mês e o ano; os textos abaixo já estão com a data exata que o site gera (calculada da grade da faixa), então a chave bate.
 - Pitch (N3): *(a escrever com o roteiro do vídeo.)*
 
 **Temperatura do mar (SST)**
