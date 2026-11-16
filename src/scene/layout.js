@@ -8,6 +8,30 @@ export const TILT = 0.12; // rad, about X (positive = north pole toward the came
 export const NEEDLE_LAT = 30; // where the stylus touches the meridian line (degrees)
 export const TIME_RING = 1.15; // the platter's time ring (src/scene/Platter.jsx)
 export const PLATTER_R = 1.24; // what the camera keeps clear of the HUD: the ring, its hover state and label
+// Hover tick on the ring reaches about 0.024 past TIME_RING (src/scene/Platter.jsx shader).
+const RING_LABEL_R = TIME_RING + 0.032;
+const RING_LABEL_GAP = 8; // px: air between that tick and the date
+
+/**
+ * Hover date beside the time ring (fraction 0 at the top, clockwise, as the ring shader).
+ * The anchor sits just outside the ring. The CSS shift puts the label's inner edge on that
+ * anchor and then a few pixels further out, so the words grow away from the globe: a label
+ * centered on the anchor lays the text across the ring.
+ * Returns { position, transform } for drei <Html> (no `center`: this transform replaces it).
+ */
+export function ringLabelPlacement(fraction) {
+  const a = fraction * Math.PI * 2;
+  const wx = Math.sin(a);
+  const wy = Math.cos(a);
+  const nx = Math.abs(wx) < 1e-8 ? 0 : wx; // screen +x
+  const ny = Math.abs(wy) < 1e-8 ? 0 : -wy; // screen +y is down
+  const shift = (n) => `${(-50 + n * 50).toFixed(2)}%`;
+  const px = (n) => (n * RING_LABEL_GAP).toFixed(2);
+  return {
+    position: [wx * RING_LABEL_R, wy * RING_LABEL_R, 0],
+    transform: `translate3d(calc(${shift(nx)}), calc(${shift(ny)}), 0) translate(${px(nx)}px, ${px(ny)}px)`,
+  };
+}
 export const LINE_LATS = [-72, 88]; // north almost to the visible limb (globe tilted toward the camera)
 
 const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));

@@ -8,7 +8,7 @@ import { useStore } from '../state/store.js';
 import { SECONDS_PER_TURN } from '../data/needle.js';
 import { formatDate } from '../lib/format.js';
 import { t } from '../i18n/strings.js';
-import { GLOBE_Y, TIME_RING } from './layout.js';
+import { GLOBE_Y, TIME_RING, ringLabelPlacement } from './layout.js';
 
 const ringVertex = /* glsl */ `
   varying vec2 vPos;
@@ -136,10 +136,9 @@ function RingLabel({ f }) {
   if (!meta || meta.time?.unit === 'instant') return null;
   const step = stepAtFraction(f);
   if (step < 0) return null;
-  const a = f * Math.PI * 2;
-  const r = TIME_RING + 0.09;
+  const { position, transform } = ringLabelPlacement(f);
   return (
-    <Html position={[Math.sin(a) * r, Math.cos(a) * r, 0]} center zIndexRange={[4, 0]} style={{ pointerEvents: 'none' }}>
+    <Html position={position} zIndexRange={[4, 0]} style={{ pointerEvents: 'none', transform }}>
       <span className="ring-label">{formatDate(meta.dates[step], lang, meta.time?.unit)}</span>
     </Html>
   );

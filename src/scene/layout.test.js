@@ -1,5 +1,28 @@
 import { describe, expect, it } from 'vitest';
-import { DUST_RADII, cameraDistance, dustPositions } from './layout.js';
+import { DUST_RADII, TIME_RING, cameraDistance, dustPositions, ringLabelPlacement } from './layout.js';
+
+describe('ringLabelPlacement', () => {
+  const r = TIME_RING + 0.032;
+
+  it('grows the hover date away from the ring instead of centering it on the ring', () => {
+    const right = ringLabelPlacement(0.25);
+    expect(right.position[0]).toBeCloseTo(r, 5);
+    expect(right.position[1]).toBeCloseTo(0, 5);
+    expect(right.transform).toBe('translate3d(calc(0.00%), calc(-50.00%), 0) translate(8.00px, 0.00px)');
+
+    const left = ringLabelPlacement(0.75);
+    expect(left.position[0]).toBeCloseTo(-r, 5);
+    expect(left.transform).toBe('translate3d(calc(-100.00%), calc(-50.00%), 0) translate(-8.00px, 0.00px)');
+
+    const top = ringLabelPlacement(0);
+    expect(top.position[1]).toBeCloseTo(r, 5);
+    expect(top.transform).toBe('translate3d(calc(-50.00%), calc(-100.00%), 0) translate(0.00px, -8.00px)');
+
+    const bottom = ringLabelPlacement(0.5);
+    expect(bottom.position[1]).toBeCloseTo(-r, 5);
+    expect(bottom.transform).toBe('translate3d(calc(-50.00%), calc(0.00%), 0) translate(0.00px, 8.00px)');
+  });
+});
 
 describe('dustPositions', () => {
   const { positions, sizes, seeds } = dustPositions(500);
