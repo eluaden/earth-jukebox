@@ -1,5 +1,5 @@
 // Liner notes and narration of the sea level bonus record, EN / PT / ES.
-// Rules (docs/si-e-referencias.md): only facts from the NASA page (SVS 5235) or computed from the track's
+// Rules: only facts from the NASA page (SVS 5235) or computed from the track's
 // own series (scripts/pipeline/sealevel.py). The team reviews these texts before publishing.
 // Shown at a glance: dataset, whatYouHear, mapping, highlights. Behind "Learn more": description, limits.
 

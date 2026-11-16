@@ -10,8 +10,7 @@ under it: every note is a value read from the NASA frame with NASA's own colour 
 made up, and the music is not AI-generated: it is synthesized live in the browser from the data,
 with fixed, documented rules.
 
-Current state ([`docs/direcionamento.md`](docs/direcionamento.md)): five records on the shelf, changed
-from **Records**:
+Five records on the shelf:
 
 | Record | NASA source | Period | Globe skin |
 |---|---|---|---|
@@ -137,11 +136,11 @@ data plays underneath and is declared in the liner notes. Music ducks while the 
 | `src/media/` | The globe's skin per record: NASA video, or yearly images with their own clock |
 | `src/scene/` | React Three Fiber: globe, atmosphere, needle, platter, opening |
 | `src/flat/` | 2D version |
-| `src/ui/` | Interface (closed list of the direction §5.2.1), panels, keyboard |
+| `src/ui/` | Interface, panels, keyboard |
 | `src/narration/` | Narration: voice files when present, browser speech as fallback |
 | `src/i18n/` | Interface and track texts, EN / PT / ES |
 
-Recorded narration (ElevenLabs, see [`docs/prompts-assets.md`](docs/prompts-assets.md) §2.5) lives in
+Recorded narration (ElevenLabs) lives in
 `public/narration/<en|pt|es>/<key>.mp3`, listed in `public/narration/manifest.json` under `lines`. The key
 is `lineKey(lang, text)` ([`src/narration/key.js`](src/narration/key.js)), a hash of the exact text: a line
 whose text changes falls back to the browser's speech synthesis until it is recorded again. Captions
@@ -174,18 +173,4 @@ each one has its file. Aerosols and sea level still use speech synthesis until t
 - Fonts: Instrument Serif, Geist Mono, Atkinson Hyperlegible (SIL Open Font License).
 - Libraries: React, three.js, React Three Fiber, drei, postprocessing, GSAP, Tone.js, zustand, Vite, Vitest.
 - Code written with AI coding assistants (Anthropic Claude) under the team's direction and review.
-  No data, values, music or scientific claims are AI-generated. Full disclosure and references:
-  [`docs/si-e-referencias.md`](docs/si-e-referencias.md).
-
-## Planning docs
-
-Development is 100% AI-driven: existing code and decisions are not the source of truth. Read
-[`AGENTS.md`](AGENTS.md) first. [`docs/direcionamento.md`](docs/direcionamento.md) holds the current
-direction and must be updated before any change. [`STATUS.md`](STATUS.md) tracks what is done, item by
-item, and who owns what. Design of this slice:
-[`docs/superpowers/specs/2026-11-15-fatia-sst-design.md`](docs/superpowers/specs/2026-11-15-fatia-sst-design.md).
-
-## Still open
-
-Team names are listed in About.
-The sound must be approved by ear by a team member with musical training (direction §6.1).
+  No data, values, music or scientific claims are AI-generated.

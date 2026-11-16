@@ -1,5 +1,5 @@
 // Liner notes and narration of the sea surface temperature track, EN / PT / ES.
-// Rules (docs/si-e-referencias.md): only facts stated on the NASA page (SVS 3912) or computed from the
+// Rules: only facts stated on the NASA page (SVS 3912) or computed from the
 // track's own grid (scripts/pipeline/sst.py). Numbers below come from public/tracks/sst/grid.bin.
 // Shown at a glance: dataset, whatYouHear, mapping, highlights. Behind "Learn more": description, limits.
 // The team reviews these texts before publishing.

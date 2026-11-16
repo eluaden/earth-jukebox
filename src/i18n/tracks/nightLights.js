@@ -1,5 +1,5 @@
 // Liner notes and narration of the night lights track, EN / PT / ES.
-// Rules (docs/si-e-referencias.md): only facts from the NASA page (SVS 5313) or computed from the track's
+// Rules: only facts from the NASA page (SVS 5313) or computed from the track's
 // own grid (scripts/pipeline/nightlights.py). The team reviews these texts before publishing.
 // Shown at a glance: dataset, whatYouHear, mapping, highlights. Behind "Learn more": description, limits.
 // {date} is the year, filled by the app.
