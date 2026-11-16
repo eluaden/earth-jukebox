@@ -1,5 +1,5 @@
 import * as Tone from 'tone';
-import { isAudible } from './mix.js';
+import { isAudible, musicBusGain } from './mix.js';
 import { INSTRUMENTS } from './instruments.js';
 
 // Plays what a track's music module decides (src/music/tracks/index.js). Every voice of the current
@@ -7,7 +7,8 @@ import { INSTRUMENTS } from './instruments.js';
 // solo), then ducking, reverb and a limiter. The samples are decoded once and shared, so changing
 // track only rebuilds the voices. Vinyl crackle (S2, not data, declared in the liner notes) runs
 // underneath while the needle is on the record; with the needle up the record is silent. One-shot
-// SFX (S1, S3–S7) sit on a separate bus so they do not duck with the narration.
+// SFX (S1, S3–S7) sit on a separate bus so they do not duck with the narration. The music bus gain
+// is intro level × duck (first visit rises under the opening narration; ducking still clears the voice).
 
 const BPM = 84;
 const PULSE = '8n';
@@ -41,6 +42,8 @@ export function createEngine(base) {
   let mix = { mute: {}, solo: {} };
   let sfx = {}; // id -> Tone.Player
   let useSampleBed = false; // true when S2 loaded; otherwise the synthesised hiss/crackle
+  let musicLevel = 1; // 0..1 bed under ducking (intro swell on a first visit)
+  let ducked = false;
 
   function bufferMap(instrument) {
     const b = n.buffers[instrument];
@@ -263,8 +266,23 @@ export function createEngine(base) {
     if (n) applyMix();
   }
 
+  /** Applies intro level × duck to the music bus (SFX and vinyl stay full). */
+  function applyMusicGain(ramp = 0.4) {
+    if (n) n.music.gain.rampTo(musicBusGain(musicLevel, ducked, DUCK_DB), ramp);
+  }
+
   function duck(on) {
-    if (n) n.music.gain.rampTo(on ? Tone.dbToGain(DUCK_DB) : 1, 0.4);
+    ducked = Boolean(on);
+    applyMusicGain(0.4);
+  }
+
+  /**
+   * Sets the music bed level (0..1). On a first visit the bed starts low and rises under the
+   * opening narration; ducking still multiplies on top so the voice stays clear.
+   */
+  function setMusicLevel(level, ramp = 0.4) {
+    musicLevel = Math.max(0, Math.min(1, level));
+    applyMusicGain(ramp);
   }
 
   /**
@@ -323,6 +341,7 @@ export function createEngine(base) {
     releaseAll,
     setMix,
     duck,
+    setMusicLevel,
     playLegend,
     playSfx,
     needleDrop,

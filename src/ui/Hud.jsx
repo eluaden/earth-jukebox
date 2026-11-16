@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../state/store.js';
-import { replayTrack, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
+import { replayTrack, returnToCold, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
 import { InstrumentMenu } from './InstrumentMenu.jsx';
 import { chipSign, describeValue, TRACK_TEXT } from '../state/tracks.js';
 import { chipValue, formatDate, longDate } from '../lib/format.js';
@@ -23,12 +23,14 @@ function InfoIcon({ size = 15 }) {
   );
 }
 
-/** Top corners: brand and About. */
+/** Top corners: brand (back to language screen) and About. */
 export function Corners() {
   const lang = useStore((s) => s.lang);
   return (
     <>
-      <div className="brand" aria-hidden="true">{t(lang, 'brand')}</div>
+      <button type="button" className="brand" aria-label={t(lang, 'changeLanguage')} onClick={returnToCold}>
+        {t(lang, 'brand')}
+      </button>
       <button type="button" className="about-link" onClick={() => openPanel('about')}>
         {t(lang, 'about')}
       </button>
@@ -91,7 +93,7 @@ export function DateCaption() {
 
 /**
  * One glass chip per voice of the current record: "Instrument · what it plays", the value under the
- * needle (direction 5.2.1), M and S. A dash when the needle is up or the map has no value there.
+ * needle (direction 5.2.1), and Mute. A dash when the needle is up or the map has no value there.
  */
 export function Chips() {
   const lang = useStore((s) => s.lang);
@@ -99,11 +101,8 @@ export function Chips() {
   const voices = useStore((s) => s.voices);
   const summary = useStore((s) => s.summary);
   const mute = useStore((s) => s.mute);
-  const solo = useStore((s) => s.solo);
   const toggleMute = useStore((s) => s.toggleMute);
-  const toggleSolo = useStore((s) => s.toggleSolo);
   const reading = useStore((s) => s.arm === 'down' && !s.switching);
-  const anySolo = Object.values(solo).some(Boolean);
   return (
     <ul className="chips">
       {summary.map((sv) => {
@@ -112,7 +111,7 @@ export function Chips() {
         const instrument = t(lang, `instrument.${voice.instrument}`);
         const variable = t(lang, `var.${trackId}.${sv.voice}`);
         const name = `${instrument} · ${variable}`;
-        const off = mute[sv.voice] || (anySolo && !solo[sv.voice]);
+        const off = mute[sv.voice];
         const shown = reading ? chipValue(sv.unit, sv.value, lang, chipSign(sv.voice)) : { value: '—', suffix: '' };
         return (
           <li key={`${trackId}-${sv.voice}`} className={`chip glass ${off ? 'off' : ''}`}>
@@ -135,10 +134,7 @@ export function Chips() {
               </span>
               <span className="chip-buttons">
                 <button type="button" aria-pressed={mute[sv.voice]} aria-label={t(lang, 'mute', { voice: name })} onClick={() => toggleMute(sv.voice)}>
-                  M
-                </button>
-                <button type="button" aria-pressed={solo[sv.voice]} aria-label={t(lang, 'solo', { voice: name })} onClick={() => toggleSolo(sv.voice)}>
-                  S
+                  Mute
                 </button>
               </span>
             </span>
@@ -171,9 +167,9 @@ function ReplayIcon() {
 }
 
 /**
- * Glass pill in three parts: transport and the track on the left; Records in the middle, drawn as
- * the record on the platter resting on the pill's top edge; 'What am I hearing?' on the right.
- * Language lives on the cold open.
+ * Glass pill in three parts: transport and the track on the left; Change record in the middle,
+ * drawn as the record on the platter resting on the pill's top edge; 'What am I hearing?' on the
+ * right. Language lives on the cold open.
  */
 export function Footer() {
   const lang = useStore((s) => s.lang);
@@ -189,6 +185,8 @@ export function Footer() {
   // Buttons stay focusable while a record changes (aria-disabled, not disabled) so keyboard focus
   // is not thrown to the page; the controller ignores them meanwhile.
   const busy = switching ? 'true' : undefined;
+  const recordsHint = hint === 'records' && panel !== 'records';
+  const hearingHint = hint === 'hearing' && panel !== 'liner';
   return (
     <nav className={`footer glass ${playing && !switching ? 'is-playing' : ''}`} aria-label="Earth Jukebox">
       <div className="footer-side footer-start">
@@ -205,9 +203,10 @@ export function Footer() {
       </div>
       <button
         type="button"
+        aria-label={t(lang, 'records')}
         aria-expanded={panel === 'records'}
         aria-disabled={busy}
-        className={`records-open ${panel === 'records' ? 'on' : ''}`}
+        className={`records-open ${panel === 'records' ? 'on' : ''} ${recordsHint ? 'hint records-nudge' : ''}`}
         onClick={() => openPanel('records')}
       >
         <span className="records-slot" aria-hidden="true">
@@ -221,15 +220,20 @@ export function Footer() {
           aria-expanded={panel === 'liner'}
           aria-disabled={busy}
           aria-label={t(lang, 'linerNotes')}
-          className={`hearing ${panel === 'liner' ? 'on' : ''} ${hint ? 'hint' : ''}`}
+          className={`hearing ${panel === 'liner' ? 'on' : ''} ${hearingHint ? 'hint' : ''}`}
           onClick={() => openPanel('liner')}
         >
           <InfoIcon />
           <span className="hearing-label">{t(lang, 'linerNotes')}</span>
         </button>
       </div>
-      {hint && panel !== 'liner' && (
-        <p className="hearing-hint" aria-hidden="true">
+      {recordsHint && (
+        <p className="footer-hint records-hint" aria-hidden="true">
+          {t(lang, 'recordsHint')}
+        </p>
+      )}
+      {hearingHint && (
+        <p className="footer-hint hearing-hint" aria-hidden="true">
           {t(lang, 'hearingHint')}
         </p>
       )}

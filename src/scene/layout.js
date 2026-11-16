@@ -54,7 +54,7 @@ export function cameraFrame(w, h) {
   let maxR;
   let centerY = h / 2;
   if (!stackedLayout(w, h)) {
-    const chips = Math.min(210, 0.19 * w) + gutter + 48 + 16; // chips column, liner tab, gap
+    const chips = Math.min(178, 0.16 * w) + gutter + 48 + 16; // chips column, liner tab, gap
     const date = Math.min(0.24 * w, 400) + gutter + 40 + 24; // date and caption column (.when), gap
     maxR = Math.min(w / 2 - Math.max(chips, date), h / 2 - (gutter + FOOTER_H + DISC_RISE + 12));
     const tx = w / 2 - (gutter + 40 + 300); // trend chart's top-right corner, from the centre
@@ -106,6 +106,35 @@ export function dustPositions(count, random = Math.random) {
     seeds[i] = random();
   }
   return { positions, sizes, seeds };
+}
+
+// NASA SVS 5235 ruler, measured on the 2160² porthole frame (direcionamento E1):
+// +50 cm on row 50, −50 cm on row 2107.5. The disc maps that square onto a circle of radius 1.
+const RULER_FRAME = 2160;
+const RULER_TOP_PX = 50;
+const RULER_BOT_PX = 2107.5;
+const RULER_TOP_CM = 50;
+const RULER_BOT_CM = -50;
+
+/** Local Y on the porthole disc (radius 1, +Y up) for a sea level in centimetres above 1993. */
+export function seaLevelLocalY(cm) {
+  const t = (RULER_TOP_CM - cm) / (RULER_TOP_CM - RULER_BOT_CM);
+  const row = RULER_TOP_PX + t * (RULER_BOT_PX - RULER_TOP_PX);
+  return 1 - (2 * row) / RULER_FRAME;
+}
+
+/**
+ * World-space radius of the porthole disc: it is drawn flat at the globe's centre and scaled so
+ * it covers the same angle as a sphere of radius 1 seen from `camera`.
+ */
+export function portholeRadius(camera) {
+  const d = Math.hypot(camera.position.y - GLOBE_Y, camera.position.z);
+  return d > 1.01 ? d / Math.sqrt(d * d - 1) : 1;
+}
+
+/** Point on the porthole glass where `cm` sits on NASA's ruler (x = 0, the centre line). */
+export function seaLevelPoint(cm, radius) {
+  return new THREE.Vector3(0, GLOBE_Y + seaLevelLocalY(cm) * radius, 0.02);
 }
 
 /** Tonearm pivot: off the platter, top right, always inside the view (counterweight included). */

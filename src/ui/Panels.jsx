@@ -103,7 +103,7 @@ export function LinerNotes() {
   return (
     <>
       {open && <div className="liner-backdrop" onClick={(e) => e.target === e.currentTarget && close()} />}
-      <div className={`liner-shell ${open ? 'is-open' : ''} ${hint && !open ? 'hint' : ''}`}>
+      <div className={`liner-shell ${open ? 'is-open' : ''} ${hint === 'hearing' && !open ? 'hint' : ''}`}>
         <button
           type="button"
           className="liner-tab"

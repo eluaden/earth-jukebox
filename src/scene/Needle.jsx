@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import * as THREE from 'three';
 import { live } from '../state/live.js';
 import { controller } from '../state/controller.js';
 import { useStore } from '../state/store.js';
-import { GLOBE_Y, LINE_LATS, NEEDLE_LAT, meridianPoint, pivotFor } from './layout.js';
+import { GLOBE_Y, LINE_LATS, NEEDLE_LAT, meridianPoint, pivotFor, portholeRadius, seaLevelPoint } from './layout.js';
 
 const DOT_LIFE = 650; // ms a note flash lasts on the meridian
 const POOL = 16;
@@ -113,17 +113,43 @@ const POSES = {
 const Z = new THREE.Vector3(0, 0, 1);
 const along = (v) => new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), v.clone().normalize());
 
-/** Slender chrome tonearm on a pivot at the top right; its stylus rests on the meridian. */
+/** Disc radius that matches the globe, refreshed while the camera moves (opening, resize). */
+function usePortholeRadius() {
+  const camera = useThree((s) => s.camera);
+  const [radius, setRadius] = useState(() => portholeRadius(camera));
+  useFrame(() => {
+    const next = portholeRadius(camera);
+    setRadius((r) => (Math.abs(r - next) > 0.004 ? next : r));
+  });
+  return radius;
+}
+
+/** Centimetres above 1993, rounded so the arm is not rebuilt on every data step. Null off the sea-level record. */
+function seaCm(trackId, summary) {
+  if (trackId !== 'sea-level') return null;
+  const level = summary.find((sv) => sv.voice === 'level')?.value;
+  return Number.isFinite(level) ? Math.round(level * 10) / 10 : 0;
+}
+
+/**
+ * Slender chrome tonearm on a pivot at the top right. Its stylus rests on the meridian, or on the
+ * sea-level mark of NASA's ruler when the sea-level record plays (the tip follows the water).
+ */
 export function Tonearm() {
   const group = useRef();
   const arm = useStore((s) => s.arm);
+  const trackId = useStore((s) => s.trackId);
+  const summary = useStore((s) => s.summary);
   const aspect = useThree((s) => s.size.width / s.size.height);
+  const radius = usePortholeRadius();
+  const cm = seaCm(trackId, summary);
 
   const parts = useMemo(() => {
     const pivot = pivotFor(aspect);
-    const tip = meridianPoint(NEEDLE_LAT, 1.002);
+    const sea = cm != null;
+    const tip = sea ? seaLevelPoint(cm, radius) : meridianPoint(NEEDLE_LAT, 1.002);
     const normal = tip.clone().sub(new THREE.Vector3(0, GLOBE_Y, 0)).normalize();
-    const head = tip.clone().addScaledVector(normal, 0.075);
+    const head = sea ? tip.clone().add(new THREE.Vector3(0, 0, 0.08)) : tip.clone().addScaledVector(normal, 0.075);
     const top = pivot.clone().add(new THREE.Vector3(0, 0, 0.1));
     const flat = head.clone().sub(top).setZ(0);
     const dir = flat.clone().normalize();
@@ -162,16 +188,26 @@ export function Tonearm() {
       weight,
       axisQ: along(Z),
     };
-  }, [aspect]);
+  }, [aspect, cm, radius]);
+
+  // The tube is rebuilt when the tip moves (sea level); free the old one.
+  const tubeRef = useRef(null);
+  useEffect(() => {
+    const old = tubeRef.current;
+    tubeRef.current = parts.tube;
+    if (old && old !== parts.tube) old.dispose();
+  }, [parts.tube]);
 
   useEffect(() => {
     const p = POSES[arm];
     const g = group.current;
     const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
     const d = reduce ? 0 : 0.9;
-    gsap.to(g.position, { x: parts.pivot.x, y: parts.pivot.y, z: parts.pivot.z + p.z, duration: d, ease: 'power2.inOut' });
+    const pivot = parts.pivot;
+    gsap.to(g.position, { x: pivot.x, y: pivot.y, z: pivot.z + p.z, duration: d, ease: 'power2.inOut' });
     gsap.to(g.rotation, { z: p.rz, duration: d, ease: 'power2.inOut' });
-  }, [arm, parts]);
+    // Pivot numbers, not the vector: a new tip (sea level) must not replay the lift.
+  }, [arm, parts.pivot.x, parts.pivot.y, parts.pivot.z]);
 
   const chrome = <meshStandardMaterial color="#f2f4f7" metalness={1} roughness={0.14} envMapIntensity={1.8} />;
   const dark = <meshStandardMaterial color="#16181c" metalness={0.7} roughness={0.32} envMapIntensity={1.2} />;

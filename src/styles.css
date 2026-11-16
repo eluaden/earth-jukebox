@@ -121,7 +121,7 @@ a {
 }
 .cold-langs {
   display: flex;
-  gap: 4px;
+  gap: 18px;
   margin-top: 10px;
   font-family: var(--mono);
   font-size: 14px;
@@ -132,15 +132,16 @@ a {
 .cold-langs button {
   color: inherit;
   background: transparent;
-  border: 0;
-  padding: 6px 10px;
+  border: 1.5px solid transparent;
+  padding: 6px 11px;
   cursor: pointer;
   font: inherit;
   letter-spacing: inherit;
-  border-radius: 999px;
+  border-radius: 8px;
   transition:
     color 0.25s ease,
     background 0.25s ease,
+    border-color 0.25s ease,
     transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .cold-langs button:hover {
@@ -152,9 +153,8 @@ a {
   font-weight: 700;
 }
 .cold-langs button:focus-visible {
-  outline-color: rgba(255, 255, 255, 0.7);
-  outline-offset: 4px;
-  border-radius: 4px;
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.78);
 }
 .cold.leaving {
   opacity: 0;
@@ -206,13 +206,22 @@ a {
 
 .brand {
   position: absolute;
-  top: var(--gutter);
+  top: calc(var(--gutter) - 6px);
   left: var(--gutter);
+  z-index: 2;
+  padding: 6px 4px;
   font-size: 13px;
   letter-spacing: 0.18em;
   font-weight: 700;
-  pointer-events: none;
+  color: var(--fg);
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
   animation: fade-in 1s ease 0.15s both;
+}
+.brand:hover {
+  opacity: 0.72;
 }
 .about-link {
   position: absolute;
@@ -437,11 +446,11 @@ a {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: min(210px, 19vw);
+  width: min(178px, 16vw);
 }
 .chip {
   border-radius: 14px;
-  padding: 11px 13px;
+  padding: 9px 11px;
   transition:
     opacity 0.3s ease,
     transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -512,13 +521,16 @@ a {
   gap: 6px;
 }
 .chip-buttons button {
-  width: 30px;
-  height: 28px;
+  width: auto;
+  min-width: 0;
+  height: 26px;
+  padding: 0 8px;
   border-radius: 8px;
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.04);
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
   color: var(--fg-dim);
   transition:
     background 0.2s ease,
@@ -652,8 +664,8 @@ a {
 .footer button.records-open {
   position: relative;
   align-self: stretch;
-  width: 76px;
-  padding: 0 0 2px;
+  min-width: 88px;
+  padding: 0 4px 2px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -672,6 +684,7 @@ a {
   margin-left: calc(var(--disc) / -2);
 }
 .records-disc {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
@@ -715,10 +728,11 @@ a {
 .records-label {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--fg-dim);
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 .footer button.records-open:hover .records-disc {
   transform: translateY(-3px);
@@ -739,8 +753,33 @@ a {
 .footer button.records-open:focus-visible {
   border-radius: 999px;
 }
+/* First-visit nudge: the disc on the pill lifts once so it reads as tappable. */
+.footer button.records-open.records-nudge .records-disc {
+  animation: records-nudge 1.15s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.footer button.records-open.hint .records-disc {
+  box-shadow:
+    0 0 0 1.5px rgba(255, 200, 120, 0.55),
+    0 0 0 6px rgba(255, 200, 120, 0.2),
+    0 10px 20px rgba(0, 0, 0, 0.65);
+}
+@keyframes records-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-8px) scale(1.04);
+  }
+  55% {
+    transform: translateY(-3px) scale(1.01);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .records-disc img {
+    animation: none;
+  }
+  .footer button.records-open.records-nudge .records-disc {
     animation: none;
   }
 }
@@ -839,13 +878,14 @@ a {
   align-items: flex-start;
   padding: 0;
   text-align: left;
+  cursor: pointer;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .cover:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px);
 }
 .cover:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(-1px) scale(0.98);
 }
 /* Sleeve (the track's frame) with the record peeking out on the right. */
 .cover-art {
@@ -870,11 +910,21 @@ a {
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.08),
     0 6px 20px rgba(0, 0, 0, 0.6);
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.3s ease;
 }
-.cover:hover .cover-art::before,
+.cover:hover .cover-art::before {
+  transform: translateX(22px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.28),
+    0 10px 24px rgba(0, 0, 0, 0.7);
+}
 .cover[aria-current='true'] .cover-art::before {
-  transform: translateX(14px);
+  transform: translateX(18px);
+  box-shadow:
+    0 0 0 1.5px rgba(255, 200, 120, 0.55),
+    0 8px 22px rgba(0, 0, 0, 0.65);
 }
 .cover:focus-visible {
   outline-offset: 6px;
@@ -889,11 +939,35 @@ a {
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.12),
     0 10px 30px rgba(0, 0, 0, 0.6);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cover:hover img {
+  box-shadow:
+    0 0 0 1.5px rgba(255, 255, 255, 0.35),
+    0 14px 34px rgba(0, 0, 0, 0.7);
+}
+.cover[aria-current='true'] {
+  transform: translateY(-4px);
+}
+.cover[aria-current='true'] img {
+  box-shadow:
+    0 0 0 1.5px rgba(255, 200, 120, 0.7),
+    0 0 0 5px rgba(255, 200, 120, 0.16),
+    0 12px 32px rgba(0, 0, 0, 0.65);
+}
+.cover[aria-current='true']:hover {
+  transform: translateY(-6px);
 }
 .cover-name {
   margin-top: 14px;
   font-size: 15px;
   font-weight: 700;
+  transition: color 0.2s ease;
+}
+.cover:hover .cover-name {
+  color: var(--fg);
 }
 .cover-period {
   font-family: var(--mono);
@@ -911,6 +985,9 @@ a {
   border-radius: 50%;
   background: var(--amber);
   box-shadow: 0 0 8px var(--amber);
+}
+.cover[aria-current='true'] .cover-name {
+  color: var(--fg);
 }
 .panel-records .stage {
   filter: brightness(0.4);
@@ -1264,8 +1341,9 @@ a {
     font-size: 16px;
   }
   .chip-buttons button {
-    width: 32px;
-    height: 30px;
+    width: auto;
+    height: 28px;
+    padding: 0 8px;
   }
   .footer {
     left: var(--gutter);
@@ -1285,14 +1363,16 @@ a {
     display: none;
   }
   .footer button.records-open {
-    width: 64px;
+    min-width: 72px;
+    padding: 0 2px 2px;
   }
   .records-slot {
     --disc: 46px;
     top: -30px;
   }
   .records-label {
-    font-size: 10px;
+    font-size: 9.5px;
+    letter-spacing: 0.04em;
   }
   .records {
     bottom: calc(var(--gutter) + 100px);
@@ -1323,9 +1403,11 @@ a {
     bottom: 6px;
     left: 20px;
   }
-  .cover:hover .cover-art::before,
+  .cover:hover .cover-art::before {
+    transform: translateX(12px);
+  }
   .cover[aria-current='true'] .cover-art::before {
-    transform: translateX(8px);
+    transform: translateX(10px);
   }
   .cover-name {
     margin-top: 10px;
@@ -1406,8 +1488,8 @@ body.dragging-globe * {
   }
 }
 @media (max-width: 760px), (orientation: portrait) {
-  .hearing-hint {
-    display: none; /* no free spot near the button on a phone: the button and the arrow glow instead */
+  .footer-hint {
+    display: none; /* no free spot near the button on a phone: the controls glow instead */
   }
   .footer button.hearing {
     padding: 5px 9px;
@@ -1508,15 +1590,10 @@ body.dragging-globe * {
   z-index: 25; /* the open menu sits above the chips below it */
 }
 
-/* ---------- first-visit bubble, beside the footer on its right ---------- */
-/* The only free spot near the button that never reaches the record's ring (hidden when stacked). */
-.hearing-hint {
+/* ---------- first-visit bubbles (Records above the disc; hearing beside the footer) ---------- */
+.footer-hint {
   position: absolute;
-  left: calc(100% + 14px);
-  top: 50%;
-  transform: translateY(-50%);
   width: max-content;
-  max-width: min(250px, calc(50vw - 50% - var(--gutter) - 14px));
   margin: 0;
   padding: 9px 13px;
   border-radius: 12px;
@@ -1527,6 +1604,30 @@ body.dragging-globe * {
   white-space: normal;
   pointer-events: none;
   animation: fade-in 0.5s ease both;
+}
+/* Above the protruding disc, centred on Change record. */
+.records-hint {
+  left: 50%;
+  bottom: calc(100% + 44px);
+  transform: translateX(-50%);
+  max-width: min(220px, 70vw);
+}
+.records-hint::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -7px;
+  border: 7px solid transparent;
+  border-top-color: rgba(255, 244, 228, 0.96);
+  border-bottom: 0;
+}
+/* The only free spot near the hearing button that never reaches the record's ring. */
+.hearing-hint {
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: min(250px, calc(50vw - 50% - var(--gutter) - 14px));
 }
 .hearing-hint::after {
   content: '';

@@ -25,6 +25,11 @@ const ARM_MS = 650; // tonearm swing before the stylus touches
 const INTRO_GAP_MS = 2500; // music alone between the welcome and the track's opening narration
 const PREFETCH_MS = 5000; // after the music starts, the other records load in the background
 const INSTANT_OUTRO_TURNS = 4; // a single-instant record (aerosols) closes after this many turns
+// First visit: music rises under the welcome + first-disc intro; full level only after that ends.
+const INTRO_MUSIC_START = 0.06;
+const INTRO_MUSIC_MID = 0.28;
+const INTRO_SWELL_SEC = 22; // soft rise while the narrator still has the floor
+const INTRO_FINISH_SEC = 4.5; // last climb to normal after the track intro
 
 const c = {
   ready: null,
@@ -37,6 +42,7 @@ const c = {
   fired: new Set(), // narration already spoken on this record
   swap: null, // { from: skin, t0, dur } while the globe crossfades to a new record
   opening: null, // Promise of the N1 lines on a first visit
+  swell: false, // music bed is rising under the first-visit opening (until the track intro ends)
   landed: false, // the current descent already ended (introDone ran)
   token: 0, // changes with every record; callbacks left over from an older record do nothing
   prefetched: false,
@@ -278,9 +284,22 @@ function startPlayback() {
   useStore.setState({ phase: 'playing', playing: true });
   c.track.skin.play();
   c.engine.playSfx('platter-spin-up');
+  // First visit: music enters quiet under the welcome / first-disc intro and only nears full after.
+  if (c.opening) {
+    c.swell = true;
+    c.engine.setMusicLevel(INTRO_MUSIC_START, 0);
+    c.engine.setMusicLevel(INTRO_MUSIC_MID, INTRO_SWELL_SEC);
+  }
   c.engine.start(onTick);
   sayIntroWhenFree();
   schedulePrefetch();
+}
+
+/** Ends the first-visit music swell (or snaps to full if the opening was cut short). */
+function finishIntroSwell(rampSec = INTRO_FINISH_SEC) {
+  if (!c.swell) return;
+  c.swell = false;
+  c.engine.setMusicLevel(1, rampSec);
 }
 
 /** The record's opening narration, after the welcome (plus a breath of music) on a first visit. */
@@ -299,7 +318,9 @@ function sayIntroWhenFree() {
     }
     c.introSaid = token;
     Promise.resolve(say('intro')).then(() => {
-      if (token === c.token) hintOnce();
+      if (token !== c.token) return;
+      finishIntroSwell();
+      hintOnce();
     });
   });
 }
@@ -371,10 +392,43 @@ export function replayOpening() {
   useStore.setState((s) => ({ panel: null, arm: 'away', introAnimated: true, introKey: s.introKey + 1 }));
 }
 
+/** Brand click: black screen again so the listener can pick another language. */
+export function returnToCold() {
+  const s = useStore.getState();
+  if (s.phase === 'cold') return;
+  if (c.nudgeTimer) {
+    clearTimeout(c.nudgeTimer);
+    c.nudgeTimer = 0;
+  }
+  if (c.scrub) c.scrub = null;
+  clearHintTimer();
+  c.opening = null;
+  c.swell = false;
+  c.landed = false;
+  c.token++;
+  c.narrator?.stop();
+  c.track?.skin?.pause();
+  if (c.engine) {
+    c.engine.pause();
+    c.engine.setMusicLevel(1, 0);
+  }
+  useStore.setState({
+    phase: 'cold',
+    playing: false,
+    panel: null,
+    arm: 'away',
+    caption: '',
+    hint: null,
+    switching: null,
+    scrubbing: false,
+  });
+}
+
 export function setPanel(panel) {
   const s = useStore.getState();
   if (s.switching) return;
   const next = s.panel === panel ? null : panel;
+  const prev = s.panel;
   // Needle up: nothing is read, so the data clock waits with the music.
   if (s.phase === 'playing') {
     if (next === 'records' && s.arm === 'down') {
@@ -389,6 +443,7 @@ export function setPanel(panel) {
     }
   }
   useStore.setState({ panel: next });
+  dismissHintFor(next, prev);
 }
 
 /**
@@ -404,11 +459,16 @@ export async function selectTrack(id) {
     return;
   }
   c.narrator.stop();
+  finishIntroSwell(1); // leaving the first visit: do not keep the next disc quiet
   if (s.arm === 'down') {
     c.engine.needleLift();
     c.track.skin.pause();
   }
   useStore.setState({ panel: null, switching: id, arm: 'up' });
+  if (s.hint === 'records') {
+    clearHintTimer();
+    useStore.setState({ hint: null });
+  }
   c.engine.playSfx('record-swap');
   useStore.getState().announce(t(s.lang, 'loadingTrack', { track: TRACK_TEXT[id][s.lang].title }));
 
@@ -421,6 +481,7 @@ export async function selectTrack(id) {
   } catch (err) {
     console.error(err);
     skin?.dispose();
+    if (useStore.getState().phase === 'cold') return;
     const playing = useStore.getState().playing;
     useStore.setState({ switching: null, arm: playing ? 'down' : 'up' });
     if (playing) {
@@ -431,6 +492,11 @@ export async function selectTrack(id) {
     return;
   }
 
+  if (useStore.getState().phase === 'cold') {
+    skin.dispose();
+    return;
+  }
+
   const from = c.track.skin;
   from.pause();
   activate(bundle, skin);
@@ -438,6 +504,8 @@ export async function selectTrack(id) {
   await wait(SWAP_MS);
   c.swap = null;
   from.dispose();
+
+  if (useStore.getState().phase === 'cold') return;
 
   const token = c.token;
   const { playing, lang } = useStore.getState();
@@ -517,18 +585,84 @@ function placeMarkers(meta, prevLon, lon, dt) {
 }
 
 const HINT_MS = 9000;
+let hintTimer = 0;
 
-/** First visit: after the record's intro, the 'What am I hearing?' openers glow once. */
-function hintOnce() {
+function hintAlreadySeen(key) {
   try {
-    if (localStorage.getItem('ej-hint-seen') === '1') return;
-    localStorage.setItem('ej-hint-seen', '1');
+    return localStorage.getItem(key) === '1';
   } catch {
-    /* storage blocked: show it anyway */
+    return false;
   }
-  if (useStore.getState().panel === 'liner') return;
-  useStore.setState({ hint: true });
-  setTimeout(() => useStore.setState({ hint: false }), HINT_MS);
+}
+
+function markHintSeen(key) {
+  try {
+    localStorage.setItem(key, '1');
+  } catch {
+    /* storage blocked: the hint may show again next visit */
+  }
+}
+
+function clearHintTimer() {
+  if (hintTimer) {
+    clearTimeout(hintTimer);
+    hintTimer = 0;
+  }
+}
+
+/**
+ * First visit after the record's intro: understand what you hear first, then learn to
+ * change the disc — one after the other so they do not compete.
+ */
+function hintOnce() {
+  if (hintAlreadySeen('ej-hint-seen')) {
+    recordsHintOnce();
+    return;
+  }
+  if (useStore.getState().panel === 'liner') {
+    markHintSeen('ej-hint-seen');
+    recordsHintOnce();
+    return;
+  }
+  clearHintTimer();
+  markHintSeen('ej-hint-seen');
+  useStore.setState({ hint: 'hearing' });
+  hintTimer = setTimeout(() => {
+    hintTimer = 0;
+    if (useStore.getState().hint === 'hearing') useStore.setState({ hint: null });
+    recordsHintOnce();
+  }, HINT_MS);
+}
+
+function recordsHintOnce() {
+  if (hintAlreadySeen('ej-records-hint-seen')) return;
+  if (useStore.getState().panel === 'records' || useStore.getState().panel === 'liner') return;
+  clearHintTimer();
+  markHintSeen('ej-records-hint-seen');
+  useStore.setState({ hint: 'records' });
+  hintTimer = setTimeout(() => {
+    hintTimer = 0;
+    if (useStore.getState().hint === 'records') useStore.setState({ hint: null });
+  }, HINT_MS);
+}
+
+/**
+ * Ends the matching first-visit hint. Records waits until the liner closes so the two do
+ * not compete on screen. Opening Records itself counts as finding the control.
+ */
+function dismissHintFor(opening, closing) {
+  const { hint } = useStore.getState();
+  if (opening === 'liner' && hint === 'hearing') {
+    clearHintTimer();
+    useStore.setState({ hint: null });
+  } else if (opening === 'records') {
+    if (hint === 'hearing' || hint === 'records') {
+      clearHintTimer();
+      useStore.setState({ hint: null });
+    }
+    markHintSeen('ej-records-hint-seen');
+  }
+  if (closing === 'liner' && opening !== 'records') recordsHintOnce();
 }
 
 /** "V": speak the date and every voice's value (screen reader live region). */

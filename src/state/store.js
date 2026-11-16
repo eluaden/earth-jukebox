@@ -34,7 +34,7 @@ export const useStore = create((set) => ({
   introAnimated: true,
   scrubbing: false, // the globe is being dragged: date stands still, the needle plays what passes under it
   instrumentChoice: {}, // 'trackId:voiceId' -> instrument picked by the listener
-  hint: false, // first visit: the 'What am I hearing?' openers glow once after the intro
+  hint: null, // first visit: 'hearing' then 'records' after the intro (null when idle)
 
   setLang: (lang) => {
     try {
