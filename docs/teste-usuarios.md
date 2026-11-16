@@ -41,6 +41,13 @@ Gravar os mesmos trechos (Win + Alt + R grava a janela do navegador com som pela
 
 > Oi! Estamos no NASA Space Apps e fizemos um site que transforma dados da NASA sobre a Terra em música, para pessoas cegas e com baixa visão. Você toparia ouvir 3 áudios curtos (1 min no total) e responder 3 perguntas? Não guardamos seu nome nem sua voz.
 
+## Resultado — rodada 1 (15/11/2026, no evento)
+
+Cinco pessoas, sem ver a tela, só música: **2 com deficiência visual** (grupo A) e **3 de olhos fechados** (grupo B).
+
+- Tarefa 1 (nível do mar subiu?): **5 de 5** (logo, 2 de 2 no grupo A e 3 de 3 no B).
+- Tarefa 2 (estação mais quente das águas do norte): **3 de 5** (divisão por grupo não registrada).
+
 ## Ficha
 
 | # | Grupo (A/B) | Tarefa 1: resposta | Certo? | Tarefa 2: ordem | Resposta | Certo? | Agradável (1–5) | Frase (com permissão?) |
