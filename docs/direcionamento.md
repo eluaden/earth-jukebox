@@ -383,6 +383,7 @@ earth-jukebox/media-src/
 
 - **Teste com usuários é entrega obrigatória, não extra.** Contatos: Fundação Dorina Nowill, Instituto Benjamin Constant, Laramara. Teste remoto por áudio vale. Complemento: teste de olhos fechados com outras pessoas.
 - **Nunca** inventar ou simular resultado ou depoimento.
+- **Decisão de 15/11/2026 (teste no evento):** protocolo rápido em [`teste-usuarios.md`](teste-usuarios.md): grupo A (cegos ou baixa visão, presencial ou WhatsApp) e grupo B (quem enxerga, de olhos fechados), contados **separados**; só a música, sem narração (a narração é falada uma vez por disco); tarefa 1 = tendência do nível do mar (subiu?), tarefa 2 = qual de dois trechos da temperatura do mar tem a água do norte mais quente (março × setembro, só as cordas); nota de 1 a 5. Só maiores de 18, sem foto ou gravação da pessoa. A página só cita o resultado com os números reais de cada grupo.
 
 ## 10. Entregáveis da submissão
 
