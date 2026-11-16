@@ -29,22 +29,20 @@ export function ColdOpen() {
         <p className="cold-line">{t(lang, 'putOnHeadphones')}</p>
         <p className="cold-select">{t(lang, 'selectLanguage')}</p>
         <span className="cold-langs" role="group" aria-label={t(lang, 'language')}>
-          {LANGS.map((l, i) => (
-            <span key={l}>
-              {i > 0 && <span aria-hidden="true"> · </span>}
-              <button
-                ref={(el) => {
-                  langRefs.current[l] = el;
-                }}
-                type="button"
-                lang={l}
-                aria-pressed={l === lang}
-                className={`cold-lang ${l === lang ? 'on' : ''}`}
-                onClick={() => startWith(l)}
-              >
-                {l.toUpperCase()}
-              </button>
-            </span>
+          {LANGS.map((l) => (
+            <button
+              key={l}
+              ref={(el) => {
+                langRefs.current[l] = el;
+              }}
+              type="button"
+              lang={l}
+              aria-pressed={l === lang}
+              className={`cold-lang ${l === lang ? 'on' : ''}`}
+              onClick={() => startWith(l)}
+            >
+              {l.toUpperCase()}
+            </button>
           ))}
         </span>
         <span className="sr-only">{t(lang, 'startHint')}</span>

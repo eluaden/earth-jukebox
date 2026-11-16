@@ -27,6 +27,16 @@ const DIST_DLP_IGNORE = [
     policy: 'ExecutablePolicy',
     justification: 'NASA night-lights data grid (uint8 brightness), not a Unix executable; .bin is the data extension only',
   },
+  {
+    path: 'tracks/aerosols/grid.bin',
+    policy: 'ExecutablePolicy',
+    justification: 'NASA aerosols data grid (uint8 colour strength), not a Unix executable; .bin is the data extension only',
+  },
+  {
+    path: 'tracks/sea-level/grid.bin',
+    policy: 'ExecutablePolicy',
+    justification: 'NASA sea-level data grid (uint8 ruler reading), not a Unix executable; .bin is the data extension only',
+  },
 ];
 
 run('npm run build');

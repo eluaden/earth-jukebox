@@ -30,6 +30,7 @@ function CloseButton({ lang, autoFocus }) {
 /**
  * Records: a row of square glass covers rising from the bottom (public/tracks/index.json order).
  * The record on the platter is marked; another cover puts that record on (direction 5.4).
+ * A click anywhere outside the panel closes it; the footer stays above that catch-all.
  */
 export function Records() {
   const lang = useStore((s) => s.lang);
@@ -46,25 +47,28 @@ export function Records() {
     selectTrack(id);
   };
   return (
-    <section className="records glass" role="dialog" aria-label={t(lang, 'records')}>
-      <CloseButton lang={lang} autoFocus />
-      <ul className="covers">
-        {tracks.map((tr, i) => {
-          const current = tr.id === trackId;
-          return (
-            <li key={tr.id} style={{ '--cover-i': i }}>
-              <button type="button" className={`cover ${current ? 'is-current' : ''}`} aria-current={current ? 'true' : undefined} onClick={() => pick(tr.id)}>
-                <span className="cover-art">
-                  <img src={tr.cover} alt="" />
-                </span>
-                <span className="cover-name">{TRACK_TEXT[tr.id][lang].title}</span>
-                <span className="cover-period">{tr.period}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
+    <>
+      <div className="records-backdrop" onClick={close} />
+      <section className="records glass" role="dialog" aria-label={t(lang, 'records')}>
+        <CloseButton lang={lang} autoFocus />
+        <ul className="covers">
+          {tracks.map((tr, i) => {
+            const current = tr.id === trackId;
+            return (
+              <li key={tr.id} style={{ '--cover-i': i }}>
+                <button type="button" className={`cover ${current ? 'is-current' : ''}`} aria-current={current ? 'true' : undefined} onClick={() => pick(tr.id)}>
+                  <span className="cover-art">
+                    <img src={tr.cover} alt="" />
+                  </span>
+                  <span className="cover-name">{TRACK_TEXT[tr.id][lang].title}</span>
+                  <span className="cover-period">{tr.period}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    </>
   );
 }
 

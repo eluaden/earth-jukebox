@@ -31,7 +31,8 @@ export function cameraDistance(aspect) {
 }
 
 const TREND_H = 125; // px: the trend chart (src/ui/Trend.jsx, .trend in styles.css)
-const FOOTER_H = 52; // px: the footer pill
+const FOOTER_H = 54; // px: the footer pill
+const DISC_RISE = 40; // px: the Records disc above the pill, lifted when Records is open
 const CHIPS_ROW_H = 118; // px: the chips' row on phones
 
 /** True when the HUD uses its stacked layout (phones and any portrait screen; see styles.css). */
@@ -42,7 +43,7 @@ export const stackedLayout = (w, h) => w <= 760 || w < h;
  * the outer ring is kept clear of every HUD block, measured in pixels as styles.css lays them out,
  * so nothing on screen overlaps the record:
  *  - wide screens: the date column on the left, the chips (and the liner tab) on the right, the
- *    footer below and the trend chart docked bottom-left;
+ *    footer and its Records disc below and the trend chart docked bottom-left;
  *  - stacked layout: the date on top, then the globe, then the trend chart, the chips and the
  *    footer; the camera also moves so the globe sits in the middle of the free band.
  */
@@ -54,14 +55,14 @@ export function cameraFrame(w, h) {
   let centerY = h / 2;
   if (!stackedLayout(w, h)) {
     const chips = Math.min(210, 0.19 * w) + gutter + 48 + 16; // chips column, liner tab, gap
-    const date = Math.min(0.24 * w, 400) + gutter + 16; // date and caption column (.when)
-    maxR = Math.min(w / 2 - Math.max(chips, date), h / 2 - (gutter + FOOTER_H + 16));
+    const date = Math.min(0.24 * w, 400) + gutter + 40 + 24; // date and caption column (.when), gap
+    maxR = Math.min(w / 2 - Math.max(chips, date), h / 2 - (gutter + FOOTER_H + DISC_RISE + 12));
     const tx = w / 2 - (gutter + 40 + 300); // trend chart's top-right corner, from the centre
     const ty = h / 2 - (gutter + 64 + TREND_H);
     if (ty > 0) maxR = Math.min(maxR, tx > 0 ? Math.hypot(tx, ty) - 12 : ty - 12);
   } else {
     const top = gutter + 40 + 48 + 8 + 44 + 12; // brand row, date, two caption lines
-    const bottom = gutter + 64 + CHIPS_ROW_H + TREND_H + 12; // footer, chips row, trend chart
+    const bottom = gutter + 92 + CHIPS_ROW_H + TREND_H + 12; // footer and its disc, chips row, trend chart
     const free = h - top - bottom;
     maxR = Math.min(w / 2 - 28 - 10, free / 2); // the liner tab peeks from the right edge
     centerY = top + free / 2;

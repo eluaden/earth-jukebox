@@ -1,4 +1,4 @@
-import { useId, useMemo } from 'react';
+import { useId, useMemo, useRef } from 'react';
 import { useStore } from '../state/store.js';
 import { periodKey, seriesThrough, sparkPaths, xTickIndices } from '../data/series.js';
 import { t } from '../i18n/strings.js';
@@ -44,6 +44,7 @@ function xParts(key, lang, longMonthly) {
 /**
  * One chart per record, docked bottom-left: the whole disc (every month or year), drawn once.
  * A marker moves to the period now playing; the line does not rebuild when the record loops.
+ * It steps aside while Records is open or a record is changing, and draws itself again on return.
  */
 export function Trend() {
   const lang = useStore((s) => s.lang);
@@ -51,7 +52,13 @@ export function Trend() {
   const step = useStore((s) => s.step);
   const means = useStore((s) => s.trendMeans);
   const trend = useStore((s) => s.trend);
+  const away = useStore((s) => s.panel === 'records' || Boolean(s.switching));
   const gid = useId();
+  // Bumped on every return, so the line draws itself again (and with the new record's data).
+  const entry = useRef(0);
+  const wasAway = useRef(away);
+  if (wasAway.current && !away) entry.current += 1;
+  wasAway.current = away;
   const fillId = `${gid}-fill`;
   const glowId = `${gid}-glow`;
 
@@ -100,12 +107,12 @@ export function Trend() {
   const longMonthly = trend.bucket === 'month' && points.length > 18;
 
   return (
-    <div className="trend" role="img" aria-label={`${t(lang, trend.label)}: ${nowText}`}>
+    <div className={`trend ${away ? 'is-away' : ''}`} role="img" aria-label={`${t(lang, trend.label)}: ${nowText}`}>
       <div className="trend-head" aria-hidden="true">
         <span className="trend-label">{t(lang, trend.label)}</span>
         <span className="trend-now">{nowText}</span>
       </div>
-      <svg className="trend-svg" viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden="true">
+      <svg key={entry.current} className="trend-svg" viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden="true">
         <defs>
           <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="rgba(255,255,255,0.22)" />
@@ -135,31 +142,35 @@ export function Trend() {
         </text>
 
         <path className="trend-area" d={paths.area} fill={`url(#${fillId})`} />
-        <path className="trend-line" d={paths.line} />
-        <line className="trend-now-line" x1={nowX} y1={plot.yTop} x2={nowX} y2={plot.yBot} />
-        <circle className="trend-glow" cx={nowX} cy={nowY} r="7" fill={`url(#${glowId})`} />
-        <circle className="trend-dot" cx={nowX} cy={nowY} r="2.6" />
+        <path className="trend-line" d={paths.line} pathLength="1" />
+        <g className="trend-marker">
+          <line className="trend-now-line" x1={nowX} y1={plot.yTop} x2={nowX} y2={plot.yBot} />
+          <circle className="trend-glow" cx={nowX} cy={nowY} r="7" fill={`url(#${glowId})`} />
+          <circle className="trend-dot" cx={nowX} cy={nowY} r="2.6" />
+        </g>
 
-        {ticks.map((i, k) => {
-          const x = xAt(i);
-          const first = k === 0;
-          const last = k === ticks.length - 1;
-          const anchor = ticks.length === 1 ? 'middle' : first ? 'start' : last ? 'end' : 'middle';
-          const parts = xParts(points[i].key, lang, longMonthly);
-          return (
-            <g key={points[i].key}>
-              <line className="trend-xmark" x1={x} y1={plot.yBot} x2={x} y2={plot.yBot + 4} />
-              <text className="trend-tick x" x={x} y={plot.yBot + 15} textAnchor={anchor}>
-                {parts.main}
-              </text>
-              {(first || last) && parts.year && (
-                <text className="trend-tick x year" x={x} y={H - 3} textAnchor={anchor}>
-                  {parts.year}
+        <g className="trend-xticks">
+          {ticks.map((i, k) => {
+            const x = xAt(i);
+            const first = k === 0;
+            const last = k === ticks.length - 1;
+            const anchor = ticks.length === 1 ? 'middle' : first ? 'start' : last ? 'end' : 'middle';
+            const parts = xParts(points[i].key, lang, longMonthly);
+            return (
+              <g key={points[i].key}>
+                <line className="trend-xmark" x1={x} y1={plot.yBot} x2={x} y2={plot.yBot + 4} />
+                <text className="trend-tick x" x={x} y={plot.yBot + 15} textAnchor={anchor}>
+                  {parts.main}
                 </text>
-              )}
-            </g>
-          );
-        })}
+                {(first || last) && parts.year && (
+                  <text className="trend-tick x year" x={x} y={H - 3} textAnchor={anchor}>
+                    {parts.year}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+        </g>
       </svg>
     </div>
   );

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useStore } from '../state/store.js';
 import { replayTrack, seekBySteps, setPanel, togglePlay } from '../state/controller.js';
 import { InstrumentMenu } from './InstrumentMenu.jsx';
@@ -36,6 +37,7 @@ export function Corners() {
 }
 
 const MONTH_MS = 30.44 * 86400e3;
+const CAPTION_OUT_MS = 450; // matches .caption.is-leaving in styles.css
 
 /** True when a record moves faster than one month per second (sea level: 31 years in 30 s). */
 function fastRecord(meta) {
@@ -43,15 +45,30 @@ function fastRecord(meta) {
   return months > 0 && trackDuration(meta) / months < 1;
 }
 
+/** { text, leaving }: the last non-empty text stays for `ms` after it is cleared, so it can fade out. */
+function useLingering(text, ms) {
+  const [shown, setShown] = useState({ text, leaving: false });
+  useEffect(() => {
+    if (text) {
+      setShown({ text, leaving: false });
+      return undefined;
+    }
+    setShown((s) => ({ ...s, leaving: true }));
+    const id = setTimeout(() => setShown({ text: '', leaving: false }), ms);
+    return () => clearTimeout(id);
+  }, [text, ms]);
+  return shown;
+}
+
 /**
- * Big date on the left, narration caption below it. The date settles in when it changes; on a
- * fast record only a new year does, or the month would flicker away before it can be read.
+ * Big date on the left, narration caption below it (word by word in, fading out). The date settles
+ * in when it changes; on a fast record only a new year does, or the month would flicker away.
  */
 export function DateCaption() {
   const lang = useStore((s) => s.lang);
   const meta = useStore((s) => s.meta);
   const step = useStore((s) => s.step);
-  const caption = useStore((s) => s.caption);
+  const caption = useLingering(useStore((s) => s.caption), CAPTION_OUT_MS);
   if (!meta) return null;
   const iso = meta.dates[step];
   const unit = meta.time?.unit;
@@ -61,8 +78,12 @@ export function DateCaption() {
       <p key={fastRecord(meta) ? iso.slice(0, 4) : label} className="date" aria-label={longDate(iso, lang, unit)}>
         {label}
       </p>
-      <p className="caption" aria-hidden="true">
-        {caption}
+      <p key={caption.text} className={`caption ${caption.leaving ? 'is-leaving' : ''}`} aria-hidden="true">
+        {caption.text.split(' ').map((word, i) => (
+          <span key={i} className="caption-word" style={{ '--w': i }}>
+            {word}{' '}
+          </span>
+        ))}
       </p>
     </div>
   );
@@ -149,50 +170,64 @@ function ReplayIcon() {
   );
 }
 
-/** Glass pill: play/pause · replay · track · Records · Liner notes. Language lives on the cold open. */
+/**
+ * Glass pill in three parts: transport and the track on the left; Records in the middle, drawn as
+ * the record on the platter resting on the pill's top edge; 'What am I hearing?' on the right.
+ * Language lives on the cold open.
+ */
 export function Footer() {
   const lang = useStore((s) => s.lang);
   const playing = useStore((s) => s.playing);
   const panel = useStore((s) => s.panel);
   const trackId = useStore((s) => s.trackId);
+  const tracks = useStore((s) => s.tracks);
   const switching = useStore((s) => s.switching);
   const hint = useStore((s) => s.hint);
   const shownId = switching || trackId;
+  const shown = tracks.find((tr) => tr.id === shownId);
+  const title = shownId ? TRACK_TEXT[shownId][lang].title : '';
   // Buttons stay focusable while a record changes (aria-disabled, not disabled) so keyboard focus
   // is not thrown to the page; the controller ignores them meanwhile.
   const busy = switching ? 'true' : undefined;
   return (
-    <nav className="footer glass" aria-label="Earth Jukebox">
-      <button type="button" className="play" aria-label={t(lang, playing ? 'pause' : 'play')} aria-disabled={busy} onClick={togglePlay}>
-        <PlayIcon playing={playing} />
-      </button>
-      <button type="button" className="replay" aria-label={t(lang, 'replay')} title={t(lang, 'replay')} aria-disabled={busy} onClick={replayTrack}>
-        <ReplayIcon />
-      </button>
-      <span className={`track-name ${switching ? 'is-loading' : ''}`} aria-busy={busy}>
-        {shownId && TRACK_TEXT[shownId][lang].title}
-      </span>
-      <span className="footer-rule" aria-hidden="true" />
+    <nav className={`footer glass ${playing && !switching ? 'is-playing' : ''}`} aria-label="Earth Jukebox">
+      <div className="footer-side footer-start">
+        <button type="button" className="play" aria-label={t(lang, playing ? 'pause' : 'play')} aria-disabled={busy} onClick={togglePlay}>
+          <PlayIcon playing={playing} />
+        </button>
+        <button type="button" className="replay" aria-label={t(lang, 'replay')} title={t(lang, 'replay')} aria-disabled={busy} onClick={replayTrack}>
+          <ReplayIcon />
+        </button>
+        <span className={`track ${switching ? 'is-loading' : ''}`} aria-busy={busy} title={title}>
+          <span className="track-name">{title}</span>
+          {shown && <span className="track-period">{shown.period}</span>}
+        </span>
+      </div>
       <button
         type="button"
         aria-expanded={panel === 'records'}
         aria-disabled={busy}
-        className={panel === 'records' ? 'on' : ''}
+        className={`records-open ${panel === 'records' ? 'on' : ''}`}
         onClick={() => openPanel('records')}
       >
-        {t(lang, 'records')}
+        <span className="records-slot" aria-hidden="true">
+          <span className={`records-disc ${switching ? 'is-loading' : ''}`}>{shown && <img key={shown.id} src={shown.cover} alt="" />}</span>
+        </span>
+        <span className="records-label">{t(lang, 'records')}</span>
       </button>
-      <button
-        type="button"
-        aria-expanded={panel === 'liner'}
-        aria-disabled={busy}
-        aria-label={t(lang, 'linerNotes')}
-        className={`hearing ${panel === 'liner' ? 'on' : ''} ${hint ? 'hint' : ''}`}
-        onClick={() => openPanel('liner')}
-      >
-        <InfoIcon />
-        <span className="hearing-label">{t(lang, 'linerNotes')}</span>
-      </button>
+      <div className="footer-side footer-end">
+        <button
+          type="button"
+          aria-expanded={panel === 'liner'}
+          aria-disabled={busy}
+          aria-label={t(lang, 'linerNotes')}
+          className={`hearing ${panel === 'liner' ? 'on' : ''} ${hint ? 'hint' : ''}`}
+          onClick={() => openPanel('liner')}
+        >
+          <InfoIcon />
+          <span className="hearing-label">{t(lang, 'linerNotes')}</span>
+        </button>
+      </div>
       {hint && panel !== 'liner' && (
         <p className="hearing-hint" aria-hidden="true">
           {t(lang, 'hearingHint')}

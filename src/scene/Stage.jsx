@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment, Lightformer } from '@react-three/drei';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import gsap from 'gsap';
+import * as THREE from 'three';
 import { advance, introDone, togglePlay } from '../state/controller.js';
 import { beginGlobeDrag, wasDrag } from '../ui/globeDrag.js';
 import { useStore } from '../state/store.js';
@@ -67,6 +68,24 @@ function Driver() {
   return null;
 }
 
+const AWAY_SCALE = 0.93; // globe size while Records is open or a record is changing
+
+/**
+ * The globe steps back a little while Records is open or a record is changing (the needle is up
+ * then, so nothing touches the surface) and eases back as the record starts.
+ */
+function GlobeMotion({ still, children }) {
+  const group = useRef();
+  useFrame((_, dt) => {
+    const s = useStore.getState();
+    const target = s.panel === 'records' || s.switching ? AWAY_SCALE : 1;
+    const g = group.current;
+    const k = still ? target : THREE.MathUtils.damp(g.scale.x, target, 6, dt);
+    g.scale.setScalar(k);
+  });
+  return <group ref={group}>{children}</group>;
+}
+
 /** Invisible hit target on the planet: click toggles play/pause (needle lifts on pause); drag turns it. */
 function PlanetHit() {
   return (
@@ -114,10 +133,12 @@ export default function Stage() {
         <Lightformer intensity={1} position={[0, -4, 4]} rotation-x={-Math.PI / 2} scale={[10, 3, 1]} />
       </Environment>
       <group position={[0, GLOBE_Y, 0]} rotation={[TILT, 0, 0]}>
-        <Globe />
-        <Atmosphere />
-        <MeridianLine />
-        <PlanetHit />
+        <GlobeMotion still={reduce}>
+          <Globe />
+          <Atmosphere />
+          <MeridianLine />
+          <PlanetHit />
+        </GlobeMotion>
       </group>
       <Porthole />
       <Platter />

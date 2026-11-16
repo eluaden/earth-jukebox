@@ -5,7 +5,7 @@
 
 export const SST_TEXT = {
   en: {
-    title: 'Sea Surface Temperature',
+    title: 'Sea temperature',
     whatYouHear:
       'The needle reads the ocean under it, from north to south, about once for every day of the year. Strings play the northern waters, the piano plays the tropics and the glockenspiel plays the southern waters. Warmer water plays a higher, brighter note. Land is silent.',
     mapping: [
@@ -40,7 +40,7 @@ export const SST_TEXT = {
     },
   },
   pt: {
-    title: 'Temperatura da superfície do mar',
+    title: 'Temperatura do mar',
     whatYouHear:
       'A agulha lê o oceano embaixo dela, de norte a sul, cerca de uma vez para cada dia do ano. As cordas tocam as águas do norte, o piano toca os trópicos e o glockenspiel toca as águas do sul. Água mais quente toca uma nota mais aguda e mais brilhante. A terra fica em silêncio.',
     mapping: [
@@ -75,7 +75,7 @@ export const SST_TEXT = {
     },
   },
   es: {
-    title: 'Temperatura de la superficie del mar',
+    title: 'Temperatura del mar',
     whatYouHear:
       'La aguja lee el océano que tiene debajo, de norte a sur, más o menos una vez por cada día del año. Las cuerdas tocan las aguas del norte, el piano toca los trópicos y el glockenspiel toca las aguas del sur. El agua más cálida toca una nota más aguda y más brillante. La tierra queda en silencio.',
     mapping: [
