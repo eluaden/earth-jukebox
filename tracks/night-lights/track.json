@@ -1,0 +1,80 @@
+{
+ "id": "night-lights",
+ "svs": 5313,
+ "period": "2012–2023",
+ "source": {
+  "name": "NASA Scientific Visualization Studio, \"Change in Night Lights between 2012 and 2023 - EIC Version\" (SVS 5313), Black Marble (NASA/NOAA, VIIRS on Suomi NPP)",
+  "url": "https://svs.gsfc.nasa.gov/5313/"
+ },
+ "texture": {
+  "kind": "stills",
+  "images": [
+   "year-2012.jpg",
+   "year-2013.jpg",
+   "year-2014.jpg",
+   "year-2015.jpg",
+   "year-2016.jpg",
+   "year-2017.jpg",
+   "year-2018.jpg",
+   "year-2019.jpg",
+   "year-2020.jpg",
+   "year-2021.jpg",
+   "year-2022.jpg",
+   "year-2023.jpg"
+  ]
+ },
+ "time": {
+  "unit": "year",
+  "secondsPerStep": 10
+ },
+ "grid": {
+  "file": "grid.bin",
+  "steps": 12,
+  "lats": 90,
+  "lons": 180,
+  "cellDeg": 2,
+  "scale": 1,
+  "noData": 255,
+  "value": "mean brightness added by night lights (0-255 of NASA's image), annual average"
+ },
+ "dates": [
+  "2012-07-01T00:00Z",
+  "2013-07-01T00:00Z",
+  "2014-07-01T00:00Z",
+  "2015-07-01T00:00Z",
+  "2016-07-01T00:00Z",
+  "2017-07-01T00:00Z",
+  "2018-07-01T00:00Z",
+  "2019-07-01T00:00Z",
+  "2020-07-01T00:00Z",
+  "2021-07-01T00:00Z",
+  "2022-07-01T00:00Z",
+  "2023-07-01T00:00Z"
+ ],
+ "totals": [
+  10414.4,
+  10868.7,
+  11120.6,
+  11679.9,
+  11180.8,
+  11601.9,
+  11748.0,
+  11983.8,
+  12098.3,
+  12146.8,
+  13406.1,
+  14071.7
+ ],
+ "markers": [
+  {
+   "id": "biggest-jump",
+   "step": 10
+  },
+  {
+   "id": "brightest",
+   "step": 11
+  }
+ ],
+ "cover": "cover.jpg",
+ "poster": "year-2012.jpg"
+}

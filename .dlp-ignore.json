@@ -1,0 +1,27 @@
+[
+    {
+        "path": "tracks/sst/grid.bin",
+        "policy": "ExecutablePolicy",
+        "justification": "NASA SST data grid (uint8 values), not a Unix executable; .bin is the data extension only"
+    },
+    {
+        "path": "tracks/lightning/grid.bin",
+        "policy": "ExecutablePolicy",
+        "justification": "NASA lightning data grid (uint8 coverage), not a Unix executable; .bin is the data extension only"
+    },
+    {
+        "path": "tracks/night-lights/grid.bin",
+        "policy": "ExecutablePolicy",
+        "justification": "NASA night-lights data grid (uint8 brightness), not a Unix executable; .bin is the data extension only"
+    },
+    {
+        "path": "tracks/aerosols/grid.bin",
+        "policy": "ExecutablePolicy",
+        "justification": "NASA aerosols data grid (uint8 colour strength), not a Unix executable; .bin is the data extension only"
+    },
+    {
+        "path": "tracks/sea-level/grid.bin",
+        "policy": "ExecutablePolicy",
+        "justification": "NASA sea-level data grid (uint8 ruler reading), not a Unix executable; .bin is the data extension only"
+    }
+]
