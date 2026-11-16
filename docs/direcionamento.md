@@ -278,6 +278,8 @@ Prompts de cada item: [`prompts-assets.md`](prompts-assets.md). Créditos dispon
 
 - Salvar também a imagem-base de cada item ao lado do vídeo, com o mesmo nome e extensão `.png`.
 
+> **Decisão de 15/11/2026 (trailer):** o vídeo usa só **V5** (agulha descendo, com prompt de movimento novo) e **V3** (agulha pousada **sobre o próprio planeta**, fundo do slogan), prompts em [`roteiro-video.md`](roteiro-video.md) §5. A imagem do V2 é gerada só como referência do V3; o vídeo do V2 e o V6 não são mais necessários; V4 fica de reserva. O resto do vídeo é captura real do app e mapas reais da NASA.
+
 ### 7.2 ElevenLabs — itens
 
 | Usar | Não usar |
@@ -308,7 +310,8 @@ Prompts de cada item: [`prompts-assets.md`](prompts-assets.md). Créditos dispon
 > **Decisão de 15/11/2026 (S1–S7 no site + motion da UI):** a frente B liga os efeitos no motor e na interface. **Quando toca o quê:** S7 no clique que inicia a abertura; S4 quando o prato começa a girar (só a primeira vez: o prato não para no pause); S1 / S3 com a agulha pousando / levantando (substitui o thump sintetizado); S2 como cama de vinil sob a agulha (substitui o hiss/crackle sintetizado; se o arquivo falhar, o sintetizado fica de reserva); S5 ao trocar de disco em Records; S6 em todo botão da UI (toque curto, sem atrapalhar a música). **Volumes:** `glass-tap` e `record-swap` são normalizados ao copiar para `public/sfx/` (originais baixos); S7 toca baixo para não cobrir a voz. **Motion (mesmo commit):** micro-animações só onde há feedback real — cold open, chips, rodapé, painéis, botões — com `prefers-reduced-motion` a zerar duração como já faz o site. Sem partículas, sem glow genérico, sem animação decorativa fora da lista fechada (§5.2.1).
 | N1 | Falas fixas da UI: `put-on-headphones`, `welcome` | Depois de escolher a voz | `media-src/elevenlabs/voice/<en\|pt\|es>/<id>.mp3` |
 | N2 | Narração das faixas: intro, marcos e encerramento de cada faixa | **Depois da E1** (o roteiro vai para `prompts-assets.md`) | `media-src/elevenlabs/voice/<en\|pt\|es>/<faixa>-<intro\|outro\|marco-N>.mp3` |
-| N3 | Narração do vídeo do pitch | Depois do roteiro do vídeo | `media-src/elevenlabs/voice/en/pitch.mp3` |
+| N3 | Narração do vídeo do pitch: 8 falas, texto e ajustes em [`roteiro-video.md`](roteiro-video.md) §4 | Agora (roteiro pronto) | `media-src/elevenlabs/voice/en/pitch-<02…09>.mp3` (a F1 reaproveita `put-on-headphones` do N1) |
+| S8 | Impacto grave para o trailer, sem nota (3 s), só no vídeo | Agora | `media-src/elevenlabs/sfx/sub-impact.mp3` |
 
 ### 7.2.1 Onde subir os arquivos no repositório
 
@@ -358,7 +361,7 @@ earth-jukebox/media-src/
 ## 9. História e gancho
 
 - Gancho: **acessibilidade provada com teste real** + **"uma camada sonora para o Earth Information Center"**.
-- Frase de posicionamento (rascunho; conferir o número na OMS antes de publicar):
+- Frase de posicionamento (rascunho). **Número conferido em 15/11/2026:** 43,3 milhões de pessoas cegas em 2020 (Vision Loss Expert Group, *The Lancet Global Health*, fev. 2021); citar essa fonte na página e nas References:
 
 > *"NASA's Earth Information Center is a wall of screens. 43 million people are blind. We turned the wall into music — and tested it with people who can't see it: X of Y heard the trend."*
 
@@ -370,7 +373,7 @@ earth-jukebox/media-src/
 | Entregável | Decisão |
 |---|---|
 | Site | Publicado e funcionando em notebook comum e celular, com versão 2D se o 3D não rodar |
-| Vídeo (~30 s) | 5 s de tela preta só com som e legenda (*"This is the Atlantic Ocean, 2007."*) → revela o globo → Explorar (e Comparar, se existir) → resultado do teste com pessoas reais → frase. Voz ElevenLabs, planos abstratos Veo, legendas em inglês |
+| Vídeo (até 30 s) | **Decisão de 15/11/2026: trailer de cinema, épico e positivo, em inglês, 29,0 s.** Roteiro plano a plano, narração, prompts, captura, mixagem e legendas em [`roteiro-video.md`](roteiro-video.md). Arco: tela preta *"Put on headphones."* → os mapas da NASA, mudos → a agulha desce no globo e o som chega → *"Warmer water. Higher note."* / *"Every note is real NASA data."* → montagem das cinco faixas → tela preta com a música no auge (*"Close your eyes."* + para quem é feito) → *"The future of seeing our planet is hearing it."* → título. **A trilha é o próprio app:** toda nota foi gravada ao vivo do Earth Jukebox (sem música de IA; corte, camadas e volume sim, mudar altura ou tempo das notas não). Imagem real (site ao vivo + mapas da NASA) em ~14 s; Veo em no máximo ~5 s, em 2 planos (V5 e V3), com marca d'água; o resto é preto e cartelas. Legendas em inglês queimadas (regra do Space Apps). O vídeo funciona de olhos fechados (tudo o que importa é dito) e sem som (tudo o que é dito aparece escrito). Resultado do teste com usuários só entra se for real; sem ele, a fala é sobre o público (43,3 milhões de pessoas cegas). Explorar e Comparar não aparecem (não existem no site). Nenhuma frase de "primeiro do mundo" (houve sonificações da Terra antes, ver [projetos anteriores](earth-jukebox-projetos-anteriores.md)) |
 | Página do projeto | Em inglês, escrita na linguagem dos prêmios ("combines technical and creative skills", "makes NASA data accessible to blind and low-vision people") |
 | References | Todas as fontes NASA, samples, conteúdo de IA e bibliotecas |
 | README | Reescrito para refletir este direcionamento |
@@ -407,7 +410,7 @@ earth-jukebox/media-src/
 | Creativity | A Terra como disco, agulha lendo o planeta, áudio espacial, capas que são o próprio dado |
 | Validity | Valor lido da legenda do frame, legenda sonora, limites no encarte, pipeline reproduzível, teste com usuários |
 | Relevance | Recursos oficiais, síntese em tempo real, exploração interativa, feedback tátil, texto descritivo rico, app + álbum |
-| Presentation | Abertura cinematográfica, narrador profissional, tela única, vídeo que começa no escuro, página na linguagem dos prêmios |
+| Presentation | Abertura cinematográfica, narrador profissional, tela única, trailer que começa no escuro e cuja trilha é o próprio dado, página na linguagem dos prêmios |
 
 ## 14. Exploração (bloqueante)
 

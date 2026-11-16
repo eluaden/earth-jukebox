@@ -1,7 +1,7 @@
 # Earth Jukebox — Status
 
 > O que já foi feito e quem faz o quê, item a item do [`direcionamento.md`](docs/direcionamento.md) (a fonte de verdade: em caso de dúvida, ele vence este arquivo).
-> Atualizado em 15/11/2026: aerossóis e nível do mar ligados no app e publicados (cinco discos no Records). **Aviso à frente B (Lucas Senno):** essa integração foi feita pela frente A nos arquivos da B, a pedido do Lucas Valadares; o que mudou está na linha de cada faixa no P1 e em `direcionamento.md` §5.4. Site: https://eluaden.github.io/earth-jukebox/ (atualiza a cada `npm run deploy`).
+> Atualizado em 15/11/2026: aerossóis e nível do mar ligados no app e publicados (cinco discos no Records). **Aviso à frente B (Lucas Senno):** essa integração foi feita pela frente A nos arquivos da B, a pedido do Lucas Valadares; o que mudou está na linha de cada faixa no P1 e em `direcionamento.md` §5.4. Site: https://eluaden.github.io/earth-jukebox/ (atualiza a cada `npm run deploy`). Roteiro do vídeo pronto em `docs/roteiro-video.md` (aviso à frente C na linha do vídeo).
 > **Atualize este arquivo no mesmo commit do trabalho.**
 
 **Legenda:** **Feito** · **Parcial** (existe, mas falta algo dito na coluna ao lado) · **A fazer** · **Bloqueado** (depende de outro item)
@@ -63,7 +63,7 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Abertura simples (tela preta + descida 3D) | §5.2 | **Feito** | B | "Put on headphones." + pedido de idioma; clicar EN/PT/ES inicia; volta à página pula a descida; "Replay opening" no About |
 | Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
 | Site publicado + versão 2D | §10 | **Feito** | B | GitHub Pages; 2D automática sem WebGL (`?flat=1` força) |
-| Vídeo (~30 s) | §10 | **A fazer** | C | Depende de V2–V6, N3 e do resultado do teste |
+| Vídeo (até 30 s) | §10 | **Parcial** | C | Roteiro pronto em [`docs/roteiro-video.md`](docs/roteiro-video.md) (trailer de 29,0 s; a trilha é o próprio app). Falta: gravar N3 (F2–F9) e S8, gerar V5 e V3, capturar o app (T1–T8), editar e enviar. Sem teste real, a fala F7 usa a versão B (43,3 milhões de pessoas cegas). **Aviso à frente C (Lucas Souza):** roteiro escrito pela frente A a pedido do Lucas Valadares; mudanças são bem-vindas, registrando no direcionamento §10 |
 | Página do projeto | §10 | **A fazer** | C | Em inglês, na linguagem dos prêmios |
 | References | §10, §7.3 | **Parcial** | C | `si-e-referencias.md` atualizado até a fatia SST. Falta checklist do §2 dele antes de submeter |
 | README | §10 | **Parcial** | todos | Reescrito para a fatia SST; atualizar a cada faixa |
@@ -107,10 +107,11 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 
 | ID | Status | Frente |
 |---|---|---|
-| V2–V6 (Veo, pitch) | **A fazer** | C |
+| V5 e V3 (Veo, trailer) | **A fazer** (prompts em `docs/roteiro-video.md` §5; a imagem do V2 só como referência; V4 reserva; V6 e o vídeo do V2 não são mais necessários) | C |
 | S1–S7 (efeitos) | **Parcial** (gerados; falta aprovar de ouvido) | C |
+| S8 (impacto grave, só no vídeo) | **A fazer** (prompt em `docs/roteiro-video.md` §6) | C |
 | N1 (falas da UI) | **Feito** (gravadas e tocando no app) | C |
-| N3 (narração do pitch) | **Bloqueado** (roteiro do vídeo) | C |
+| N3 (narração do pitch) | **A fazer** (texto e ajustes em `docs/roteiro-video.md` §4) | C |
 
 ## 7. Verificações pendentes (três faixas)
 

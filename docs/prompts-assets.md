@@ -172,7 +172,7 @@ Put on headphones. This is the Atlantic Ocean, in the summer of 2007. Every note
 - Tempo: uma fala de marco é cortada pela fala seguinte, então as que não cabem são gravadas mais rápidas (até 1,2×): o marco das águas do sul (4,3 s até o encerramento) e a introdução dos raios (8,8 s até o primeiro marco). Se a introdução dos raios soar apressada, a saída é mudar o passo do primeiro marco (frente A) ou enfileirar as falas em vez de cortar (frente B).
 - Os textos são os mesmos de `src/i18n/tracks/<faixa>.js` (fonte única); se mudar um, mude o outro.
 - `{date}` é preenchido pelo site com o mês e o ano; os textos abaixo já estão com a data exata que o site gera (calculada da grade da faixa), então a chave bate.
-- Pitch (N3): *(a escrever com o roteiro do vídeo.)*
+- Pitch (N3): texto, ajustes de voz e arquivos em [`roteiro-video.md`](roteiro-video.md) §4; prompts dos planos de Veo do trailer (V5 e V3) no §5 de lá.
 
 **Temperatura do mar (SST)**
 
