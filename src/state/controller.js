@@ -172,10 +172,10 @@ export async function chooseInstrument(voiceId, inst) {
 
 /**
  * Dragging the globe (src/ui/globeDrag.js, arrow keys up / down) or the platter's time ring. The
- * globe and the record share one clock: a turn is SECONDS_PER_TURN of the data clock, as in
- * playback, so turning the globe back takes the date (and the ring) back, and moving the ring turns
- * the globe. The needle plays what passes under it, paused or not; scrubEnd puts the record back as
- * it was. source = 'globe' | 'ring'.
+ * ring is time: it moves the data clock and the globe turns to follow (a turn is SECONDS_PER_TURN
+ * of the clock, as in playback). The globe is place: it turns with the date standing still. The
+ * needle plays what passes under it, paused or not; scrubEnd puts the record back as it was.
+ * source = 'globe' | 'ring'.
  */
 export function scrubStart(source = 'globe') {
   const s = useStore.getState();
@@ -214,22 +214,12 @@ function setScrubTime(t) {
 }
 
 /**
- * Globe drag: turns the globe and the data clock together. Positive radians turn the surface to the
- * right, against playback, so the date goes back. Time-series records stop at the first and the
- * last step (the globe stops with them); a single-instant record turns freely, its clock looping.
+ * Globe drag: turns the globe only; the data clock stays on its date, so the listener explores other
+ * places on that same day. Positive radians turn the surface to the right, against playback.
  */
 export function scrubBy(radians) {
   if (!c.scrub) return;
-  const { meta } = c.track;
-  const want = c.scrub.t - radians / RAD_PER_SEC;
-  if (meta.time?.unit === 'instant') {
-    live.rotation += radians;
-    setScrubTime(want);
-    return;
-  }
-  const from = c.scrub.t;
-  setScrubTime(Math.min(scrubMax(meta), Math.max(0, want)));
-  live.rotation -= (c.scrub.t - from) * RAD_PER_SEC;
+  live.rotation += radians;
 }
 
 /** Ring drag: the data clock goes to a fraction of the record and the globe turns to follow. */
@@ -673,7 +663,7 @@ function placeMarkers(meta, prevLon, lon, dt) {
 }
 
 const HINT_MS = 9000;
-const TIME_HINT_MS = 14000; // two lines to read (time, pause) and a ghost drag to watch
+const TIME_HINT_MS = 14000; // two balloons to read (time, place) and two ghost drags to watch
 let hintTimer = 0;
 
 function hintAlreadySeen(key) {
@@ -740,8 +730,9 @@ function recordsHintOnce() {
 }
 
 /**
- * Last first-visit hint: dragging the globe or the time ring moves the record back or ahead in
- * time, and a click on the globe pauses. Its end is the end of the tutorial.
+ * Last first-visit hint: dragging the time ring moves the record back or ahead in time; dragging
+ * the globe shows other places on the same date, and a click on it pauses. Its end is the end of
+ * the tutorial.
  */
 function timeHintOnce() {
   if (hintAlreadySeen('ej-time-hint-seen')) {

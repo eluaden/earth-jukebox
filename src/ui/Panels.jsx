@@ -78,9 +78,78 @@ export function Records() {
   );
 }
 
+const SWIPE_DEAD_PX = 10; // finger travel before a press on the drawer becomes a horizontal swipe
+const SWIPE_SHARE = 0.25; // share of the drawer's width a swipe must cover to open or close it
+const SWIPE_FLICK = 0.5; // px/ms: a quick flick counts even when short
+
+/**
+ * Touch swipe on the liner drawer: the drawer follows the finger; released past SWIPE_SHARE of its
+ * width (or flicked) it opens or closes, otherwise it settles back. Open: swipe right to close.
+ * Closed: pull the tab left to open. Vertical moves stay a scroll of the notes; mouse keeps clicks.
+ * Returns the shell's pointer handlers.
+ */
+function useDrawerSwipe(shell, open) {
+  const drag = useRef(null); // { id, x0, y0, x, t, v, width, active }
+  const swiped = useRef(false); // the click that ends a swipe must not toggle the tab again
+
+  const settle = () => {
+    const el = shell.current;
+    if (el) {
+      el.style.transition = '';
+      el.style.transform = '';
+    }
+    drag.current = null;
+  };
+
+  return {
+    onPointerDown(e) {
+      if (e.pointerType === 'mouse' || drag.current) return;
+      swiped.current = false;
+      drag.current = { id: e.pointerId, x0: e.clientX, y0: e.clientY, x: e.clientX, t: e.timeStamp, v: 0, width: shell.current.offsetWidth, active: false };
+    },
+    onPointerMove(e) {
+      const d = drag.current;
+      if (!d || e.pointerId !== d.id) return;
+      const dx = e.clientX - d.x0;
+      if (!d.active) {
+        if (Math.abs(e.clientY - d.y0) > SWIPE_DEAD_PX) return settle(); // a scroll, not a swipe
+        if (Math.abs(dx) < SWIPE_DEAD_PX) return;
+        d.active = true;
+        e.target.setPointerCapture(e.pointerId); // the shell itself takes no pointer events while closed
+        shell.current.style.transition = 'none';
+      }
+      const dt = Math.max(1, e.timeStamp - d.t);
+      d.v = (e.clientX - d.x) / dt;
+      d.x = e.clientX;
+      d.t = e.timeStamp;
+      const offset = open ? Math.max(0, dx) : Math.max(0, d.width + Math.min(0, dx));
+      shell.current.style.transform = `translateX(${offset}px)`;
+    },
+    onPointerUp(e) {
+      const d = drag.current;
+      if (!d || e.pointerId !== d.id) return;
+      if (d.active) {
+        swiped.current = true;
+        const dx = e.clientX - d.x0;
+        if (open && (dx > d.width * SWIPE_SHARE || d.v > SWIPE_FLICK)) close();
+        else if (!open && (-dx > d.width * SWIPE_SHARE || d.v < -SWIPE_FLICK)) openLiner();
+      }
+      settle();
+    },
+    onPointerCancel: settle,
+    onClickCapture(e) {
+      if (!swiped.current) return;
+      swiped.current = false;
+      e.preventDefault();
+      e.stopPropagation();
+    },
+  };
+}
+
 /**
  * Liner notes: glass drawer from the right. The pull-tab lives on the shell so it always rides
- * with the drawer (peeking at the screen edge when closed, on the left edge when open).
+ * with the drawer (peeking at the screen edge when closed, on the left edge when open). On touch
+ * screens the drawer also follows a horizontal swipe (useDrawerSwipe).
  */
 export function LinerNotes() {
   const hint = useStore((st) => st.hint);
@@ -90,6 +159,8 @@ export function LinerNotes() {
   const open = useStore((s) => s.panel === 'liner');
   const [playingLegend, setPlayingLegend] = useState(false);
   const openedOnce = useRef(false);
+  const shell = useRef(null);
+  const swipe = useDrawerSwipe(shell, open);
 
   useEffect(() => {
     if (open) openedOnce.current = true;
@@ -109,7 +180,7 @@ export function LinerNotes() {
   return (
     <>
       {open && <div className="liner-backdrop" onClick={(e) => e.target === e.currentTarget && close()} />}
-      <div className={`liner-shell ${open ? 'is-open' : ''} ${hint === 'hearing' && !open ? 'hint' : ''}`}>
+      <div ref={shell} className={`liner-shell ${open ? 'is-open' : ''} ${hint === 'hearing' && !open ? 'hint' : ''}`} {...swipe}>
         <button
           type="button"
           className="liner-tab"

@@ -32,6 +32,32 @@ export function ringLabelPlacement(fraction) {
     transform: `translate3d(calc(${shift(nx)}), calc(${shift(ny)}), 0) translate(${px(nx)}px, ${px(ny)}px)`,
   };
 }
+const HINT_R = TIME_RING + 0.05; // tutorial balloons: just outside the ring's hover track
+const HINT_GAP = 10; // px
+
+/**
+ * First-visit balloon beside the time ring (fraction 0 at the top, clockwise). Unlike the hover
+ * date, a balloon is wide: it sits wholly on the outer side of the anchor (a corner of it on the
+ * anchor within 30° of a diagonal, an edge's midpoint nearer an axis), so it never covers the ring.
+ * Returns { position, transform, tip } for drei <Html> (no `center`); tip is the part of the
+ * balloon nearest the ring: a corner ('tl' | 'tr' | 'bl' | 'br') or an edge ('l' | 'r' | 't' | 'b').
+ */
+export function ringHintPlacement(fraction) {
+  const a = fraction * Math.PI * 2;
+  const wx = Math.sin(a);
+  const wy = Math.cos(a);
+  const side = (n) => (n > 0.5 ? 1 : n < -0.5 ? -1 : 0);
+  const sx = side(wx); // screen +x
+  const sy = side(-wy); // screen +y is down
+  const pct = (s) => (s === 1 ? 0 : s === -1 ? -100 : -50);
+  const v = sy > 0 ? 't' : sy < 0 ? 'b' : '';
+  const h = sx > 0 ? 'l' : sx < 0 ? 'r' : '';
+  return {
+    position: [wx * HINT_R, wy * HINT_R, 0],
+    transform: `translate3d(${pct(sx)}%, ${pct(sy)}%, 0) translate(${sx * HINT_GAP}px, ${sy * HINT_GAP}px)`,
+    tip: v + h,
+  };
+}
 export const LINE_LATS = [-72, 88]; // north almost to the visible limb (globe tilted toward the camera)
 
 const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
@@ -56,9 +82,10 @@ export function cameraDistance(aspect) {
 }
 
 const TREND_H = 125; // px: the trend chart (src/ui/Trend.jsx, .trend in styles.css)
+const STACKED_TREND_H = 98; // px: the smaller, centred chart of the stacked layout
 const FOOTER_H = 54; // px: the footer pill
 const DISC_RISE = 40; // px: the Records disc above the pill, lifted when Records is open
-const CHIPS_ROW_H = 118; // px: the chips' row on phones
+const CHIPS_ROW_H = 86; // px: the chips' row on phones, with its gap to the chart
 
 /** True when the HUD uses its stacked layout (phones and any portrait screen; see styles.css). */
 export const stackedLayout = (w, h) => w <= 760 || w < h;
@@ -87,9 +114,9 @@ export function cameraFrame(w, h) {
     if (ty > 0) maxR = Math.min(maxR, tx > 0 ? Math.hypot(tx, ty) - 12 : ty - 12);
   } else {
     const top = gutter + 40 + 48 + 8 + 44 + 12; // brand row, date, two caption lines
-    const bottom = gutter + 92 + CHIPS_ROW_H + TREND_H + 12; // footer and its disc, chips row, trend chart
+    const bottom = gutter + 92 + CHIPS_ROW_H + STACKED_TREND_H + 12; // footer and its disc, chips row, trend chart
     const free = h - top - bottom;
-    maxR = Math.min(w / 2 - 28 - 10, free / 2); // the liner tab peeks from the right edge
+    maxR = Math.min(w / 2 - 12, free / 2); // the liner tab sits beside the chart, below the platter
     centerY = top + free / 2;
   }
   const z = Math.max(z0, (PLATTER_R * h) / 2 / (TAN * Math.max(60, maxR)));

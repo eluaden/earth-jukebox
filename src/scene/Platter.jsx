@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { progress, scrubEnd, scrubStart, scrubToFraction, seekToFraction, stepAtFraction } from '../state/controller.js';
@@ -8,7 +8,8 @@ import { useStore } from '../state/store.js';
 import { SECONDS_PER_TURN } from '../data/needle.js';
 import { formatDate } from '../lib/format.js';
 import { t } from '../i18n/strings.js';
-import { GLOBE_Y, TIME_RING, ringLabelPlacement } from './layout.js';
+import { TRACK_VIEW } from '../state/tracks.js';
+import { GLOBE_Y, TIME_RING, ringHintPlacement, ringLabelPlacement, stackedLayout } from './layout.js';
 
 const ringVertex = /* glsl */ `
   varying vec2 vPos;
@@ -223,14 +224,74 @@ export function Platter() {
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
       {labelF != null && <RingLabel f={labelF} />}
-      {hint && (
-        <Html position={[0, -TIME_RING + 0.24, 0]} center zIndexRange={[4, 0]} style={{ pointerEvents: 'none' }}>
-          <div className="ring-hint" aria-hidden="true">
-            <p>{t(lang, 'timeHint')}</p>
-            <p>{t(lang, 'pauseHint')}</p>
-          </div>
-        </Html>
-      )}
+      {hint && <TutorialHints lang={lang} />}
     </group>
+  );
+}
+
+const RingIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+    <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeOpacity="0.3" strokeWidth="1.6" />
+    <path d="M8 2a6 6 0 0 1 5.2 9" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    <circle cx="13.2" cy="11" r="1.9" fill="currentColor" />
+  </svg>
+);
+
+const GlobeIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+    <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeWidth="1.6" />
+    <ellipse cx="8" cy="8" rx="2.6" ry="6" fill="none" stroke="currentColor" strokeWidth="1.2" />
+    <path d="M2 8h12" stroke="currentColor" strokeWidth="1.2" />
+  </svg>
+);
+
+// Balloons may reach over the HUD (date, trend chart on phones): they live on <body>, above it
+// (.hud is z-index 5), instead of inside the canvas wrapper, which the HUD always covers.
+const OVER_HUD = { current: typeof document === 'undefined' ? null : document.body };
+
+/** One first-visit balloon on the outer side of the ring, its nearest corner or edge pointing at it. */
+function RingBalloon({ fraction, kind, icon, title, children }) {
+  const { position, transform, tip } = ringHintPlacement(fraction);
+  return (
+    <Html position={position} portal={OVER_HUD} zIndexRange={[30, 30]} style={{ pointerEvents: 'none', transform }}>
+      <div className={`ring-hint ring-hint-${kind} tip-${tip}`} aria-hidden="true">
+        <p className="ring-hint-title">
+          {icon}
+          {title}
+        </p>
+        {children}
+      </div>
+    </Html>
+  );
+}
+
+/**
+ * Tutorial, 3rd step: two balloons at once, one per gesture. Lower right, on the ring: time (the
+ * ghost pointer runs on the ring itself, see TimeRing). Left, between the date's caption and the
+ * trend chart: place, with a ghost finger sliding across the globe. Stacked layout: time below the platter, place above it. A
+ * porthole record cannot be turned by hand, so only the time balloon shows there.
+ */
+function TutorialHints({ lang }) {
+  const size = useThree((s) => s.size);
+  const trackId = useStore((s) => s.trackId);
+  const stacked = stackedLayout(size.width, size.height);
+  const place = !TRACK_VIEW[trackId]?.porthole;
+  return (
+    <>
+      <RingBalloon fraction={stacked ? 0.5 : 0.37} kind="time" icon={<RingIcon />} title={t(lang, 'timeHintTitle')}>
+        <p>{t(lang, 'timeHint')}</p>
+      </RingBalloon>
+      {place && (
+        <>
+          <RingBalloon fraction={stacked ? 0 : 0.7} kind="place" icon={<GlobeIcon />} title={t(lang, 'placeHintTitle')}>
+            <p>{t(lang, 'placeHint')}</p>
+            <p className="ring-hint-sub">{t(lang, 'pauseHint')}</p>
+          </RingBalloon>
+          <Html position={[0, -0.3, 0]} center zIndexRange={[4, 0]} style={{ pointerEvents: 'none' }}>
+            <div className="ghost-finger" />
+          </Html>
+        </>
+      )}
+    </>
   );
 }

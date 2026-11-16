@@ -1329,15 +1329,42 @@ a {
     font-size: 14px;
     margin-top: 8px;
   }
-  /* Phones: footer and chips own the bottom, so the chart sits right above the chips. */
+  /* Phones: footer and chips own the bottom, so the chart sits right above the chips, centred and
+     small so the globe keeps the room (src/scene/layout.js STACKED_TREND_H, CHIPS_ROW_H). */
   .trend {
-    bottom: calc(var(--gutter) + 92px + 118px);
-    left: var(--gutter);
-    width: min(300px, calc(100vw - 2 * var(--gutter)));
+    bottom: calc(var(--gutter) + 92px + 86px);
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    width: min(240px, calc(100vw - 2 * var(--gutter)));
+  }
+  .trend-head {
+    margin-bottom: 4px;
+  }
+  .trend-label {
+    font-size: 10px;
+  }
+  .trend-now {
+    font-size: 13px;
   }
   .trend-svg {
     width: 100%;
     height: auto;
+  }
+  /* The drawer leaves a strip of the record on the left, where its tab stays in reach to close it. */
+  .liner-shell {
+    width: calc(100vw - 40px);
+  }
+  .liner {
+    padding: 22px 20px 120px;
+    touch-action: pan-y; /* vertical scrolls the notes; horizontal swipes the drawer (Panels.jsx) */
+  }
+  /* Beside the centred chart instead of mid-height, so the platter can use the full width. */
+  .liner-tab {
+    top: auto;
+    bottom: calc(var(--gutter) + 92px + 86px + 21px);
+    transform: translateX(-100%);
+    touch-action: none;
   }
   .panel-liner .footer {
     left: var(--gutter);
@@ -1359,7 +1386,7 @@ a {
   }
   .chip {
     border-radius: 14px;
-    padding: 10px 10px;
+    padding: 8px 9px;
   }
   .chip-name {
     font-size: 11px;
@@ -1378,19 +1405,23 @@ a {
     font-size: 12px;
     font-weight: 700;
   }
+  /* Value and Mute on one line: a shorter row of chips leaves the globe more room. */
   .chip-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    margin-top: 6px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-top: 4px;
   }
   .chip-value {
-    font-size: 16px;
+    font-size: 15px;
+    white-space: nowrap;
   }
   .chip-buttons button {
     width: auto;
-    height: 28px;
-    padding: 0 8px;
+    height: 26px;
+    padding: 0 6px;
+    font-size: 10.5px;
   }
   .footer {
     left: var(--gutter);
@@ -1503,40 +1534,126 @@ body.dragging-globe * {
   pointer-events: none;
   user-select: none;
 }
-/* Tutorial, inside the ring at the bottom, pointing down to it. */
+/* Tutorial: one balloon per gesture, outside the ring; the corner nearest the ring is sharp (it points). */
 .ring-hint {
-  position: relative;
   width: max-content;
-  max-width: min(280px, 64vw);
+  max-width: min(230px, 42vw);
   margin: 0;
-  padding: 9px 13px;
+  padding: 10px 13px 11px;
   border-radius: 12px;
   background: rgba(255, 244, 228, 0.96);
   color: #111;
   font-size: 13.5px;
   line-height: 1.35;
-  text-align: center;
   pointer-events: none;
   user-select: none;
   animation: fade-in 0.5s ease both;
 }
-.ring-hint p {
-  margin: 0;
+.ring-hint-place {
+  animation-delay: 0.35s; /* read right to left in two beats: time first, then place */
 }
-.ring-hint p + p {
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+.ring-hint.tip-tl {
+  border-top-left-radius: 2px;
 }
-.ring-hint::after {
+.ring-hint.tip-tr {
+  border-top-right-radius: 2px;
+}
+.ring-hint.tip-bl {
+  border-bottom-left-radius: 2px;
+}
+.ring-hint.tip-br {
+  border-bottom-right-radius: 2px;
+}
+.ring-hint.tip-l,
+.ring-hint.tip-r,
+.ring-hint.tip-t,
+.ring-hint.tip-b {
+  position: relative;
+}
+.ring-hint.tip-l::before,
+.ring-hint.tip-r::before,
+.ring-hint.tip-t::before,
+.ring-hint.tip-b::before {
   content: '';
   position: absolute;
+  border: 7px solid transparent;
+}
+.ring-hint.tip-r::before {
+  left: 100%;
+  top: 50%;
+  margin-top: -7px;
+  border-right: 0;
+  border-left-color: rgba(255, 244, 228, 0.96);
+}
+.ring-hint.tip-l::before {
+  right: 100%;
+  top: 50%;
+  margin-top: -7px;
+  border-left: 0;
+  border-right-color: rgba(255, 244, 228, 0.96);
+}
+.ring-hint.tip-b::before {
   top: 100%;
   left: 50%;
   margin-left: -7px;
-  border: 7px solid transparent;
-  border-top-color: rgba(255, 244, 228, 0.96);
   border-bottom: 0;
+  border-top-color: rgba(255, 244, 228, 0.96);
+}
+.ring-hint.tip-t::before {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -7px;
+  border-top: 0;
+  border-bottom-color: rgba(255, 244, 228, 0.96);
+}
+.ring-hint p {
+  margin: 0;
+}
+.ring-hint .ring-hint-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a5a12;
+}
+.ring-hint .ring-hint-sub {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.62);
+}
+/* Tutorial: a fingertip sliding across the globe, the gesture of the place balloon. */
+.ghost-finger {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.16),
+    0 0 18px rgba(255, 244, 228, 0.6);
+  pointer-events: none;
+  animation:
+    fade-in 0.5s ease 0.35s both,
+    ghost-swipe 2.4s ease-in-out 0.35s infinite;
+}
+@keyframes ghost-swipe {
+  0%,
+  100% {
+    transform: translateX(-70px);
+  }
+  50% {
+    transform: translateX(70px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ghost-finger {
+    animation: fade-in 0.5s ease both;
+  }
 }
 
 /* ---------- "What am I hearing?" openers ---------- */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DUST_RADII, TIME_RING, cameraDistance, dustPositions, ringLabelPlacement } from './layout.js';
+import { DUST_RADII, TIME_RING, cameraDistance, dustPositions, ringHintPlacement, ringLabelPlacement } from './layout.js';
 
 describe('ringLabelPlacement', () => {
   const r = TIME_RING + 0.028;
@@ -21,6 +21,34 @@ describe('ringLabelPlacement', () => {
     const bottom = ringLabelPlacement(0.5);
     expect(bottom.position[1]).toBeCloseTo(-r, 5);
     expect(bottom.transform).toBe('translate3d(calc(-50.00%), calc(0.00%), 0) translate(0.00px, 8.00px)');
+  });
+});
+
+describe('ringHintPlacement', () => {
+  it('puts a tutorial balloon wholly outside the ring, its nearest corner on the anchor', () => {
+    const lowerRight = ringHintPlacement(0.375);
+    expect(lowerRight.position[0]).toBeGreaterThan(TIME_RING * 0.7);
+    expect(lowerRight.position[1]).toBeLessThan(-TIME_RING * 0.7);
+    expect(lowerRight.transform).toBe('translate3d(0%, 0%, 0) translate(10px, 10px)');
+    expect(lowerRight.tip).toBe('tl');
+
+    const lowerLeft = ringHintPlacement(0.625);
+    expect(lowerLeft.transform).toBe('translate3d(-100%, 0%, 0) translate(-10px, 10px)');
+    expect(lowerLeft.tip).toBe('tr');
+  });
+
+  it('centres the balloon on its edge near an axis, the edge pointing at the ring', () => {
+    const left = ringHintPlacement(0.7);
+    expect(left.transform).toBe('translate3d(-100%, -50%, 0) translate(-10px, 0px)');
+    expect(left.tip).toBe('r');
+
+    const top = ringHintPlacement(0);
+    expect(top.transform).toBe('translate3d(-50%, -100%, 0) translate(0px, -10px)');
+    expect(top.tip).toBe('b');
+
+    const bottom = ringHintPlacement(0.5);
+    expect(bottom.transform).toBe('translate3d(-50%, 0%, 0) translate(0px, 10px)');
+    expect(bottom.tip).toBe('t');
   });
 });
 
