@@ -41,7 +41,34 @@
   "c2fc012e76728130": "es/c2fc012e76728130.mp3",
   "35d10524e9f801cc": "es/35d10524e9f801cc.mp3",
   "c4650e1255394381": "es/c4650e1255394381.mp3",
-  "c643e671c1576078": "es/c643e671c1576078.mp3"
+  "c643e671c1576078": "es/c643e671c1576078.mp3",
+  "ad23c28405a3fb3f": "en/ad23c28405a3fb3f.mp3",
+  "37a4c3350b66b738": "en/37a4c3350b66b738.mp3",
+  "f9fdd250228e82f4": "en/f9fdd250228e82f4.mp3",
+  "f7b7659bea8e8335": "en/f7b7659bea8e8335.mp3",
+  "3f28890d95d20e2f": "en/3f28890d95d20e2f.mp3",
+  "8b4489d0222edb85": "pt/8b4489d0222edb85.mp3",
+  "f888b569c7322aac": "pt/f888b569c7322aac.mp3",
+  "ff3f8155d5935580": "pt/ff3f8155d5935580.mp3",
+  "f6acbf4c73a5018f": "pt/f6acbf4c73a5018f.mp3",
+  "7f8a6226e2b2ed33": "pt/7f8a6226e2b2ed33.mp3",
+  "353c49eb82082fa5": "es/353c49eb82082fa5.mp3",
+  "913a2a51659d36e8": "es/913a2a51659d36e8.mp3",
+  "fc79997f30238ff5": "es/fc79997f30238ff5.mp3",
+  "20d7030757abbad7": "es/20d7030757abbad7.mp3",
+  "5293a84348453465": "es/5293a84348453465.mp3",
+  "bee1c684d7190ea6": "en/bee1c684d7190ea6.mp3",
+  "b7bb77986d2fd3ed": "en/b7bb77986d2fd3ed.mp3",
+  "c7b53672e7c5424b": "en/c7b53672e7c5424b.mp3",
+  "650cf94a8cb66637": "en/650cf94a8cb66637.mp3",
+  "61922075b40f6110": "pt/61922075b40f6110.mp3",
+  "ec7b652de85833cb": "pt/ec7b652de85833cb.mp3",
+  "936d98ad425fe238": "pt/936d98ad425fe238.mp3",
+  "7d91f9122d9fac04": "pt/7d91f9122d9fac04.mp3",
+  "9c57ad81d7c34362": "es/9c57ad81d7c34362.mp3",
+  "a31423f1c26e708b": "es/a31423f1c26e708b.mp3",
+  "ac349b28451ca2ef": "es/ac349b28451ca2ef.mp3",
+  "107c383b963288e8": "es/107c383b963288e8.mp3"
  },
  "info": {
   "b8835534eea274e5": {
@@ -379,6 +406,222 @@
    "text": "Doce años de noche han pasado bajo la aguja. El disco vuelve a empezar.",
    "seconds": 4.18,
    "speed": 1
+  },
+  "ad23c28405a3fb3f": {
+   "track": "aerosols",
+   "id": "intro",
+   "lang": "en",
+   "text": "This is the air of a single moment: 19 August 2025, as NASA’s GEOS model saw it. Low strings are smoke, the marimba is dust, the bells are sea salt.",
+   "seconds": 9.43,
+   "speed": 1
+  },
+  "37a4c3350b66b738": {
+   "track": "aerosols",
+   "id": "outro",
+   "lang": "en",
+   "text": "The same moment comes round again: every turn plays the same air, place by place.",
+   "seconds": 4.13,
+   "speed": 1
+  },
+  "f9fdd250228e82f4": {
+   "track": "aerosols",
+   "id": "dust",
+   "lang": "en",
+   "text": "Under the needle: dust from the Sahara, crossing the Atlantic.",
+   "seconds": 3.25,
+   "speed": 1
+  },
+  "f7b7659bea8e8335": {
+   "track": "aerosols",
+   "id": "smoke",
+   "lang": "en",
+   "text": "Now smoke, from the fires burning in Africa.",
+   "seconds": 2.14,
+   "speed": 1
+  },
+  "3f28890d95d20e2f": {
+   "track": "aerosols",
+   "id": "sea-salt",
+   "lang": "en",
+   "text": "Sea salt, lifted by the winds over the southern seas.",
+   "seconds": 2.79,
+   "speed": 1
+  },
+  "8b4489d0222edb85": {
+   "track": "aerosols",
+   "id": "intro",
+   "lang": "pt",
+   "text": "Este é o ar de um único momento: 19 de agosto de 2025, como o modelo GEOS da NASA o viu. As cordas graves são fumaça, a marimba é poeira, os sinos são sal marinho.",
+   "seconds": 11.66,
+   "speed": 1
+  },
+  "f888b569c7322aac": {
+   "track": "aerosols",
+   "id": "outro",
+   "lang": "pt",
+   "text": "O mesmo momento volta: cada volta toca o mesmo ar, lugar por lugar.",
+   "seconds": 4.27,
+   "speed": 1
+  },
+  "ff3f8155d5935580": {
+   "track": "aerosols",
+   "id": "dust",
+   "lang": "pt",
+   "text": "Sob a agulha: poeira do Saara, cruzando o Atlântico.",
+   "seconds": 3.3,
+   "speed": 1
+  },
+  "f6acbf4c73a5018f": {
+   "track": "aerosols",
+   "id": "smoke",
+   "lang": "pt",
+   "text": "Agora fumaça, das queimadas na África.",
+   "seconds": 2.14,
+   "speed": 1
+  },
+  "7f8a6226e2b2ed33": {
+   "track": "aerosols",
+   "id": "sea-salt",
+   "lang": "pt",
+   "text": "Sal marinho, levantado pelos ventos sobre os mares do sul.",
+   "seconds": 3.02,
+   "speed": 1
+  },
+  "353c49eb82082fa5": {
+   "track": "aerosols",
+   "id": "intro",
+   "lang": "es",
+   "text": "Este es el aire de un solo momento: el 19 de agosto de 2025, tal como lo vio el modelo GEOS de la NASA. Las cuerdas graves son humo, la marimba es polvo, las campanas son sal marina.",
+   "seconds": 12.4,
+   "speed": 1
+  },
+  "913a2a51659d36e8": {
+   "track": "aerosols",
+   "id": "outro",
+   "lang": "es",
+   "text": "El mismo momento vuelve: cada vuelta toca el mismo aire, lugar por lugar.",
+   "seconds": 5.06,
+   "speed": 1
+  },
+  "fc79997f30238ff5": {
+   "track": "aerosols",
+   "id": "dust",
+   "lang": "es",
+   "text": "Bajo la aguja: polvo del Sahara, cruzando el Atlántico.",
+   "seconds": 3.11,
+   "speed": 1
+  },
+  "20d7030757abbad7": {
+   "track": "aerosols",
+   "id": "smoke",
+   "lang": "es",
+   "text": "Ahora humo, de las quemas en África.",
+   "seconds": 2.14,
+   "speed": 1
+  },
+  "5293a84348453465": {
+   "track": "aerosols",
+   "id": "sea-salt",
+   "lang": "es",
+   "text": "Sal marina, levantada por los vientos sobre los mares del sur.",
+   "seconds": 3.39,
+   "speed": 1
+  },
+  "bee1c684d7190ea6": {
+   "track": "sea-level",
+   "id": "intro",
+   "lang": "en",
+   "text": "The sea, through a porthole, from 1993 to 2023. The strings follow the water: one step up for every centimetre.",
+   "seconds": 6.92,
+   "speed": 1
+  },
+  "b7bb77986d2fd3ed": {
+   "track": "sea-level",
+   "id": "year-2003",
+   "lang": "en",
+   "text": "January 2003: ten years on, the sea is about three centimetres higher.",
+   "seconds": 4.23,
+   "speed": 1
+  },
+  "c7b53672e7c5424b": {
+   "track": "sea-level",
+   "id": "year-2013",
+   "lang": "en",
+   "text": "January 2013: twenty years on, about six centimetres.",
+   "seconds": 3.2,
+   "speed": 1
+  },
+  "650cf94a8cb66637": {
+   "track": "sea-level",
+   "id": "outro",
+   "lang": "en",
+   "text": "By the end of 2023 the sea stood about eleven centimetres above 1993. The record starts again.",
+   "seconds": 6.27,
+   "speed": 1
+  },
+  "61922075b40f6110": {
+   "track": "sea-level",
+   "id": "intro",
+   "lang": "pt",
+   "text": "O mar, por uma escotilha, de 1993 a 2023. As cordas acompanham a água: um degrau acima a cada centímetro.",
+   "seconds": 7.94,
+   "speed": 1
+  },
+  "ec7b652de85833cb": {
+   "track": "sea-level",
+   "id": "year-2003",
+   "lang": "pt",
+   "text": "Janeiro de 2003: dez anos depois, o mar está cerca de três centímetros mais alto.",
+   "seconds": 5.02,
+   "speed": 1
+  },
+  "936d98ad425fe238": {
+   "track": "sea-level",
+   "id": "year-2013",
+   "lang": "pt",
+   "text": "Janeiro de 2013: vinte anos depois, cerca de seis centímetros.",
+   "seconds": 4.55,
+   "speed": 1
+  },
+  "7d91f9122d9fac04": {
+   "track": "sea-level",
+   "id": "outro",
+   "lang": "pt",
+   "text": "No fim de 2023 o mar estava cerca de onze centímetros acima de 1993. O disco recomeça.",
+   "seconds": 6.13,
+   "speed": 1
+  },
+  "9c57ad81d7c34362": {
+   "track": "sea-level",
+   "id": "intro",
+   "lang": "es",
+   "text": "El mar, por un ojo de buey, de 1993 a 2023. Las cuerdas siguen al agua: un escalón más por cada centímetro.",
+   "seconds": 8.68,
+   "speed": 1
+  },
+  "a31423f1c26e708b": {
+   "track": "sea-level",
+   "id": "year-2003",
+   "lang": "es",
+   "text": "Enero de 2003: diez años después, el mar está unos tres centímetros más alto.",
+   "seconds": 4.64,
+   "speed": 1
+  },
+  "ac349b28451ca2ef": {
+   "track": "sea-level",
+   "id": "year-2013",
+   "lang": "es",
+   "text": "Enero de 2013: veinte años después, unos seis centímetros.",
+   "seconds": 4.23,
+   "speed": 1
+  },
+  "107c383b963288e8": {
+   "track": "sea-level",
+   "id": "outro",
+   "lang": "es",
+   "text": "A finales de 2023 el mar estaba unos once centímetros por encima de 1993. El disco vuelve a empezar.",
+   "seconds": 7.38,
+   "speed": 1
   }
  },
  "voiceModel": "eleven_multilingual_v2",
@@ -387,5 +630,5 @@
   "similarity_boost": 0.75,
   "style": 0.1
  },
- "generated": "2026-11-15T18:47:38.900Z"
+ "generated": "2026-11-16T00:06:42.379Z"
 }
