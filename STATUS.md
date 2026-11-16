@@ -65,8 +65,8 @@ Somos três. Cada frente tem **dono e arquivos próprios**, para ninguém editar
 | Teste com usuários | §9 | **A fazer** | C | Contatar Dorina Nowill, Instituto Benjamin Constant, Laramara (Q3). Protocolo do §17.2. **Nunca simular resultado** |
 | Site publicado + versão 2D | §10 | **Feito** | B | GitHub Pages; 2D automática sem WebGL (`?flat=1` força) |
 | Vídeo (até 30 s) | §10 | **Parcial** | C | Roteiro pronto em [`docs/roteiro-video.md`](docs/roteiro-video.md) (trailer de 29,0 s; a trilha é o próprio app). Falta: gravar N3 (F2–F9) e S8, gerar V5 e V3, capturar o app (T1–T8), editar e enviar. Sem teste real, a fala F7 usa a versão B (43,3 milhões de pessoas cegas). **Aviso à frente C (Lucas Souza):** roteiro escrito pela frente A a pedido do Lucas Valadares; mudanças são bem-vindas, registrando no direcionamento §10 |
-| Página do projeto | §10 | **A fazer** | C | Em inglês, na linguagem dos prêmios |
-| References | §10, §7.3 | **Parcial** | C | `si-e-referencias.md` atualizado até a fatia SST. Falta checklist do §2 dele antes de submeter |
+| Página do projeto | §10 | **Parcial** | C | Texto de todos os campos pronto em [`docs/project-page.md`](docs/project-page.md) (15/11, frente A a pedido do Lucas Valadares). Falta: link da demo, colar as References e **clicar "Submit for Judging" até 23:59 de 15/11** (regras no direcionamento §10) |
+| References | §10, §7.3 | **Parcial** | C | `si-e-referencias.md` em dia com os cinco discos, a voz clonada e a fonte do número de 43,3 milhões (15/11). Os 76 MP3 de voz e efeitos têm o metadado "AI-generated…: ElevenLabs" (conferido). O About agora credita a narração como voz de IA (antes só os efeitos; `strings.js`, aviso à frente C). Falta: marca d'água nos planos do Veo do vídeo, se entrarem |
 | README | §10 | **Parcial** | todos | Reescrito para a fatia SST; atualizar a cada faixa |
 
 ## 3. P1 — Fortalece (só depois do P0 pronto)

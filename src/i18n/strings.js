@@ -99,6 +99,7 @@ export const STRINGS = {
     creditsList: [
       'Data and visualization: NASA Scientific Visualization Studio, SVS 3912 (ECCO2 model, MIT/JPL), SVS 5011 (Lightning Imaging Sensor on the ISS), SVS 5313 (Black Marble, NASA/NOAA), SVS 5669 (GEOS aerosols, NASA GMAO) and SVS 5235 (sea level, multi-mission ocean altimeters).',
       'Instrument samples: VSCO 2 Community Edition by Versilian Studios (CC0).',
+      'Narration: AI-generated voice (ElevenLabs, eleven_multilingual_v2), a clone of team member Lucas Souza’s voice made with his consent (tagged in each file).',
       'UI and turntable sound effects: AI-generated with ElevenLabs (tagged in each file).',
       'Fonts: Instrument Serif, Geist Mono, Atkinson Hyperlegible (SIL Open Font License).',
       'Libraries: React, three.js, React Three Fiber, drei, postprocessing, GSAP, Tone.js, zustand.',
@@ -215,6 +216,7 @@ export const STRINGS = {
     creditsList: [
       'Dados e visualização: NASA Scientific Visualization Studio, SVS 3912 (modelo ECCO2, MIT/JPL), SVS 5011 (Lightning Imaging Sensor na ISS), SVS 5313 (Black Marble, NASA/NOAA), SVS 5669 (aerossóis do GEOS, NASA GMAO) e SVS 5235 (nível do mar, altímetros oceânicos de várias missões).',
       'Samples de instrumentos: VSCO 2 Community Edition, da Versilian Studios (CC0).',
+      'Narração: voz gerada por IA (ElevenLabs, eleven_multilingual_v2), clone da voz do integrante Lucas Souza feito com o consentimento dele (marcada em cada arquivo).',
       'Efeitos sonoros da interface e do toca-discos: gerados por IA com ElevenLabs (marcados em cada arquivo).',
       'Fontes: Instrument Serif, Geist Mono, Atkinson Hyperlegible (SIL Open Font License).',
       'Bibliotecas: React, three.js, React Three Fiber, drei, postprocessing, GSAP, Tone.js, zustand.',
@@ -331,6 +333,7 @@ export const STRINGS = {
     creditsList: [
       'Datos y visualización: NASA Scientific Visualization Studio, SVS 3912 (modelo ECCO2, MIT/JPL), SVS 5011 (Lightning Imaging Sensor en la ISS), SVS 5313 (Black Marble, NASA/NOAA), SVS 5669 (aerosoles de GEOS, NASA GMAO) y SVS 5235 (nivel del mar, altímetros oceánicos de varias misiones).',
       'Muestras de instrumentos: VSCO 2 Community Edition, de Versilian Studios (CC0).',
+      'Narración: voz generada por IA (ElevenLabs, eleven_multilingual_v2), clon de la voz del integrante Lucas Souza hecho con su consentimiento (marcada en cada archivo).',
       'Efectos de sonido de la interfaz y del tocadiscos: generados por IA con ElevenLabs (marcados en cada archivo).',
       'Fuentes: Instrument Serif, Geist Mono, Atkinson Hyperlegible (SIL Open Font License).',
       'Bibliotecas: React, three.js, React Three Fiber, drei, postprocessing, GSAP, Tone.js, zustand.',

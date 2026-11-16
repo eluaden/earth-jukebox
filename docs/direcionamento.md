@@ -387,9 +387,11 @@ earth-jukebox/media-src/
 |---|---|
 | Site | Publicado e funcionando em notebook comum e celular, com versão 2D se o 3D não rodar |
 | Vídeo (até 30 s) | **Decisão de 15/11/2026: trailer de cinema, épico e positivo, em inglês, 29,0 s.** Roteiro plano a plano, narração, prompts, captura, mixagem e legendas em [`roteiro-video.md`](roteiro-video.md). Arco: tela preta *"Put on headphones."* → os mapas da NASA, mudos → a agulha desce no globo e o som chega → *"Warmer water. Higher note."* / *"Every note is real NASA data."* → montagem das cinco faixas → tela preta com a música no auge (*"Close your eyes."* + para quem é feito) → *"The future of seeing our planet is hearing it."* → título. **A trilha é o próprio app:** toda nota foi gravada ao vivo do Earth Jukebox (sem música de IA; corte, camadas e volume sim, mudar altura ou tempo das notas não). Imagem real (site ao vivo + mapas da NASA) em ~14 s; Veo em no máximo ~5 s, em 2 planos (V5 e V3), com marca d'água; o resto é preto e cartelas. Legendas em inglês queimadas (regra do Space Apps). O vídeo funciona de olhos fechados (tudo o que importa é dito) e sem som (tudo o que é dito aparece escrito). Resultado do teste com usuários só entra se for real; sem ele, a fala é sobre o público (43,3 milhões de pessoas cegas). Explorar e Comparar não aparecem (não existem no site). Nenhuma frase de "primeiro do mundo" (houve sonificações da Terra antes, ver [projetos anteriores](earth-jukebox-projetos-anteriores.md)) |
-| Página do projeto | Em inglês, escrita na linguagem dos prêmios ("combines technical and creative skills", "makes NASA data accessible to blind and low-vision people") |
+| Página do projeto | Em inglês, escrita na linguagem dos prêmios ("combines technical and creative skills", "makes NASA data accessible to blind and low-vision people"). **Texto de cada campo do formulário pronto para colar em [`project-page.md`](project-page.md)** (15/11/2026): só cita o que está no site (sem Explorar, Comparar, áudio espacial, vibração, álbum, Audio-first) e nenhum resultado de teste que não tenha acontecido |
 | References | Todas as fontes NASA, samples, conteúdo de IA e bibliotecas |
 | README | Reescrito para refletir este direcionamento |
+
+> **Regras oficiais conferidas em 15/11/2026 (Project Submission Guide e Judging & Awards Guide de 13/11/2026):** submeter ("Submit for Judging") até **domingo 15/11, 23:59 no fuso do evento local**; o que for salvo ou submetido depois não é julgado. A **demo é obrigatória**: vídeo de até 30 s **ou** até 7 slides; passar do limite tira o projeto do julgamento global. Página e todo material linkado em inglês (vídeo pode ter fala em outra língua com legenda em inglês). Links públicos, sem login. Sem imagem, vídeo, áudio ou semelhança de menores de 18 anos. Conteúdo de SI: imagem e vídeo com marca d'água visível; áudio com texto descritivo **e** metadado (a narração passou a ser creditada no About em 15/11). Pelo menos um dado ou recurso da NASA. Todos os membros no mesmo evento local, fora da lista de espera, na aba Members.
 
 ## 11. Stack
 
@@ -419,7 +421,7 @@ earth-jukebox/media-src/
 
 | Critério | Como pontuamos |
 |---|---|
-| Influence | Dados da NASA para pessoas cegas e com baixa visão, 3 idiomas, camada sonora para o EIC, script aberto para novos dados, **teste real** |
+| Impact (o guia de 2026, de 13/11, usa "Impact", não "Influence") | Dados da NASA para pessoas cegas e com baixa visão, 3 idiomas, camada sonora para o EIC, script aberto para novos dados, **teste real** |
 | Creativity | A Terra como disco, agulha lendo o planeta, áudio espacial, capas que são o próprio dado |
 | Validity | Valor lido da legenda do frame, legenda sonora, limites no encarte, pipeline reproduzível, teste com usuários |
 | Relevance | Recursos oficiais, síntese em tempo real, exploração interativa, feedback tátil, texto descritivo rico, app + álbum |

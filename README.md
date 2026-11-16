@@ -166,7 +166,10 @@ each one has its file. Aerosols and sea level still use speech synthesis until t
 ## Credits
 
 - Data and visualization: NASA Scientific Visualization Studio, [SVS 3912](https://svs.gsfc.nasa.gov/3912/) (ECCO2, MIT/JPL),
-  [SVS 5011](https://svs.gsfc.nasa.gov/5011/) (LIS on the ISS) and [SVS 5313](https://svs.gsfc.nasa.gov/5313/) (Black Marble, NASA/NOAA).
+  [SVS 5011](https://svs.gsfc.nasa.gov/5011/) (LIS on the ISS), [SVS 5313](https://svs.gsfc.nasa.gov/5313/) (Black Marble, NASA/NOAA),
+  [SVS 5669](https://svs.gsfc.nasa.gov/5669/) (GEOS aerosols, NASA GMAO) and [SVS 5235](https://svs.gsfc.nasa.gov/5235/) (sea level, ocean altimeters).
+- Narration: AI-generated voice (ElevenLabs `eleven_multilingual_v2`), cloned with consent from team member Lucas Souza;
+  sound effects: AI-generated with ElevenLabs. Every file is tagged "AI-generated …: ElevenLabs" in its metadata.
 - Instrument samples: [VSCO 2 Community Edition](https://github.com/sgossner/VSCO-2-CE), Versilian Studios (CC0).
 - Fonts: Instrument Serif, Geist Mono, Atkinson Hyperlegible (SIL Open Font License).
 - Libraries: React, three.js, React Three Fiber, drei, postprocessing, GSAP, Tone.js, zustand, Vite, Vitest.
