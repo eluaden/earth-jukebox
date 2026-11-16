@@ -199,7 +199,7 @@ export function LinerNotes() {
   );
 }
 
-/** About: method, user test, team, credits, keyboard, replay the opening. */
+/** About: method, team, credits, keyboard, replay the opening. */
 export function About() {
   const lang = useStore((s) => s.lang);
   const open = useStore((s) => s.panel === 'about');
@@ -211,8 +211,6 @@ export function About() {
         <h2 id="about-title">{t(lang, 'aboutTitle')}</h2>
         <h3>{t(lang, 'method')}</h3>
         <p>{t(lang, 'methodText')}</p>
-        <h3>{t(lang, 'userTest')}</h3>
-        <p>{t(lang, 'userTestText')}</p>
         <h3>{t(lang, 'team')}</h3>
         <p>{t(lang, 'teamText')}</p>
         <h3>{t(lang, 'keyboard')}</h3>

@@ -184,5 +184,5 @@ item, and who owns what. Design of this slice:
 
 ## Still open
 
-The user test result and the team names are shown as `[a definir]` in About until they exist.
+Team names are listed in About.
 The sound must be approved by ear by a team member with musical training (direction §6.1).
