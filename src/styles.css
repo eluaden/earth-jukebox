@@ -1129,6 +1129,53 @@ a {
   padding: 8px 8px 8px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
+.liner-period a {
+  color: inherit;
+}
+.liner .liner-lede {
+  font-size: 18px;
+  line-height: 1.45;
+  margin: 18px 0 0;
+}
+.liner-more {
+  margin-top: 28px;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 14px;
+}
+.liner-more summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+.liner-more summary::-webkit-details-marker {
+  display: none;
+}
+.liner-more summary::before {
+  content: '›';
+  display: inline-block;
+  width: 1em;
+  transition: transform 0.2s ease;
+}
+.liner-more[open] summary::before {
+  transform: rotate(90deg);
+}
+.liner-more summary:hover,
+.liner-more summary:focus-visible {
+  color: inherit;
+}
+.liner-more h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 18px 0 6px;
+}
+.liner-more p,
+.liner-more li {
+  font-size: 14px;
+  color: var(--fg-dim);
+}
 .legend-img {
   width: 100%;
   max-width: 310px;
@@ -1442,6 +1489,54 @@ body.dragging-globe * {
 }
 .stage {
   touch-action: pan-y; /* horizontal finger drags turn the globe; vertical still scrolls */
+}
+
+/* ---------- time ring (src/scene/Platter.jsx) ---------- */
+/* Beside the pointer on the ring: the date there, small and faint. */
+.ring-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+  user-select: none;
+}
+/* Tutorial, inside the ring at the bottom, pointing down to it. */
+.ring-hint {
+  position: relative;
+  width: max-content;
+  max-width: min(280px, 64vw);
+  margin: 0;
+  padding: 9px 13px;
+  border-radius: 12px;
+  background: rgba(255, 244, 228, 0.96);
+  color: #111;
+  font-size: 13.5px;
+  line-height: 1.35;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  animation: fade-in 0.5s ease both;
+}
+.ring-hint p {
+  margin: 0;
+}
+.ring-hint p + p {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+.ring-hint::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -7px;
+  border: 7px solid transparent;
+  border-top-color: rgba(255, 244, 228, 0.96);
+  border-bottom: 0;
 }
 
 /* ---------- "What am I hearing?" openers ---------- */

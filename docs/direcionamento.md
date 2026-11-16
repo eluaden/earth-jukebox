@@ -105,14 +105,23 @@ flowchart LR
 > **Decisão de 15/11/2026 (N1 na abertura):** o navegador só toca som depois de um clique, então a voz entra no clique. Na primeira visita: clique no idioma → a voz diz *"Put on headphones."* enquanto a tela preta some e a câmera já desce → em seguida *"Welcome to the Earth Jukebox…"* durante a descida (a música entra por baixo, abaixada) → ~2,5 s de música sozinha → narração de abertura da faixa. A descida não espera a voz. Retornos (abertura já vista) e "Replay opening" não repetem o N1.
 
 > **Decisão de 15/11/2026 (arrastar, instrumentos e "O que estou ouvindo?", frente C):**
-> - **Arrastar o globo** para os lados com o mouse ou o dedo, tocando ou pausado (setas ↑ ↓ fazem o mesmo pelo teclado). Enquanto arrasta, a data para e a agulha **toca o que passa embaixo dela**; ao soltar, o disco volta ao estado de antes (tocando continua tocando, pausado continua pausado). Um clique curto continua sendo play/pause.
+> - **Arrastar o globo** para os lados com o mouse ou o dedo, tocando ou pausado (setas ↑ ↓ fazem o mesmo pelo teclado). Enquanto arrasta, a agulha **toca o que passa embaixo dela** e a data anda junto com o globo (ver decisão "globo e anel são o mesmo relógio"); ao soltar, o disco volta ao estado de antes (tocando continua tocando, pausado continua pausado). Um clique curto continua sendo play/pause.
 > - **Escolher o instrumento de cada voz** no cartão da voz: menu de vidro próprio do site (não o seletor do sistema), com **no máximo 5 instrumentos por disco**, escolhidos pelo jeito de cada disco tocar: temperatura do mar (notas longas) cordas, piano, glockenspiel, harpa, flauta; raios (batidas) marimba, xilofone, pizzicato, harpa, glockenspiel; luzes noturnas piano, cordas, glockenspiel, harpa, flauta. Muda só o timbre: notas, ritmo e mapeamento dado → som ficam iguais, e continua no máximo 3 vozes por faixa. Os novos (harpa, flauta, pizzicato, xilofone; VSCO 2 CE, CC0) só são baixados quando escolhidos.
 > - **O encarte vira "O que estou ouvindo?"** e abre pelo botão destacado no rodapé (com ⓘ), pela seta na borda direita e pela tecla L. Sem botão no topo. A narração **não** foi alterada.
 > - **O globo só gira quando o disco toca com a agulha no disco.** Pausado, com Records aberto ou trocando de disco, ele fica parado (e o brilho do prato também); só gira se alguém arrastar.
 
 > **Decisão de 15/11/2026 (descobrir o que ouve, depois trocar o disco):** o rótulo do meio do rodapé é o verbo **"Trocar disco" / "Change record" / "Cambiar disco"** (não só "Records"), com o mini-disco em cima da pílula. Na primeira visita, quando a introdução falada termina: (1) o botão e a seta de "O que estou ouvindo?" brilham ~9 s, com o balão deles; (2) em seguida — ou ao **fechar** o encarte, se a pessoa abriu durante o hint — o mini-disco **levanta uma vez** e brilha ~9 s, com balão *"Troque o disco"*. No painel Records: hover tira o vinil da capa e acende a borda; o disco atual fica mais alto, com anel âmbar e o ponto âmbar no nome (capa + nome + período, sem texto extra).
 
-> **Decisão de 15/11/2026 (repetir com narração, frente C):** o disco gira em loop só com a música; a narração do narrador (introdução, marcos e encerramento) é falada **uma vez** por disco. O botão **repetir** no rodapé (ao lado do play/pause; tecla Home) volta o disco ao primeiro passo e fala a narração de novo, do começo. É o único jeito de ouvir a voz outra vez; pausar e retomar ou o loop não repetem a voz.
+> **Decisão de 15/11/2026 (repetir com narração, frente C):** o disco gira em loop só com a música; a narração do narrador (introdução, marcos e encerramento) é falada **uma vez** por disco. O botão **repetir** no rodapé (ao lado do play/pause; tecla Home) volta o disco ao primeiro passo e fala a narração de novo, do começo. Pausar e retomar ou o loop não repetem a voz; voltar no tempo (globo ou anel) para antes de um marco faz só aquele marco ser falado de novo quando o disco passar por ele.
+
+> **Decisão de 15/11/2026 (globo e anel são o mesmo relógio):**
+> - **Um anel só** em volta do globo: o arco de tempo. O segundo anel (decorativo) saiu.
+> - **Arrastar o globo move o tempo**, na mesma proporção da reprodução (uma volta do globo = 10 s do relógio do disco): puxar a superfície para a direita (contra o giro) volta a data e o arco; para a esquerda, avança. No primeiro e no último passo o globo trava. Disco de um instante (aerossóis): o globo gira livre e o arco acompanha a volta. Escotilha (nível do mar): arrastar o globo continua sem efeito; o anel funciona.
+> - **Mexer no anel gira o globo** junto, na mesma proporção, suavizado; um salto grande gira no máximo uma volta, no sentido do salto. Setas ← →, repetir e Home também giram o globo.
+> - Arrastar no anel funciona como arrastar o globo: a agulha toca o que passa e, ao soltar, o disco volta ao estado de antes. Passar do topo do anel arrastando trava no começo ou no fim (não dá a volta).
+> - **A narração volta junto:** voltar para antes de um marco re-arma aquele marco; se a fala em andamento é de um marco que ficou à frente, ela para. Enquanto arrasta, nenhum marco dispara. Introdução e encerramento seguem a regra do repetir.
+> - **Hover no anel** (visual de barra de progresso, sem texto fixo): o anel engrossa e o trilho ainda não tocado acende; aparece o cabeçote (bolinha âmbar na posição atual, sempre visível pequena, maior no hover), um traço no topo marcando início/fim e um traço onde está o ponteiro. Ponteiro **atrás** do cabeçote: o trecho que seria voltado esmaece; **à frente**: o trecho que seria pulado acende fraco. Junto ao ponteiro, a data daquele ponto em texto pequeno e esmaecido (sem ícone, sem fundo). Disco de um instante não mostra data. Cursor: mão aberta; fechada enquanto arrasta.
+> - **Tutorial, 3º passo** (depois do balão "Troque o disco", ou ao fechar Records se a pessoa abriu antes): por ~9 s o anel fica no estado de hover, um ponteiro fantasma desliza para trás a partir do cabeçote e um balão dentro do anel, embaixo, diz *"Arraste o anel (ou gire o globo) para voltar no tempo"*. Some ao tocar no anel ou no globo. Uma vez por navegador.
 
 > **Decisão de 15/11/2026 (idioma na abertura):** o seletor **EN · PT · ES** sai do rodapé e fica só na cold open; escolher o idioma **é** o gesto de iniciar (libera espaço na tela principal; idioma do navegador pré-selecionado).
 
@@ -133,18 +142,18 @@ flowchart LR
 | Agulha | Braço fino de cromo, simples, sem marca; vem sempre do canto superior direito |
 | Capas (Records) | Capa + nome da faixa + período. Hover: vinil sai da capa, borda clara. Disco atual: mais alto, anel âmbar, ponto âmbar no nome. Nada além |
 | Cold open | "Put on headphones." · "Select a language to start." · "EN · PT · ES" (navegador pré-selecionado; clicar no idioma inicia) |
-| Liner notes | Drawer à direita: título · "What you hear" · tabela "Data → Sound" · legenda da NASA + "Hear the legend" · "Limits" · fonte · "Download album" (só quando o P2 existir) · aba branca com seta na borda esquerda · "×" · fecha ao clicar fora |
+| Liner notes | Drawer à direita: título · período · dado + link curto da NASA · frase de abertura · tabela "Data → Sound" · "Listen for" (2–3 destaques) · legenda da NASA + "Hear the legend" · "Learn more · method and limits" recolhido (no mapa, limites, fonte completa) · "Download album" (só quando o P2 existir) · aba branca com seta na borda esquerda · "×" · fecha ao clicar fora |
 | Valores ainda desconhecidos | Mostrados como `[a definir]`, nunca inventados |
 
 ### 5.3 Tela principal
 
 | Região | O que aparece |
 |---|---|
-| Centro | Globo grande (~70% da altura, levemente abaixo do centro), vídeo NASA projetado, halo de atmosfera e brilho suave. Em volta, anéis concêntricos leves girando devagar (o "prato") |
+| Centro | Globo grande (~70% da altura, levemente abaixo do centro), vídeo NASA projetado, halo de atmosfera e brilho suave. Em volta, um anel leve com um brilho que gira com o globo (o "prato") |
 | Agulha | Braço de cromo fino vindo do canto superior direito; a ponta toca o meridiano. **Meridiano** = sulco hairline prata (baixa opacidade) na superfície: só marca onde a agulha lê — não é UI. **Flash da nota** = luz aditiva na linha quando uma nota toca, na cor do instrumento/dado (§5.4). O flash marca a **faixa musical que tocou**, não uma cidade: a latitude é o centro ponderado pelo valor na coluna sob a agulha (ex.: luzes de SP puxam o flash para ~23° S, não para o meio geométrico da faixa 20° S–45° S). Aparece no pulso da música (com arpejo), não no instante em que a cidade cruza a linha |
 | Esquerda | Data enorme em serifa editorial (ex.: "AUG 2007"); abaixo, a legenda da narração em uma linha. No canto inferior esquerdo, o gráfico de tendência da média global do disco (§5.2.1) |
 | Direita | Coluna de chips de vidro, um por instrumento: ícone, nome da variável, valor ao vivo com unidade, botões de mudo e solo |
-| Anel do prato | Arco de progresso do tempo, arrastável (substitui o slider) |
+| Anel do prato | Arco de progresso do tempo, arrastável (substitui o slider), sincronizado com o giro do globo; hover em §5.2 (decisão "globo e anel são o mesmo relógio") |
 | Rodapé | Pílula de vidro: play/pause, repetir, nome da faixa, "Trocar disco" (mini-disco), "O que estou ouvindo?", modo (Ouvir / Explorar / Comparar) — sem idioma |
 | Canto superior esquerdo | Marca "EARTH JUKEBOX" pequena; acesso ao overlay About |
 
@@ -174,12 +183,13 @@ flowchart LR
 Drawer de vidro que desliza da direita (música continua tocando), com:
 - Aba branca na borda esquerda, com seta (chevron) para fora, no estilo de um puxador de painel; clicar na aba fecha.
 - Fecha também ao clicar fora do drawer (backdrop) ou em "×" / Esc.
+- **Decisão de 15/11/2026 (encarte enxuto):** quem abre quer entender em segundos e ver que é sério, não ler tudo. Visível de cara: título, período · dado (ex.: "Modelo oceânico ECCO2 (MIT/JPL)") · link curto "NASA SVS nnnn"; **uma ou duas frases** do que se ouve; tabela "dado → som" com 2–5 linhas curtas; **"Preste atenção"** com 2–3 destaques, cada um com número e unidade; legenda + "Ouvir a legenda". O resto fica num bloco recolhido **"Saiba mais · método e limites"** (`<details>`, fechado por padrão): o que aparece no mapa, os limites ditos com franqueza e a fonte completa. Nenhum fato foi tirado do texto: o que saiu do topo foi para o "Saiba mais". A narração não mudou (está gravada).
 - O que você está ouvindo, em linguagem simples.
 - Tabela "dado → som" da faixa.
-- **Texto descritivo rico**: o que acontece na imagem em cada trecho (também lido pelo leitor de tela).
+- Texto descritivo: o que acontece na imagem (também lido pelo leitor de tela), no "Saiba mais".
 - Barra de cores da NASA com o botão **"Hear the legend"**: toca do mínimo ao máximo para calibrar o ouvido.
   - **Faixas sem barra de cores numérica (raios, luzes noturnas; decisão de 15/11/2026):** a seção vira "Legend in sound", com uma frase dizendo o que a imagem mostra, e "Hear the legend" toca as notas que a própria faixa usa, geradas pelo mapeamento da faixa: raios = as 10 faixas de latitude de 55° S (mais grave) a 55° N (mais agudo), na força máxima; luzes noturnas = as 6 faixas de latitude do piano de sul a norte, depois a figura de luzes apagadas (cordas descendo) e a de luzes novas (sinos subindo).
-- Fonte NASA com link e limites da leitura, ditos com franqueza.
+- Fonte NASA com link e limites da leitura, ditos com franqueza (link curto no topo; fonte completa e limites no "Saiba mais").
 - Botão de exportar a faixa como álbum (§7.4).
 
 ### 5.6 Modo Explorar

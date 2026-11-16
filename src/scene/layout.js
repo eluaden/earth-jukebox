@@ -6,7 +6,8 @@ export const FOV = 35;
 export const GLOBE_Y = 0;
 export const TILT = 0.12; // rad, about X (positive = north pole toward the camera)
 export const NEEDLE_LAT = 30; // where the stylus touches the meridian line (degrees)
-export const RINGS = [1.15, 1.24]; // platter rings; the time arc runs on RINGS[0]
+export const TIME_RING = 1.15; // the platter's time ring (src/scene/Platter.jsx)
+export const PLATTER_R = 1.24; // what the camera keeps clear of the HUD: the ring, its hover state and label
 export const LINE_LATS = [-72, 88]; // north almost to the visible limb (globe tilted toward the camera)
 
 const TAN = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
@@ -20,7 +21,7 @@ export function meridianPoint(latDeg, radius = 1) {
 
 /**
  * Camera distance that keeps the platter (and the UI around it) in view for this aspect ratio.
- * Landscape: the outer ring stays clear of the footer pill and leaves room for the date on the left
+ * Landscape: the platter stays clear of the footer pill and leaves room for the date on the left
  * and the chips on the right. Portrait: the platter fits the width.
  */
 export function cameraDistance(aspect) {
@@ -40,7 +41,7 @@ export const stackedLayout = (w, h) => w <= 760 || w < h;
 
 /**
  * Camera for a window of w x h px: { z, y }. On top of cameraDistance (the platter's own framing),
- * the outer ring is kept clear of every HUD block, measured in pixels as styles.css lays them out,
+ * the platter (PLATTER_R) is kept clear of every HUD block, measured in pixels as styles.css lays them out,
  * so nothing on screen overlaps the record:
  *  - wide screens: the date column on the left, the chips (and the liner tab) on the right, the
  *    footer and its Records disc below and the trend chart docked bottom-left;
@@ -67,7 +68,7 @@ export function cameraFrame(w, h) {
     maxR = Math.min(w / 2 - 28 - 10, free / 2); // the liner tab peeks from the right edge
     centerY = top + free / 2;
   }
-  const z = Math.max(z0, (RINGS[1] * h) / 2 / (TAN * Math.max(60, maxR)));
+  const z = Math.max(z0, (PLATTER_R * h) / 2 / (TAN * Math.max(60, maxR)));
   // Camera y that puts the globe's centre at centerY px (a lower camera shows the globe higher).
   const y = ((centerY - h / 2) * TAN * z) / (h / 2);
   return { z, y };

@@ -10,6 +10,12 @@ function close() {
   restoreFocus();
 }
 
+/** "NASA SVS 3912" from an svs.gsfc.nasa.gov URL; the full source name lives under "Learn more". */
+function svsLabel(url) {
+  const id = url.match(/svs\.gsfc\.nasa\.gov\/(\d+)/)?.[1];
+  return id ? `NASA SVS ${id}` : 'NASA';
+}
+
 function openLiner() {
   rememberOpener();
   setPanel('liner');
@@ -133,10 +139,14 @@ export function LinerNotes() {
           >
             <CloseButton lang={lang} autoFocus={open} />
             <h2 id="liner-title">{text.title}</h2>
-            <p className="liner-period">{meta.period}</p>
+            <p className="liner-period">
+              {meta.period} · {text.dataset} ·{' '}
+              <a href={meta.source.url} target="_blank" rel="noreferrer">
+                {svsLabel(meta.source.url)}
+              </a>
+            </p>
 
-            <h3>{t(lang, 'whatYouHear')}</h3>
-            <p>{text.whatYouHear}</p>
+            <p className="liner-lede">{text.whatYouHear}</p>
 
             <h3>{t(lang, 'dataToSound')}</h3>
             <table>
@@ -156,10 +166,12 @@ export function LinerNotes() {
               </tbody>
             </table>
 
-            <h3>{t(lang, 'onTheMap')}</h3>
-            {text.description.map((p) => (
-              <p key={p}>{p}</p>
-            ))}
+            <h3>{t(lang, 'listenFor')}</h3>
+            <ul className="liner-highlights">
+              {text.highlights.map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
 
             <h3>{meta.legend?.image ? t(lang, 'legend') : t(lang, 'legendSound')}</h3>
             {meta.legend?.image ? (
@@ -179,19 +191,25 @@ export function LinerNotes() {
               {t(lang, 'hearLegend')}
             </button>
 
-            <h3>{t(lang, 'limits')}</h3>
-            <ul>
-              {text.limits.map((l) => (
-                <li key={l}>{l}</li>
+            <details className="liner-more" key={trackId}>
+              <summary>{t(lang, 'learnMore')}</summary>
+              <h4>{t(lang, 'onTheMap')}</h4>
+              {text.description.map((p) => (
+                <p key={p}>{p}</p>
               ))}
-            </ul>
-
-            <h3>{t(lang, 'source')}</h3>
-            <p>
-              <a href={meta.source.url} target="_blank" rel="noreferrer">
-                {meta.source.name}
-              </a>
-            </p>
+              <h4>{t(lang, 'limits')}</h4>
+              <ul>
+                {text.limits.map((l) => (
+                  <li key={l}>{l}</li>
+                ))}
+              </ul>
+              <h4>{t(lang, 'source')}</h4>
+              <p>
+                <a href={meta.source.url} target="_blank" rel="noreferrer">
+                  {meta.source.name}
+                </a>
+              </p>
+            </details>
           </aside>
         )}
       </div>

@@ -1,29 +1,30 @@
 // Liner notes and narration of the sea level bonus record, EN / PT / ES.
 // Rules (docs/si-e-referencias.md): only facts from the NASA page (SVS 5235) or computed from the track's
 // own series (scripts/pipeline/sealevel.py). The team reviews these texts before publishing.
+// Shown at a glance: dataset, whatYouHear, mapping, highlights. Behind "Learn more": description, limits.
 
 export const SEA_LEVEL_TEXT = {
   en: {
     title: 'Sea level',
-    whatYouHear:
-      'Through a ship’s porthole, NASA shows how far the ocean rose from 1993 to 2023. The strings hold one long note that follows the water: for every centimetre the sea gains, the note climbs one step. The first time the sea reaches a new centimetre above 1993, a bell rings.',
+    dataset: 'Satellite altimetry (GSFC GMSL v5.1)',
+    whatYouHear: 'Thirty years of global sea level, seen through a porthole. The strings climb one step for every centimetre; a bell marks each new centimetre.',
     mapping: [
-      ['Global mean sea level above 1993, read from the blue bar on NASA’s ruler', 'Strings: one long note, one step higher for every centimetre, and a little louder'],
-      ['A new whole centimetre above 1993, reached for the first time', 'Glockenspiel: one bell, higher for each centimetre'],
-      ['Time: January 1993 to December 2023', 'The date on the left; about one year per second'],
+      ['Global mean sea level above 1993', 'Strings: one step higher per centimetre'],
+      ['A new whole centimetre, reached for the first time', 'Glockenspiel: one bell'],
+    ],
+    highlights: [
+      'The peak is October 2023: about 11.5 cm above 1993.',
+      'The last decade rose the most: about 3.5 cm, against about 3.2 cm in each of the first two.',
     ],
     description: [
-      'The porthole looks out at the open sea. The ruler on the glass is in centimetres and inches; the blue bar starts at the 1993 sea level and rises with NASA’s satellite record.',
-      'By January 2003 the sea was about 3.2 centimetres above 1993; by January 2013, about 6.4; by January 2023, about 9.8.',
-      'The last decade added the most: about 3.5 centimetres, against about 3.2 in each of the first two.',
-      'The highest point of the record is in October 2023, about 11.5 centimetres above 1993.',
+      'The blue bar on the ruler (centimetres and inches) starts at the 1993 level and rises with NASA’s satellite record.',
+      'January 2003: about 3.2 cm. January 2013: about 6.4 cm. January 2023: about 9.8 cm.',
     ],
     limits: [
-      'NASA does not publish the numbers with this video, so we read them from the picture: the height of the blue bar against the ruler printed on the frame, where one pixel is half a millimetre.',
-      'The dates come from the year NASA prints next to the bar, which advances at a steady pace of one year every 29 frames of the video, so a date is accurate to about two weeks.',
-      'This is the average over all the oceans. The sea does not rise the same everywhere, and this record cannot show where.',
-      'The 1993 level is where the satellite record starts, not a natural or normal level.',
-      'The waves in the porthole follow a 60-day average of the same data; the blue bar, which we read, shows the measurements themselves (TOPEX/Poseidon, Jason-1, Jason-2 and Jason-3). After March 2022 the record includes Sentinel-6 Michael Freilich data that NASA marks as preliminary.',
+      'NASA does not publish the numbers with this video: we read the blue bar against the ruler on the frame (one pixel is half a millimetre).',
+      'Dates come from the year printed next to the bar, one year every 29 frames, so they are accurate to about two weeks.',
+      'This is the average of all oceans; it cannot show where the sea rises more. 1993 is where the satellite record starts, not a normal level.',
+      'The waves follow a 60-day average; the bar shows the measurements (TOPEX/Poseidon, Jason-1, -2 and -3). From March 2022 it includes Sentinel-6 Michael Freilich data that NASA marks as preliminary.',
     ],
     narration: {
       intro: 'The sea, through a porthole, from 1993 to 2023. The strings follow the water: one step up for every centimetre.',
@@ -34,25 +35,25 @@ export const SEA_LEVEL_TEXT = {
   },
   pt: {
     title: 'Nível do mar',
-    whatYouHear:
-      'Pela escotilha de um navio, a NASA mostra quanto o oceano subiu de 1993 a 2023. As cordas sustentam uma nota longa que acompanha a água: a cada centímetro que o mar ganha, a nota sobe um degrau. Na primeira vez que o mar chega a um novo centímetro acima de 1993, toca um sino.',
+    dataset: 'Altimetria por satélite (GSFC GMSL v5.1)',
+    whatYouHear: 'Trinta anos de nível do mar global, vistos por uma escotilha. As cordas sobem um degrau a cada centímetro; um sino marca cada centímetro novo.',
     mapping: [
-      ['Nível médio global do mar acima de 1993, lido da barra azul na régua da NASA', 'Cordas: uma nota longa, um degrau mais aguda a cada centímetro, e um pouco mais forte'],
-      ['Um novo centímetro inteiro acima de 1993, alcançado pela primeira vez', 'Glockenspiel: um sino, mais agudo a cada centímetro'],
-      ['Tempo: janeiro de 1993 a dezembro de 2023', 'A data à esquerda; cerca de um ano por segundo'],
+      ['Nível médio global do mar acima de 1993', 'Cordas: um degrau mais agudo por centímetro'],
+      ['Um novo centímetro inteiro, alcançado pela primeira vez', 'Glockenspiel: um sino'],
+    ],
+    highlights: [
+      'O pico é em outubro de 2023: cerca de 11,5 cm acima de 1993.',
+      'A última década subiu mais: cerca de 3,5 cm, contra cerca de 3,2 cm em cada uma das duas primeiras.',
     ],
     description: [
-      'A escotilha olha para o mar aberto. A régua no vidro está em centímetros e polegadas; a barra azul começa no nível do mar de 1993 e sobe com o registro de satélites da NASA.',
-      'Em janeiro de 2003 o mar estava cerca de 3,2 centímetros acima de 1993; em janeiro de 2013, cerca de 6,4; em janeiro de 2023, cerca de 9,8.',
-      'A última década somou mais: cerca de 3,5 centímetros, contra cerca de 3,2 em cada uma das duas primeiras.',
-      'O ponto mais alto do registro é em outubro de 2023, cerca de 11,5 centímetros acima de 1993.',
+      'A barra azul na régua (centímetros e polegadas) começa no nível de 1993 e sobe com o registro de satélites da NASA.',
+      'Janeiro de 2003: cerca de 3,2 cm. Janeiro de 2013: cerca de 6,4 cm. Janeiro de 2023: cerca de 9,8 cm.',
     ],
     limits: [
-      'A NASA não publica os números com este vídeo, então nós os lemos da imagem: a altura da barra azul contra a régua impressa no quadro, onde um pixel é meio milímetro.',
-      'As datas vêm do ano que a NASA imprime ao lado da barra, que avança num ritmo constante de um ano a cada 29 quadros do vídeo, então uma data tem precisão de cerca de duas semanas.',
-      'Esta é a média de todos os oceanos. O mar não sobe igual em todo lugar, e este registro não mostra onde.',
-      'O nível de 1993 é onde o registro de satélites começa, não um nível natural ou normal.',
-      'As ondas na escotilha seguem uma média de 60 dias do mesmo dado; a barra azul, que nós lemos, mostra as próprias medições (TOPEX/Poseidon, Jason-1, Jason-2 e Jason-3). Depois de março de 2022 o registro inclui dados do Sentinel-6 Michael Freilich que a NASA marca como preliminares.',
+      'A NASA não publica os números com este vídeo: lemos a barra azul contra a régua do quadro (um pixel é meio milímetro).',
+      'As datas vêm do ano impresso ao lado da barra, um ano a cada 29 quadros, então têm precisão de cerca de duas semanas.',
+      'É a média de todos os oceanos; não mostra onde o mar sobe mais. 1993 é onde o registro de satélites começa, não um nível normal.',
+      'As ondas seguem uma média de 60 dias; a barra mostra as medições (TOPEX/Poseidon, Jason-1, -2 e -3). Desde março de 2022 inclui dados do Sentinel-6 Michael Freilich que a NASA marca como preliminares.',
     ],
     narration: {
       intro: 'O mar, por uma escotilha, de 1993 a 2023. As cordas acompanham a água: um degrau acima a cada centímetro.',
@@ -63,25 +64,25 @@ export const SEA_LEVEL_TEXT = {
   },
   es: {
     title: 'Nivel del mar',
-    whatYouHear:
-      'Por el ojo de buey de un barco, la NASA muestra cuánto subió el océano de 1993 a 2023. Las cuerdas sostienen una nota larga que sigue al agua: por cada centímetro que gana el mar, la nota sube un escalón. La primera vez que el mar llega a un nuevo centímetro por encima de 1993, suena una campana.',
+    dataset: 'Altimetría por satélite (GSFC GMSL v5.1)',
+    whatYouHear: 'Treinta años de nivel del mar global, vistos por un ojo de buey. Las cuerdas suben un escalón por cada centímetro; una campana marca cada centímetro nuevo.',
     mapping: [
-      ['Nivel medio global del mar por encima de 1993, leído de la barra azul en la regla de la NASA', 'Cuerdas: una nota larga, un escalón más aguda por cada centímetro, y un poco más fuerte'],
-      ['Un nuevo centímetro entero por encima de 1993, alcanzado por primera vez', 'Glockenspiel: una campana, más aguda por cada centímetro'],
-      ['Tiempo: enero de 1993 a diciembre de 2023', 'La fecha a la izquierda; cerca de un año por segundo'],
+      ['Nivel medio global del mar por encima de 1993', 'Cuerdas: un escalón más aguda por centímetro'],
+      ['Un nuevo centímetro entero, alcanzado por primera vez', 'Glockenspiel: una campana'],
+    ],
+    highlights: [
+      'El pico es en octubre de 2023: unos 11,5 cm por encima de 1993.',
+      'La última década subió más: unos 3,5 cm, frente a unos 3,2 cm en cada una de las dos primeras.',
     ],
     description: [
-      'El ojo de buey mira al mar abierto. La regla en el vidrio está en centímetros y pulgadas; la barra azul empieza en el nivel del mar de 1993 y sube con el registro de satélites de la NASA.',
-      'En enero de 2003 el mar estaba unos 3,2 centímetros por encima de 1993; en enero de 2013, unos 6,4; en enero de 2023, unos 9,8.',
-      'La última década sumó más: unos 3,5 centímetros, frente a unos 3,2 en cada una de las dos primeras.',
-      'El punto más alto del registro es en octubre de 2023, unos 11,5 centímetros por encima de 1993.',
+      'La barra azul en la regla (centímetros y pulgadas) empieza en el nivel de 1993 y sube con el registro de satélites de la NASA.',
+      'Enero de 2003: unos 3,2 cm. Enero de 2013: unos 6,4 cm. Enero de 2023: unos 9,8 cm.',
     ],
     limits: [
-      'La NASA no publica los números con este vídeo, así que los leemos de la imagen: la altura de la barra azul contra la regla impresa en el cuadro, donde un píxel es medio milímetro.',
-      'Las fechas vienen del año que la NASA imprime junto a la barra, que avanza a un ritmo constante de un año cada 29 cuadros del vídeo, así que una fecha tiene una precisión de unas dos semanas.',
-      'Este es el promedio de todos los océanos. El mar no sube igual en todas partes, y este registro no muestra dónde.',
-      'El nivel de 1993 es donde empieza el registro de satélites, no un nivel natural o normal.',
-      'Las olas en el ojo de buey siguen un promedio de 60 días del mismo dato; la barra azul, que leemos, muestra las propias mediciones (TOPEX/Poseidon, Jason-1, Jason-2 y Jason-3). Después de marzo de 2022 el registro incluye datos del Sentinel-6 Michael Freilich que la NASA marca como preliminares.',
+      'La NASA no publica los números con este vídeo: leemos la barra azul contra la regla del cuadro (un píxel es medio milímetro).',
+      'Las fechas vienen del año impreso junto a la barra, un año cada 29 cuadros, así que tienen una precisión de unas dos semanas.',
+      'Es el promedio de todos los océanos; no muestra dónde sube más el mar. 1993 es donde empieza el registro de satélites, no un nivel normal.',
+      'Las olas siguen un promedio de 60 días; la barra muestra las mediciones (TOPEX/Poseidon, Jason-1, -2 y -3). Desde marzo de 2022 incluye datos del Sentinel-6 Michael Freilich que la NASA marca como preliminares.',
     ],
     narration: {
       intro: 'El mar, por un ojo de buey, de 1993 a 2023. Las cuerdas siguen al agua: un escalón más por cada centímetro.',

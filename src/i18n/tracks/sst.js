@@ -1,36 +1,36 @@
 // Liner notes and narration of the sea surface temperature track, EN / PT / ES.
 // Rules (docs/si-e-referencias.md): only facts stated on the NASA page (SVS 3912) or computed from the
 // track's own grid (scripts/pipeline/sst.py). Numbers below come from public/tracks/sst/grid.bin.
+// Shown at a glance: dataset, whatYouHear, mapping, highlights. Behind "Learn more": description, limits.
 // The team reviews these texts before publishing.
 
 export const SST_TEXT = {
   en: {
     title: 'Sea temperature',
-    whatYouHear:
-      'The needle reads the ocean under it, from north to south, about once for every day of the year. Strings play the northern waters, the piano plays the tropics and the glockenspiel plays the southern waters. Warmer water plays a higher, brighter note. Land is silent.',
+    dataset: 'ECCO2 ocean model (MIT/JPL)',
+    whatYouHear: 'One year of ocean surface temperature, read from north to south. Warmer water plays a higher note.',
     mapping: [
-      ['Sea surface temperature, 0–32 °C (NASA colour bar)', 'Pitch: warmer is higher, on the same scale for every instrument; warmer is also brighter and louder'],
-      ['Northern waters, 23.5° N to 80° N', 'Strings, held notes'],
-      ['Tropics, 23.5° S to 23.5° N', 'Piano, two notes in turn'],
-      ['Southern waters, 23.5° S to 80° S', 'Glockenspiel'],
+      ['Sea temperature, 0 to 32 °C', 'Pitch: warmer is higher, brighter and louder'],
+      ['Northern waters, 23.5° to 80° N', 'Strings'],
+      ['Tropics, 23.5° S to 23.5° N', 'Piano'],
+      ['Southern waters, 23.5° to 80° S', 'Glockenspiel'],
       ['Land, sea ice or no data', 'Silence'],
-      ['Time: 25 March 2007 to 3 March 2008', 'The date on the left; the globe turns once every 10 seconds'],
+    ],
+    highlights: [
+      'The tropics barely change: 26.6–27.7 °C all year, so the piano stays high.',
+      'The hemispheres take turns: the north peaks in September (15.4 °C), the south in February (11.6 °C). The strings rise as the glockenspiel falls.',
     ],
     description: [
-      'The map shows the ocean surface currents as thin lines, coloured by the water temperature. Blue is near 0 °C, green between 10 and 20 °C, yellow about 25 °C and red 32 °C.',
-      'The warm band around the equator barely changes: averaged around the whole planet, the tropics stay between 26.6 °C and 27.7 °C all year. The piano keeps to the top of the scale.',
-      'The two hemispheres take turns. The northern waters are coolest in early March 2008 (9.0 °C on average) and warmest in early September 2007 (15.4 °C), so the strings climb through the northern summer.',
-      'The southern waters do the opposite: coolest in early September 2007 (7.5 °C) and warmest in February 2008 (11.6 °C). The glockenspiel rises as the strings fall.',
-      'Each band averages whatever ocean it holds, so the music rarely stops: over the open Pacific and Atlantic all six notes sound, and even over the Americas and Africa at least four of the six still find ocean.',
+      'The thin lines are surface currents, coloured by temperature: blue near 0 °C, green 10–20 °C, yellow about 25 °C, red 32 °C.',
+      'Band averages: the north goes from 9.0 °C (March 2008) to 15.4 °C (September 2007); the south from 7.5 °C (September 2007) to 11.6 °C (February 2008).',
+      'Each voice averages the ocean in its band, so the music rarely stops: even over the Americas and Africa, at least four of the six notes find ocean.',
     ],
     limits: [
-      'The data is the ECCO2 ocean model (MIT/JPL), which combines satellite and in-water measurements with a physical model of the ocean. It is not a photograph.',
-      'We read the temperature from the colour of the flow lines with NASA’s colour bar. Our reader returns the colour bar’s own values with an error below 0.3 °C.',
-      'Above about 31 °C the colour bar is one single red, so everything from 31.1 to 31.9 °C reads as about 31.5 °C.',
-      'Each value is an average over a 2° × 2° box and about one day of the model. Where no line passes for a while, the box keeps its last reading; boxes that are almost always empty (land, sea ice) are silent.',
-      'Each instrument plays the average of two wide latitude bands, so a single warm current inside a band is smoothed out.',
-      'The colour shows temperature only. The movement of the lines (the currents) is not turned into sound.',
-      'The soft vinyl crackle in the background is not data. It keeps playing when the needle is over land.',
+      'ECCO2 is a model that combines satellite and in-water measurements with ocean physics. It is not a photograph.',
+      'We read temperature from the colour of the lines with NASA’s colour bar (error below 0.3 °C). Above about 31 °C the bar is a single red, read as about 31.5 °C.',
+      'Each value averages a 2° × 2° box over about one day. Where no line passes, the box keeps its last reading.',
+      'Wide bands smooth out a single warm current. The movement of the currents is not turned into sound.',
+      'The vinyl crackle in the background is not data.',
     ],
     narration: {
       intro: 'This is the surface of the ocean, from March 2007 to March 2008. Every note is a temperature read from a NASA map: the warmer the water, the higher the note.',
@@ -41,31 +41,30 @@ export const SST_TEXT = {
   },
   pt: {
     title: 'Temperatura do mar',
-    whatYouHear:
-      'A agulha lê o oceano embaixo dela, de norte a sul, cerca de uma vez para cada dia do ano. As cordas tocam as águas do norte, o piano toca os trópicos e o glockenspiel toca as águas do sul. Água mais quente toca uma nota mais aguda e mais brilhante. A terra fica em silêncio.',
+    dataset: 'Modelo oceânico ECCO2 (MIT/JPL)',
+    whatYouHear: 'Um ano de temperatura da superfície do oceano, lida de norte a sul. Água mais quente toca uma nota mais aguda.',
     mapping: [
-      ['Temperatura da superfície do mar, 0–32 °C (legenda de cores da NASA)', 'Altura: mais quente é mais agudo, na mesma escala para todos os instrumentos; mais quente também é mais brilhante e mais forte'],
-      ['Águas do norte, de 23,5° N a 80° N', 'Cordas, notas sustentadas'],
-      ['Trópicos, de 23,5° S a 23,5° N', 'Piano, duas notas alternadas'],
-      ['Águas do sul, de 23,5° S a 80° S', 'Glockenspiel'],
+      ['Temperatura do mar, 0 a 32 °C', 'Altura: mais quente é mais agudo, brilhante e forte'],
+      ['Águas do norte, 23,5° a 80° N', 'Cordas'],
+      ['Trópicos, 23,5° S a 23,5° N', 'Piano'],
+      ['Águas do sul, 23,5° a 80° S', 'Glockenspiel'],
       ['Terra, gelo marinho ou sem dado', 'Silêncio'],
-      ['Tempo: 25 de março de 2007 a 3 de março de 2008', 'A data à esquerda; o globo dá uma volta a cada 10 segundos'],
+    ],
+    highlights: [
+      'Os trópicos quase não mudam: 26,6–27,7 °C o ano todo, e o piano fica no agudo.',
+      'Os hemisférios se revezam: o norte chega ao pico em setembro (15,4 °C), o sul em fevereiro (11,6 °C). As cordas sobem enquanto o glockenspiel desce.',
     ],
     description: [
-      'O mapa mostra as correntes da superfície do oceano como linhas finas, coloridas pela temperatura da água. Azul é perto de 0 °C, verde entre 10 e 20 °C, amarelo cerca de 25 °C e vermelho 32 °C.',
-      'A faixa quente em volta do equador quase não muda: na média do planeta inteiro, os trópicos ficam entre 26,6 °C e 27,7 °C o ano todo. O piano fica no alto da escala.',
-      'Os dois hemisférios se revezam. As águas do norte estão mais frias no começo de março de 2008 (9,0 °C em média) e mais quentes no começo de setembro de 2007 (15,4 °C), então as cordas sobem durante o verão do norte.',
-      'As águas do sul fazem o contrário: mais frias no começo de setembro de 2007 (7,5 °C) e mais quentes em fevereiro de 2008 (11,6 °C). O glockenspiel sobe enquanto as cordas descem.',
-      'Cada faixa faz a média do oceano que contém, então a música quase nunca para: sobre o Pacífico e o Atlântico abertos as seis notas soam, e mesmo sobre as Américas e a África pelo menos quatro das seis ainda encontram oceano.',
+      'As linhas finas são as correntes da superfície, coloridas pela temperatura: azul perto de 0 °C, verde 10–20 °C, amarelo cerca de 25 °C, vermelho 32 °C.',
+      'Médias por faixa: o norte vai de 9,0 °C (março de 2008) a 15,4 °C (setembro de 2007); o sul, de 7,5 °C (setembro de 2007) a 11,6 °C (fevereiro de 2008).',
+      'Cada voz faz a média do oceano da sua faixa, então a música quase nunca para: mesmo sobre as Américas e a África, pelo menos quatro das seis notas encontram oceano.',
     ],
     limits: [
-      'O dado é o modelo oceânico ECCO2 (MIT/JPL), que combina medições de satélite e dentro da água com um modelo físico do oceano. Não é uma fotografia.',
-      'Lemos a temperatura pela cor das linhas de corrente com a legenda de cores da NASA. Nosso leitor devolve os valores da própria legenda com erro menor que 0,3 °C.',
-      'Acima de cerca de 31 °C a legenda é um vermelho só, então tudo entre 31,1 e 31,9 °C é lido como cerca de 31,5 °C.',
-      'Cada valor é a média de um quadrado de 2° × 2° e de cerca de um dia do modelo. Onde nenhuma linha passa por um tempo, o quadrado mantém a última leitura; quadrados quase sempre vazios (terra, gelo marinho) ficam em silêncio.',
-      'Cada instrumento toca a média de duas faixas largas de latitude, então uma corrente quente isolada dentro de uma faixa fica suavizada.',
-      'A cor mostra só a temperatura. O movimento das linhas (as correntes) não vira som.',
-      'O estalo suave de vinil ao fundo não é dado. Ele continua tocando quando a agulha está sobre a terra.',
+      'O ECCO2 é um modelo que combina medições de satélite e dentro da água com a física do oceano. Não é uma fotografia.',
+      'Lemos a temperatura pela cor das linhas com a barra de cores da NASA (erro menor que 0,3 °C). Acima de cerca de 31 °C a barra é um vermelho só, lido como cerca de 31,5 °C.',
+      'Cada valor é a média de um quadrado de 2° × 2° em cerca de um dia. Onde nenhuma linha passa, o quadrado mantém a última leitura.',
+      'Faixas largas suavizam uma corrente quente isolada. O movimento das correntes não vira som.',
+      'O estalo de vinil ao fundo não é dado.',
     ],
     narration: {
       intro: 'Esta é a superfície do oceano, de março de 2007 a março de 2008. Cada nota é uma temperatura lida de um mapa da NASA: quanto mais quente a água, mais aguda a nota.',
@@ -76,31 +75,30 @@ export const SST_TEXT = {
   },
   es: {
     title: 'Temperatura del mar',
-    whatYouHear:
-      'La aguja lee el océano que tiene debajo, de norte a sur, más o menos una vez por cada día del año. Las cuerdas tocan las aguas del norte, el piano toca los trópicos y el glockenspiel toca las aguas del sur. El agua más cálida toca una nota más aguda y más brillante. La tierra queda en silencio.',
+    dataset: 'Modelo oceánico ECCO2 (MIT/JPL)',
+    whatYouHear: 'Un año de temperatura de la superficie del océano, leída de norte a sur. El agua más cálida toca una nota más aguda.',
     mapping: [
-      ['Temperatura de la superficie del mar, 0–32 °C (barra de colores de la NASA)', 'Altura: más cálido es más agudo, en la misma escala para todos los instrumentos; más cálido también es más brillante y más fuerte'],
-      ['Aguas del norte, de 23,5° N a 80° N', 'Cuerdas, notas sostenidas'],
-      ['Trópicos, de 23,5° S a 23,5° N', 'Piano, dos notas alternadas'],
-      ['Aguas del sur, de 23,5° S a 80° S', 'Glockenspiel'],
+      ['Temperatura del mar, 0 a 32 °C', 'Altura: más cálido es más agudo, brillante y fuerte'],
+      ['Aguas del norte, 23,5° a 80° N', 'Cuerdas'],
+      ['Trópicos, 23,5° S a 23,5° N', 'Piano'],
+      ['Aguas del sur, 23,5° a 80° S', 'Glockenspiel'],
       ['Tierra, hielo marino o sin dato', 'Silencio'],
-      ['Tiempo: del 25 de marzo de 2007 al 3 de marzo de 2008', 'La fecha a la izquierda; el globo da una vuelta cada 10 segundos'],
+    ],
+    highlights: [
+      'Los trópicos casi no cambian: 26,6–27,7 °C todo el año, y el piano se queda en lo agudo.',
+      'Los hemisferios se turnan: el norte llega a su pico en septiembre (15,4 °C), el sur en febrero (11,6 °C). Las cuerdas suben mientras el glockenspiel baja.',
     ],
     description: [
-      'El mapa muestra las corrientes de la superficie del océano como líneas finas, coloreadas por la temperatura del agua. Azul es cerca de 0 °C, verde entre 10 y 20 °C, amarillo unos 25 °C y rojo 32 °C.',
-      'La franja cálida alrededor del ecuador casi no cambia: en el promedio de todo el planeta, los trópicos se mantienen entre 26,6 °C y 27,7 °C todo el año. El piano se queda en lo alto de la escala.',
-      'Los dos hemisferios se turnan. Las aguas del norte están más frías a principios de marzo de 2008 (9,0 °C de promedio) y más cálidas a principios de septiembre de 2007 (15,4 °C), así que las cuerdas suben durante el verano del norte.',
-      'Las aguas del sur hacen lo contrario: más frías a principios de septiembre de 2007 (7,5 °C) y más cálidas en febrero de 2008 (11,6 °C). El glockenspiel sube mientras las cuerdas bajan.',
-      'Cada franja promedia el océano que contiene, así que la música casi nunca se detiene: sobre el Pacífico y el Atlántico abiertos suenan las seis notas, e incluso sobre las Américas y África al menos cuatro de las seis siguen encontrando océano.',
+      'Las líneas finas son las corrientes de la superficie, coloreadas por la temperatura: azul cerca de 0 °C, verde 10–20 °C, amarillo unos 25 °C, rojo 32 °C.',
+      'Promedios por franja: el norte va de 9,0 °C (marzo de 2008) a 15,4 °C (septiembre de 2007); el sur, de 7,5 °C (septiembre de 2007) a 11,6 °C (febrero de 2008).',
+      'Cada voz promedia el océano de su franja, así que la música casi nunca se detiene: incluso sobre las Américas y África, al menos cuatro de las seis notas encuentran océano.',
     ],
     limits: [
-      'El dato es el modelo oceánico ECCO2 (MIT/JPL), que combina mediciones de satélite y dentro del agua con un modelo físico del océano. No es una fotografía.',
-      'Leemos la temperatura por el color de las líneas de corriente con la barra de colores de la NASA. Nuestro lector devuelve los valores de la propia barra con un error menor de 0,3 °C.',
-      'Por encima de unos 31 °C la barra es un único rojo, así que todo entre 31,1 y 31,9 °C se lee como unos 31,5 °C.',
-      'Cada valor es el promedio de un cuadro de 2° × 2° y de más o menos un día del modelo. Donde no pasa ninguna línea durante un tiempo, el cuadro conserva su última lectura; los cuadros casi siempre vacíos (tierra, hielo marino) quedan en silencio.',
-      'Cada instrumento toca el promedio de dos franjas anchas de latitud, así que una corriente cálida aislada dentro de una franja queda suavizada.',
-      'El color muestra solo la temperatura. El movimiento de las líneas (las corrientes) no se convierte en sonido.',
-      'El crujido suave de vinilo de fondo no es un dato. Sigue sonando cuando la aguja está sobre tierra.',
+      'ECCO2 es un modelo que combina mediciones de satélite y dentro del agua con la física del océano. No es una fotografía.',
+      'Leemos la temperatura por el color de las líneas con la barra de colores de la NASA (error menor de 0,3 °C). Por encima de unos 31 °C la barra es un único rojo, leído como unos 31,5 °C.',
+      'Cada valor es el promedio de un cuadro de 2° × 2° en más o menos un día. Donde no pasa ninguna línea, el cuadro conserva su última lectura.',
+      'Las franjas anchas suavizan una corriente cálida aislada. El movimiento de las corrientes no se convierte en sonido.',
+      'El crujido de vinilo de fondo no es un dato.',
     ],
     narration: {
       intro: 'Esta es la superficie del océano, de marzo de 2007 a marzo de 2008. Cada nota es una temperatura leída de un mapa de la NASA: cuanto más cálida el agua, más aguda la nota.',

@@ -5,7 +5,7 @@ import { loadTrack } from '../data/loadTrack.js';
 import { readColumn, lonToIndex } from '../data/grid.js';
 import { lonUnderNeedle, SECONDS_PER_TURN } from '../data/needle.js';
 import { INSTRUMENTS } from '../music/instruments.js';
-import { shouldFireMarker, stepAt, timeOfStep, trackDuration } from './clock.js';
+import { shouldFireMarker, stepAt, timeOfStep, trackDuration, turnLimited } from './clock.js';
 import { createEngine } from '../music/engine.js';
 import { TRACK_MUSIC } from '../music/tracks/index.js';
 import { createNarrator } from '../narration/narrator.js';
@@ -30,6 +30,7 @@ const INTRO_MUSIC_START = 0.06;
 const INTRO_MUSIC_MID = 0.28;
 const INTRO_SWELL_SEC = 22; // soft rise while the narrator still has the floor
 const INTRO_FINISH_SEC = 4.5; // last climb to normal after the track intro
+const TUTORIAL_DUCK_DB = -24; // first-visit tutorial: the music drops to a faint bed whenever the narrator speaks
 
 const c = {
   ready: null,
@@ -43,13 +44,19 @@ const c = {
   swap: null, // { from: skin, t0, dur } while the globe crossfades to a new record
   opening: null, // Promise of the N1 lines on a first visit
   swell: false, // music bed is rising under the first-visit opening (until the track intro ends)
+  tutorial: false, // first visit, from the welcome until the last tutorial balloon (deeper duck)
   landed: false, // the current descent already ended (introDone ran)
   token: 0, // changes with every record; callbacks left over from an older record do nothing
   prefetched: false,
   speaking: 0, // narration lines in progress (place markers wait for a free narrator)
   introSaid: -1, // token of the record whose intro has been spoken (place markers wait for it)
   turned: 0, // radians the globe has turned with the needle down on this record (instant records)
+  scrub: null, // { wasPlaying, t } while the globe or the ring is dragged; t = the data clock
+  spinDebt: 0, // radians the globe still has to turn to catch up with a jump of the data clock
+  saying: null, // { id, step } of the milestone being spoken (stopped if time goes back before it)
 };
+
+const RAD_PER_SEC = (2 * Math.PI) / SECONDS_PER_TURN; // globe turn per second of the data clock
 
 export const controller = c;
 
@@ -101,6 +108,7 @@ function activate(bundle, skin) {
   c.musicState = music.initialState();
   c.fired = new Set();
   c.turned = 0;
+  c.spinDebt = 0;
   c.token++;
   live.step = -1;
   live.lonIdx = -1;
@@ -163,15 +171,23 @@ export async function chooseInstrument(voiceId, inst) {
 }
 
 /**
- * Dragging the globe (src/ui/globeDrag.js, arrow keys up / down). The date stands still and the
- * needle plays what passes under it, paused or not; scrubEnd puts the record back as it was.
+ * Dragging the globe (src/ui/globeDrag.js, arrow keys up / down) or the platter's time ring. The
+ * globe and the record share one clock: a turn is SECONDS_PER_TURN of the data clock, as in
+ * playback, so turning the globe back takes the date (and the ring) back, and moving the ring turns
+ * the globe. The needle plays what passes under it, paused or not; scrubEnd puts the record back as
+ * it was. source = 'globe' | 'ring'.
  */
-export function scrubStart() {
+export function scrubStart(source = 'globe') {
   const s = useStore.getState();
   if (!c.track || s.phase !== 'playing' || s.switching || s.panel === 'records' || s.panel === 'about') return false;
-  if (c.track.view.porthole) return false; // one value per step: turning by hand would change nothing
+  if (source === 'globe' && c.track.view.porthole) return false; // one value per step: turning by hand would change nothing
+  if (s.hint === 'time') {
+    clearHintTimer();
+    useStore.setState({ hint: null });
+    endTutorial();
+  }
   if (c.scrub) return true;
-  c.scrub = { wasPlaying: s.playing };
+  c.scrub = { wasPlaying: s.playing, t: c.track.skin.time() };
   c.track.skin.pause();
   if (!s.playing) {
     c.engine.start(onTick);
@@ -184,8 +200,58 @@ export function scrubStart() {
   return true;
 }
 
+/** Latest time a drag may reach: the last frame (video) or just before the loop (stills). */
+function scrubMax(meta) {
+  return trackDuration(meta) - (meta.video ? 1 / meta.video.fps : 0.01);
+}
+
+/** Moves the data clock while dragging; the narration follows (see timeMoved). */
+function setScrubTime(t) {
+  const from = c.scrub.t;
+  c.track.skin.seek(t);
+  c.scrub.t = c.track.skin.time();
+  timeMoved(from, c.scrub.t);
+}
+
+/**
+ * Globe drag: turns the globe and the data clock together. Positive radians turn the surface to the
+ * right, against playback, so the date goes back. Time-series records stop at the first and the
+ * last step (the globe stops with them); a single-instant record turns freely, its clock looping.
+ */
 export function scrubBy(radians) {
-  if (c.scrub) live.rotation += radians;
+  if (!c.scrub) return;
+  const { meta } = c.track;
+  const want = c.scrub.t - radians / RAD_PER_SEC;
+  if (meta.time?.unit === 'instant') {
+    live.rotation += radians;
+    setScrubTime(want);
+    return;
+  }
+  const from = c.scrub.t;
+  setScrubTime(Math.min(scrubMax(meta), Math.max(0, want)));
+  live.rotation -= (c.scrub.t - from) * RAD_PER_SEC;
+}
+
+/** Ring drag: the data clock goes to a fraction of the record and the globe turns to follow. */
+export function scrubToFraction(f) {
+  if (!c.scrub) return;
+  const { meta } = c.track;
+  const from = c.scrub.t;
+  setScrubTime(Math.min(scrubMax(meta), Math.max(0, f * trackDuration(meta))));
+  c.spinDebt = turnLimited(c.spinDebt - (c.scrub.t - from) * RAD_PER_SEC);
+}
+
+/**
+ * The data clock moved by hand (drag, ring, arrow keys). Going back re-arms the milestones now
+ * ahead of it (spoken again when playback crosses them) and stops a milestone line that is ahead.
+ */
+function timeMoved(from, to) {
+  if (!c.track || to >= from) return;
+  const step = stepAt(c.track.meta, to);
+  for (const m of c.track.meta.markers) {
+    if (Number.isInteger(m.step) && m.step > step) c.fired.delete(m.id);
+  }
+  if (c.saying && c.saying.step > step) c.narrator.stop();
 }
 
 export function scrubEnd() {
@@ -263,7 +329,11 @@ export async function begin() {
   await preload();
   c.engine.playSfx('space-whoosh');
   const firstVisit = !introSeen();
-  if (firstVisit) c.opening = speakOpening();
+  if (firstVisit) {
+    c.tutorial = true;
+    c.engine.setDuckDepth(TUTORIAL_DUCK_DB);
+    c.opening = speakOpening();
+  }
   c.landed = false;
   useStore.setState({ phase: 'intro', introAnimated: firstVisit && !prefersReducedMotion(), arm: 'away' });
 }
@@ -300,6 +370,13 @@ function finishIntroSwell(rampSec = INTRO_FINISH_SEC) {
   if (!c.swell) return;
   c.swell = false;
   c.engine.setMusicLevel(1, rampSec);
+}
+
+/** Ends the first-visit tutorial: the narrator ducks the music by the normal depth again. */
+function endTutorial() {
+  if (!c.tutorial) return;
+  c.tutorial = false;
+  c.engine.setDuckDepth();
 }
 
 /** The record's opening narration, after the welcome (plus a breath of music) on a first visit. */
@@ -402,6 +479,7 @@ export function returnToCold() {
   }
   if (c.scrub) c.scrub = null;
   clearHintTimer();
+  endTutorial();
   c.opening = null;
   c.swell = false;
   c.landed = false;
@@ -531,11 +609,11 @@ export function seekBySteps(delta) {
   s.requestSeek(timeOfStep(c.track.meta, Math.max(0, live.step) + delta));
 }
 
-/** Seek to a fraction of the record (the platter's time arc). */
+/** Seek to a fraction of the record (the time ring when it cannot scrub, e.g. Records open). */
 export function seekToFraction(f) {
   const s = useStore.getState();
   if (!c.track || s.switching || s.phase !== 'playing') return;
-  s.requestSeek(f * trackDuration(c.track.meta));
+  s.requestSeek(Math.min(scrubMax(c.track.meta), Math.max(0, f * trackDuration(c.track.meta))));
 }
 
 /** Position in the record, 0..1 (the platter's time arc). */
@@ -544,11 +622,21 @@ export function progress() {
   return c.track.skin.time() / trackDuration(c.track.meta);
 }
 
+/** Step of the current record at a fraction of it (the ring's hover label), or -1. */
+export function stepAtFraction(f) {
+  if (!c.track) return -1;
+  return stepAt(c.track.meta, f * trackDuration(c.track.meta));
+}
+
 function say(id) {
   const { lang } = useStore.getState();
+  const marker = c.track.meta.markers.find((m) => m.id === id && Number.isInteger(m.step));
+  const line = marker ? { id, step: marker.step } : null;
+  c.saying = line;
   c.speaking++;
   return c.narrator.say(narrationLine(c.track.id, c.track.meta, id, lang), lang).finally(() => {
     c.speaking--;
+    if (c.saying === line) c.saying = null;
   });
 }
 
@@ -585,6 +673,7 @@ function placeMarkers(meta, prevLon, lon, dt) {
 }
 
 const HINT_MS = 9000;
+const TIME_HINT_MS = 14000; // two lines to read (time, pause) and a ghost drag to watch
 let hintTimer = 0;
 
 function hintAlreadySeen(key) {
@@ -635,7 +724,10 @@ function hintOnce() {
 }
 
 function recordsHintOnce() {
-  if (hintAlreadySeen('ej-records-hint-seen')) return;
+  if (hintAlreadySeen('ej-records-hint-seen')) {
+    timeHintOnce();
+    return;
+  }
   if (useStore.getState().panel === 'records' || useStore.getState().panel === 'liner') return;
   clearHintTimer();
   markHintSeen('ej-records-hint-seen');
@@ -643,12 +735,36 @@ function recordsHintOnce() {
   hintTimer = setTimeout(() => {
     hintTimer = 0;
     if (useStore.getState().hint === 'records') useStore.setState({ hint: null });
+    timeHintOnce();
   }, HINT_MS);
 }
 
 /**
+ * Last first-visit hint: dragging the globe or the time ring moves the record back or ahead in
+ * time, and a click on the globe pauses. Its end is the end of the tutorial.
+ */
+function timeHintOnce() {
+  if (hintAlreadySeen('ej-time-hint-seen')) {
+    endTutorial();
+    return;
+  }
+  if (!hintAlreadySeen('ej-hint-seen') || !hintAlreadySeen('ej-records-hint-seen')) return;
+  const s = useStore.getState();
+  if (s.phase !== 'playing' || s.panel || s.hint || s.switching) return;
+  clearHintTimer();
+  markHintSeen('ej-time-hint-seen');
+  useStore.setState({ hint: 'time' });
+  hintTimer = setTimeout(() => {
+    hintTimer = 0;
+    if (useStore.getState().hint === 'time') useStore.setState({ hint: null });
+    endTutorial();
+  }, TIME_HINT_MS);
+}
+
+/**
  * Ends the matching first-visit hint. Records waits until the liner closes so the two do
- * not compete on screen. Opening Records itself counts as finding the control.
+ * not compete on screen, and the time ring until Records closes. Opening Records itself counts as
+ * finding the control.
  */
 function dismissHintFor(opening, closing) {
   const { hint } = useStore.getState();
@@ -656,13 +772,15 @@ function dismissHintFor(opening, closing) {
     clearHintTimer();
     useStore.setState({ hint: null });
   } else if (opening === 'records') {
-    if (hint === 'hearing' || hint === 'records') {
+    if (hint === 'hearing' || hint === 'records' || hint === 'time') {
       clearHintTimer();
       useStore.setState({ hint: null });
     }
+    if (hint === 'time') endTutorial();
     markHintSeen('ej-records-hint-seen');
   }
   if (closing === 'liner' && opening !== 'records') recordsHintOnce();
+  if (closing === 'records' && !opening) timeHintOnce();
 }
 
 /** "V": speak the date and every voice's value (screen reader live region). */
@@ -718,10 +836,19 @@ export function advance(dt) {
   // The globe turns only while the record plays with the needle down (not paused, not with Records
   // open, not while a record changes); a drag turns it by hand.
   live.spinning = s.playing && s.arm === 'down' && !s.switching && !s.scrubbing;
-  if (live.spinning) live.rotation -= Math.min(dt, 0.5) * ((2 * Math.PI) / SECONDS_PER_TURN);
+  if (live.spinning) live.rotation -= Math.min(dt, 0.5) * RAD_PER_SEC;
   if (s.seekTo != null) {
+    const from = skin.time();
     skin.seek(s.seekTo);
     useStore.setState({ seekTo: null });
+    timeMoved(from, skin.time());
+    c.spinDebt = turnLimited(c.spinDebt - (skin.time() - from) * RAD_PER_SEC);
+  }
+  // A jump of the clock (ring, arrow keys, replay) turns the globe smoothly instead of at once.
+  if (c.spinDebt) {
+    const d = Math.abs(c.spinDebt) < 1e-3 ? c.spinDebt : c.spinDebt * (1 - Math.exp(-12 * Math.min(dt, 0.1)));
+    live.rotation += d;
+    c.spinDebt -= d;
   }
   skin.advance(dt);
   const step = stepAt(meta, skin.time());
@@ -739,7 +866,8 @@ export function advance(dt) {
   live.summary = music.summary(live.read);
   useStore.setState({ step, lon: live.lon, summary: live.summary });
 
-  if (prev < 0 || !s.playing || s.switching) return;
+  // While dragging, nothing is spoken: going back and forth would cut one line after another.
+  if (prev < 0 || !s.playing || s.switching || s.scrubbing) return;
   for (const m of meta.markers) {
     if (shouldFireMarker(m.step, prev, step, c.fired, m.id)) {
       c.fired.add(m.id);

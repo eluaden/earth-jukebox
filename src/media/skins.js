@@ -24,6 +24,13 @@ function createVideoSkin(meta, dir) {
   el.preload = 'auto';
   el.setAttribute('aria-hidden', 'true');
   let disposed = false;
+  let pending = null; // a seek asked for while the previous one is still running (drags seek every frame)
+  el.addEventListener('seeked', () => {
+    if (pending == null || disposed) return;
+    const t = pending;
+    pending = null;
+    el.currentTime = t;
+  });
   const ready = timeout(
     new Promise((resolve) => {
       el.addEventListener('loadeddata', resolve, { once: true });
@@ -36,9 +43,11 @@ function createVideoSkin(meta, dir) {
     el,
     poster: dir + meta.poster,
     ready,
-    time: () => el.currentTime || 0,
+    time: () => pending ?? (el.currentTime || 0),
     seek(t) {
-      el.currentTime = clampTime(t, meta.video.duration, meta.video.fps);
+      const to = clampTime(t, meta.video.duration, meta.video.fps);
+      if (el.seeking) pending = to;
+      else el.currentTime = to;
     },
     play() {
       if (!disposed) el.play().catch(() => {});

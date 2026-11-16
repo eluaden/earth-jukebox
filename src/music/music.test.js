@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MAX_NOTES_PER_VOICE, MAX_NOTES_TOTAL, SCALE, emptyHeld, noteFor, planTick, tempToDegree, velocityFor } from './mapping.js';
-import { isAudible, musicBusGain } from './mix.js';
+import { duckGain, isAudible } from './mix.js';
 
 const band = (lat, temp) => ({ lat, temp });
 const zones = (n0, n1, t0, t1, s0, s1) => [
@@ -106,10 +106,13 @@ describe('isAudible', () => {
   });
 });
 
-describe('musicBusGain', () => {
-  it('keeps the intro bed under ducking so unduck does not jump to full', () => {
-    expect(musicBusGain(0.28, false)).toBeCloseTo(0.28, 6);
-    expect(musicBusGain(0.28, true, -10)).toBeCloseTo(0.28 * 10 ** (-10 / 20), 6);
-    expect(musicBusGain(1, true, -10)).toBeCloseTo(10 ** (-10 / 20), 6);
+describe('duckGain', () => {
+  it('is unity when the narrator is quiet', () => {
+    expect(duckGain(false)).toBe(1);
+    expect(duckGain(false, -24)).toBe(1);
+  });
+  it('drops by the given depth while the narrator speaks', () => {
+    expect(duckGain(true)).toBeCloseTo(10 ** (-10 / 20), 6);
+    expect(duckGain(true, -24)).toBeCloseTo(10 ** (-24 / 20), 6);
   });
 });

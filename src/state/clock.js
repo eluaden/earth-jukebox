@@ -41,6 +41,16 @@ export function clampTime(t, duration, fps) {
   return Math.min(duration - 1 / fps, Math.max(0, t));
 }
 
+const TURN = 2 * Math.PI;
+
+/**
+ * Globe turn for a jump of the data clock, at most one turn and in the jump's direction: only the
+ * angle under the needle matters, so a jump across the whole record does not spin the globe ten times.
+ */
+export function turnLimited(radians) {
+  return Math.sign(radians) * (Math.abs(radians) % TURN);
+}
+
 const MAX_NORMAL_ADVANCE = 3; // steps between two animation frames; more than this is a seek
 
 /** A narration marker fires once, when normal playback crosses its step (not on loops or seeks). */

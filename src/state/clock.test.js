@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { clampTime, isStills, shouldFireMarker, stepAt, timeOfStep, trackDuration } from './clock.js';
+import { clampTime, isStills, shouldFireMarker, stepAt, timeOfStep, trackDuration, turnLimited } from './clock.js';
 import { pickVideo } from '../media/pickVideo.js';
 
 const meta = {
@@ -102,5 +102,18 @@ describe('crossedLon (place markers of a single instant)', () => {
     expect(crossedLon(178, -178, 180)).toBe(true);
     expect(crossedLon(178, -178, -179)).toBe(true);
     expect(crossedLon(10, 10, 10)).toBe(false);
+  });
+});
+
+describe('turnLimited (the globe follows a jump of the clock)', () => {
+  const TURN = 2 * Math.PI;
+  it('keeps a small jump as it is', () => {
+    expect(turnLimited(1.5)).toBeCloseTo(1.5);
+    expect(turnLimited(-0.4)).toBeCloseTo(-0.4);
+    expect(turnLimited(0)).toBe(0);
+  });
+  it('turns at most once, in the direction of the jump', () => {
+    expect(turnLimited(3 * TURN + 1)).toBeCloseTo(1);
+    expect(turnLimited(-(5 * TURN + 2))).toBeCloseTo(-2);
   });
 });

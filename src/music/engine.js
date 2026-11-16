@@ -1,5 +1,5 @@
 import * as Tone from 'tone';
-import { isAudible, musicBusGain } from './mix.js';
+import { duckGain, isAudible } from './mix.js';
 import { INSTRUMENTS } from './instruments.js';
 
 // Plays what a track's music module decides (src/music/tracks/index.js). Every voice of the current
@@ -7,8 +7,9 @@ import { INSTRUMENTS } from './instruments.js';
 // solo), then ducking, reverb and a limiter. The samples are decoded once and shared, so changing
 // track only rebuilds the voices. Vinyl crackle (S2, not data, declared in the liner notes) runs
 // underneath while the needle is on the record; with the needle up the record is silent. One-shot
-// SFX (S1, S3–S7) sit on a separate bus so they do not duck with the narration. The music bus gain
-// is intro level × duck (first visit rises under the opening narration; ducking still clears the voice).
+// SFX (S1, S3–S7) sit on a separate bus so they do not duck with the narration. The music bus has two
+// gain stages in series, so neither ramp cancels the other: the intro level (first visit rises under
+// the opening narration) and the duck (the voice stays clear; deeper during the first-visit tutorial).
 
 const BPM = 84;
 const PULSE = '8n';
@@ -42,8 +43,8 @@ export function createEngine(base) {
   let mix = { mute: {}, solo: {} };
   let sfx = {}; // id -> Tone.Player
   let useSampleBed = false; // true when S2 loaded; otherwise the synthesised hiss/crackle
-  let musicLevel = 1; // 0..1 bed under ducking (intro swell on a first visit)
   let ducked = false;
+  let duckDb = DUCK_DB;
 
   function bufferMap(instrument) {
     const b = n.buffers[instrument];
@@ -95,7 +96,8 @@ export function createEngine(base) {
     // The VSCO recordings are quiet; make-up gain on the music only (the limiter catches peaks).
     const makeup = new Tone.Gain(Tone.dbToGain(MAKEUP_DB)).connect(limiter);
     const reverb = new Tone.Reverb({ decay: 4, preDelay: 0.02, wet: 0.28 }).connect(makeup);
-    const music = new Tone.Gain(1).connect(reverb);
+    const ducker = new Tone.Gain(1).connect(reverb);
+    const music = new Tone.Gain(1).connect(ducker);
 
     // Vinyl bed: S2 when present, otherwise soft hiss plus sparse crackles. Not data.
     const bed = new Tone.Gain(0).connect(limiter);
@@ -113,7 +115,7 @@ export function createEngine(base) {
     const sfxBus = new Tone.Gain(1).connect(limiter);
 
     await reverb.ready;
-    n = { urls, buffers, decoding, limiter, reverb, music, bed, hiss, crackle, crackleEnv, thump, sfxBus };
+    n = { urls, buffers, decoding, limiter, reverb, music, ducker, bed, hiss, crackle, crackleEnv, thump, sfxBus };
     await loadSfx(sfxBus);
   }
 
@@ -266,23 +268,24 @@ export function createEngine(base) {
     if (n) applyMix();
   }
 
-  /** Applies intro level × duck to the music bus (SFX and vinyl stay full). */
-  function applyMusicGain(ramp = 0.4) {
-    if (n) n.music.gain.rampTo(musicBusGain(musicLevel, ducked, DUCK_DB), ramp);
-  }
-
+  /** Lowers the music under the narrator (SFX and vinyl stay full). */
   function duck(on) {
     ducked = Boolean(on);
-    applyMusicGain(0.4);
+    if (n) n.ducker.gain.rampTo(duckGain(ducked, duckDb), 0.4);
+  }
+
+  /** How far the music drops under the narrator, in dB (no argument: the normal depth). */
+  function setDuckDepth(db = DUCK_DB) {
+    duckDb = db;
+    duck(ducked);
   }
 
   /**
    * Sets the music bed level (0..1). On a first visit the bed starts low and rises under the
-   * opening narration; ducking still multiplies on top so the voice stays clear.
+   * opening narration; the duck is a separate stage, so it does not cut this ramp short.
    */
   function setMusicLevel(level, ramp = 0.4) {
-    musicLevel = Math.max(0, Math.min(1, level));
-    applyMusicGain(ramp);
+    if (n) n.music.gain.rampTo(Math.max(0, Math.min(1, level)), ramp);
   }
 
   /**
@@ -341,6 +344,7 @@ export function createEngine(base) {
     releaseAll,
     setMix,
     duck,
+    setDuckDepth,
     setMusicLevel,
     playLegend,
     playSfx,

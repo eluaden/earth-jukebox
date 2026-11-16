@@ -1,34 +1,34 @@
 // Liner notes and narration of the night lights track, EN / PT / ES.
 // Rules (docs/si-e-referencias.md): only facts from the NASA page (SVS 5313) or computed from the track's
 // own grid (scripts/pipeline/nightlights.py). The team reviews these texts before publishing.
+// Shown at a glance: dataset, whatYouHear, mapping, highlights. Behind "Learn more": description, limits.
 // {date} is the year, filled by the app.
 
 export const NIGHT_LIGHTS_TEXT = {
   en: {
     title: 'Night Lights',
-    whatYouHear:
-      'The needle reads the lights of the planet at night under it, one year at a time, from 2012 to 2023. The more light, the more piano notes; further north, higher notes. When a place has clearly less light than the year before, low strings fall; when it has clearly more, bells rise. The sea is silent.',
+    dataset: 'Black Marble (NASA/NOAA, VIIRS)',
+    whatYouHear: 'Twelve years of Earth’s lights at night, one year per turn. More light, more piano notes. Strings fall where light drops; bells rise where it grows.',
     mapping: [
-      ['Light under the needle, in six latitude bands from 70° N to 45° S', 'Piano: more light, more notes; latitude sets the pitch (north is higher)'],
-      ['Lights going out: a band with at least 10% less light than the year before', 'Low strings: a falling minor third'],
-      ['New lights: a band with at least 10% more light than the year before', 'Glockenspiel: a rising major third'],
+      ['Light in 6 latitude bands, 70° N to 45° S', 'Piano: more light, more notes; north is higher'],
+      ['A band with ≥10% less light than the year before', 'Low strings, falling'],
+      ['A band with ≥10% more light', 'Glockenspiel, rising'],
       ['Sea', 'Silence'],
-      ['Time: 2012 to 2023, one year per turn of the globe (10 seconds)', 'The year on the left'],
+    ],
+    highlights: [
+      'The planet’s light grows by about a third from 2012 to 2023 (+35%).',
+      'The biggest jump is 2021 to 2022: about 10% in a single year.',
+      'Most light lies between 20° and 50° N, where the piano is busiest.',
     ],
     description: [
-      "The globe wears NASA's map of Earth at night: a yearly average of the lights seen from orbit, from 2012 to 2023.",
-      'Added over the whole planet, the light on this map grows by about a third between 2012 and 2023 (+35%).',
-      'The biggest jump is from 2021 to 2022: about 10% more light in a single year.',
-      'Most of the light lies between 20° and 50° N, so that is where the piano is busiest; south of the equator it plays much less.',
-      'A change of 10% or more from one year to the next is rare: it happens in only a few percent of the places the needle crosses, so each falling or rising figure marks a real change in that band.',
+      'The globe wears NASA’s yearly average of the lights seen from orbit.',
+      'A change of 10% or more in a year is rare (a few percent of the places the needle crosses), so each falling or rising figure marks a real change.',
     ],
     limits: [
-      'The data is NASA Black Marble (NASA/NOAA, VIIRS on Suomi NPP), as drawn in NASA’s visualization. We read the image, not the original measurement files.',
-      'Brightness is relative: how much the lights brighten NASA’s image, from 0 to 255. The map has no numeric legend, so this is not a physical unit.',
-      'Light is measured as the brightness above the same map with the lights off (a frame of NASA’s video), averaged over 2° × 2° boxes. Boxes that are almost all sea are silent.',
-      'Which single years go down depends on how light is counted: in our reading 2016 has 4% less light than 2015; counting only the brightest points, the dip moves to 2020. The rise from 2012 to 2023 and the jump of 2022 hold either way.',
-      'There is one value per year, so changes within a year are not heard.',
-      'NASA’s map is 16:9 and was stretched to cover the globe; the year NASA prints on the map is shown on the left of the screen instead.',
+      'We read NASA’s image, not the original measurement files. Brightness is relative (0–255 in the image), not a physical unit.',
+      'Light is the brightness above the same map with the lights off, averaged over 2° × 2° boxes.',
+      'Which years dip depends on how light is counted: 2016 is 4% below 2015 in our reading; counting only the brightest points, the dip moves to 2020. The 2012–2023 rise and the 2022 jump hold either way.',
+      'One value per year, so changes within a year are not heard. NASA’s 16:9 map was stretched to cover the globe.',
     ],
     narration: {
       intro: 'These are the lights of the planet at night, one year at a time, from 2012 to 2023. The more light under the needle, the more piano notes.',
@@ -39,29 +39,28 @@ export const NIGHT_LIGHTS_TEXT = {
   },
   pt: {
     title: 'Luzes noturnas',
-    whatYouHear:
-      'A agulha lê as luzes do planeta à noite embaixo dela, um ano de cada vez, de 2012 a 2023. Quanto mais luz, mais notas de piano; mais ao norte, notas mais agudas. Quando um lugar tem bem menos luz que no ano anterior, cordas graves descem; quando tem bem mais, sinos sobem. O mar fica em silêncio.',
+    dataset: 'Black Marble (NASA/NOAA, VIIRS)',
+    whatYouHear: 'Doze anos de luzes da Terra à noite, um ano por volta. Mais luz, mais notas de piano. Cordas descem onde a luz cai; sinos sobem onde ela cresce.',
     mapping: [
-      ['Luz embaixo da agulha, em seis faixas de latitude de 70° N a 45° S', 'Piano: mais luz, mais notas; a latitude define a altura (norte mais agudo)'],
-      ['Luzes que se apagam: faixa com pelo menos 10% menos luz que no ano anterior', 'Cordas graves: uma terça menor descendo'],
-      ['Luzes novas: faixa com pelo menos 10% mais luz que no ano anterior', 'Glockenspiel: uma terça maior subindo'],
+      ['Luz em 6 faixas de latitude, 70° N a 45° S', 'Piano: mais luz, mais notas; norte mais agudo'],
+      ['Faixa com ≥10% menos luz que no ano anterior', 'Cordas graves, descendo'],
+      ['Faixa com ≥10% mais luz', 'Glockenspiel, subindo'],
       ['Mar', 'Silêncio'],
-      ['Tempo: 2012 a 2023, um ano por volta do globo (10 segundos)', 'O ano à esquerda'],
+    ],
+    highlights: [
+      'A luz do planeta cresce cerca de um terço de 2012 a 2023 (+35%).',
+      'O maior salto é de 2021 para 2022: cerca de 10% em um único ano.',
+      'A maior parte da luz fica entre 20° e 50° N, onde o piano toca mais.',
     ],
     description: [
-      'O globo veste o mapa da NASA da Terra à noite: uma média anual das luzes vistas da órbita, de 2012 a 2023.',
-      'Somando o planeta inteiro, a luz neste mapa cresce cerca de um terço entre 2012 e 2023 (+35%).',
-      'O maior salto é de 2021 para 2022: cerca de 10% mais luz em um único ano.',
-      'A maior parte da luz fica entre 20° e 50° N, por isso é ali que o piano toca mais; ao sul do equador ele toca bem menos.',
-      'Uma mudança de 10% ou mais de um ano para o outro é rara: acontece em só alguns por cento dos lugares que a agulha cruza, então cada figura que desce ou sobe marca uma mudança real naquela faixa.',
+      'O globo veste a média anual da NASA das luzes vistas da órbita.',
+      'Uma mudança de 10% ou mais num ano é rara (alguns por cento dos lugares que a agulha cruza), então cada figura que desce ou sobe marca uma mudança real.',
     ],
     limits: [
-      'O dado é o Black Marble da NASA (NASA/NOAA, VIIRS no Suomi NPP), como desenhado na visualização da NASA. Lemos a imagem, não os arquivos originais de medição.',
-      'O brilho é relativo: quanto as luzes clareiam a imagem da NASA, de 0 a 255. O mapa não tem legenda numérica, então isso não é uma unidade física.',
-      'A luz é medida como o brilho acima do mesmo mapa com as luzes apagadas (um frame do vídeo da NASA), na média de quadrados de 2° × 2°. Quadrados quase todos de mar ficam em silêncio.',
-      'Quais anos isolados caem depende de como a luz é contada: na nossa leitura 2016 tem 4% menos luz que 2015; contando só os pontos mais brilhantes, a queda passa para 2020. A subida de 2012 a 2023 e o salto de 2022 valem nos dois casos.',
-      'Há um valor por ano, então mudanças dentro do ano não são ouvidas.',
-      'O mapa da NASA é 16:9 e foi esticado para cobrir o globo; o ano que a NASA imprime no mapa aparece à esquerda da tela.',
+      'Lemos a imagem da NASA, não os arquivos originais de medição. O brilho é relativo (0–255 na imagem), não uma unidade física.',
+      'A luz é o brilho acima do mesmo mapa com as luzes apagadas, na média de quadrados de 2° × 2°.',
+      'Quais anos caem depende de como a luz é contada: 2016 fica 4% abaixo de 2015 na nossa leitura; contando só os pontos mais brilhantes, a queda passa para 2020. A subida de 2012–2023 e o salto de 2022 valem nos dois casos.',
+      'Um valor por ano, então mudanças dentro do ano não são ouvidas. O mapa 16:9 da NASA foi esticado para cobrir o globo.',
     ],
     narration: {
       intro: 'Estas são as luzes do planeta à noite, um ano de cada vez, de 2012 a 2023. Quanto mais luz embaixo da agulha, mais notas de piano.',
@@ -72,29 +71,28 @@ export const NIGHT_LIGHTS_TEXT = {
   },
   es: {
     title: 'Luces nocturnas',
-    whatYouHear:
-      'La aguja lee las luces del planeta de noche que tiene debajo, un año a la vez, de 2012 a 2023. Cuanta más luz, más notas de piano; más al norte, notas más agudas. Cuando un lugar tiene claramente menos luz que el año anterior, bajan cuerdas graves; cuando tiene claramente más, suben campanas. El mar queda en silencio.',
+    dataset: 'Black Marble (NASA/NOAA, VIIRS)',
+    whatYouHear: 'Doce años de luces de la Tierra de noche, un año por vuelta. Más luz, más notas de piano. Las cuerdas bajan donde la luz cae; las campanas suben donde crece.',
     mapping: [
-      ['Luz bajo la aguja, en seis franjas de latitud de 70° N a 45° S', 'Piano: más luz, más notas; la latitud define la altura (norte más agudo)'],
-      ['Luces que se apagan: franja con al menos 10% menos luz que el año anterior', 'Cuerdas graves: una tercera menor que baja'],
-      ['Luces nuevas: franja con al menos 10% más luz que el año anterior', 'Glockenspiel: una tercera mayor que sube'],
+      ['Luz en 6 franjas de latitud, 70° N a 45° S', 'Piano: más luz, más notas; norte más agudo'],
+      ['Franja con ≥10% menos luz que el año anterior', 'Cuerdas graves, bajando'],
+      ['Franja con ≥10% más luz', 'Glockenspiel, subiendo'],
       ['Mar', 'Silencio'],
-      ['Tiempo: 2012 a 2023, un año por vuelta del globo (10 segundos)', 'El año a la izquierda'],
+    ],
+    highlights: [
+      'La luz del planeta crece cerca de un tercio de 2012 a 2023 (+35%).',
+      'El mayor salto es de 2021 a 2022: cerca de un 10% en un solo año.',
+      'La mayor parte de la luz está entre 20° y 50° N, donde el piano toca más.',
     ],
     description: [
-      'El globo viste el mapa de la NASA de la Tierra de noche: un promedio anual de las luces vistas desde la órbita, de 2012 a 2023.',
-      'Sumando todo el planeta, la luz en este mapa crece cerca de un tercio entre 2012 y 2023 (+35%).',
-      'El mayor salto es de 2021 a 2022: cerca de un 10% más de luz en un solo año.',
-      'La mayor parte de la luz está entre 20° y 50° N, por eso ahí el piano toca más; al sur del ecuador toca mucho menos.',
-      'Un cambio del 10% o más de un año al siguiente es raro: ocurre solo en unos pocos por ciento de los lugares que cruza la aguja, así que cada figura que baja o sube marca un cambio real en esa franja.',
+      'El globo viste el promedio anual de la NASA de las luces vistas desde la órbita.',
+      'Un cambio del 10% o más en un año es raro (unos pocos por ciento de los lugares que cruza la aguja), así que cada figura que baja o sube marca un cambio real.',
     ],
     limits: [
-      'El dato es el Black Marble de la NASA (NASA/NOAA, VIIRS en el Suomi NPP), tal como lo dibuja la visualización de la NASA. Leemos la imagen, no los archivos originales de medición.',
-      'El brillo es relativo: cuánto aclaran las luces la imagen de la NASA, de 0 a 255. El mapa no tiene leyenda numérica, así que no es una unidad física.',
-      'La luz se mide como el brillo por encima del mismo mapa con las luces apagadas (un fotograma del vídeo de la NASA), en el promedio de cuadros de 2° × 2°. Los cuadros casi todo mar quedan en silencio.',
-      'Qué años sueltos bajan depende de cómo se cuente la luz: en nuestra lectura 2016 tiene un 4% menos de luz que 2015; contando solo los puntos más brillantes, la caída pasa a 2020. La subida de 2012 a 2023 y el salto de 2022 se mantienen en ambos casos.',
-      'Hay un valor por año, así que los cambios dentro del año no se oyen.',
-      'El mapa de la NASA es 16:9 y se estiró para cubrir el globo; el año que la NASA imprime en el mapa aparece a la izquierda de la pantalla.',
+      'Leemos la imagen de la NASA, no los archivos originales de medición. El brillo es relativo (0–255 en la imagen), no una unidad física.',
+      'La luz es el brillo por encima del mismo mapa con las luces apagadas, en el promedio de cuadros de 2° × 2°.',
+      'Qué años bajan depende de cómo se cuente la luz: 2016 queda un 4% por debajo de 2015 en nuestra lectura; contando solo los puntos más brillantes, la caída pasa a 2020. La subida de 2012–2023 y el salto de 2022 se mantienen en ambos casos.',
+      'Un valor por año, así que los cambios dentro del año no se oyen. El mapa 16:9 de la NASA se estiró para cubrir el globo.',
     ],
     narration: {
       intro: 'Estas son las luces del planeta de noche, un año a la vez, de 2012 a 2023. Cuanta más luz bajo la aguja, más notas de piano.',
