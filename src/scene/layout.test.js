@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DUST_RADII, TIME_RING, cameraDistance, dustPositions, ringLabelPlacement } from './layout.js';
 
 describe('ringLabelPlacement', () => {
-  const r = TIME_RING + 0.032;
+  const r = TIME_RING + 0.028;
 
   it('grows the hover date away from the ring instead of centering it on the ring', () => {
     const right = ringLabelPlacement(0.25);

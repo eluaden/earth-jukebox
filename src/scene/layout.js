@@ -8,8 +8,8 @@ export const TILT = 0.12; // rad, about X (positive = north pole toward the came
 export const NEEDLE_LAT = 30; // where the stylus touches the meridian line (degrees)
 export const TIME_RING = 1.15; // the platter's time ring (src/scene/Platter.jsx)
 export const PLATTER_R = 1.24; // what the camera keeps clear of the HUD: the ring, its hover state and label
-// Hover tick on the ring reaches about 0.024 past TIME_RING (src/scene/Platter.jsx shader).
-const RING_LABEL_R = TIME_RING + 0.032;
+// Hover tick on the ring reaches about 0.017 past TIME_RING (src/scene/Platter.jsx shader).
+const RING_LABEL_R = TIME_RING + 0.028;
 const RING_LABEL_GAP = 8; // px: air between that tick and the date
 
 /**

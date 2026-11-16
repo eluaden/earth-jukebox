@@ -45,7 +45,7 @@ const ringFragment = /* glsl */ `
     if (a < 0.0) a += TAU;
     float f = a / TAU;
     bool cursor = uCursor >= 0.0;
-    float halfW = mix(0.004, 0.014, uHover);
+    float halfW = mix(0.004, 0.009, uHover);
     float band = 1.0 - smoothstep(halfW - 0.0015, halfW + 0.0015, abs(r - uRadius));
     float glint = pow(0.5 + 0.5 * cos(a - uGlint), 10.0);
     vec3 col = vec3(1.0);
@@ -74,7 +74,7 @@ const ringFragment = /* glsl */ `
     if (uProgress >= 0.0) {
       float pa = uProgress * TAU;
       float d = distance(vPos, uRadius * vec2(sin(pa), cos(pa)));
-      float kr = mix(0.0085, 0.022, uHover);
+      float kr = mix(0.0085, 0.014, uHover);
       float knob = 1.0 - smoothstep(kr - 0.0015, kr + 0.0015, d);
       float halo = (1.0 - smoothstep(kr, kr * 2.6, d)) * (0.12 + 0.25 * uHover);
       o.rgb = mix(o.rgb, AMBER, halo * (1.0 - knob));
